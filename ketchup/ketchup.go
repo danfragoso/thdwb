@@ -9,13 +9,51 @@ var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
 var clTag = regexp.MustCompile(`\<\/\w+\>`)
 var tagContent = regexp.MustCompile(`(.+?)\<\/`)
 var tagName = regexp.MustCompile(`(\<\w+)`)
-var attr = regexp.MustCompile(`[ ]\w+=".+?"`)
+var attr = regexp.MustCompile(`\w+=".+?"`)
+
+type Attribute struct {
+	Name string
+	Value string
+}
+
+type Stylesheet struct {
+	Color string
+	FontSize int
+}
 
 type DOM_Node struct {
 	Element  string      `json:"element"`
 	Content  string      `json:"content"`
 	Children []*DOM_Node `json:"children"`
+	Attributes []*Attribute
+	Style    *Stylesheet
 	parent   *DOM_Node
+}
+
+func parseStylesheet(attributes []*Attribute) *Stylesheet {
+	parsedStylesheet := &Stylesheet{
+		Color: "black",
+		FontSize: 14,
+	}
+
+	return parsedStylesheet
+}
+
+func extractAttributes(tag string) []*Attribute {
+	rawAttrArray := attr.FindAllString(tag, -1)
+	elementAttrs := []*Attribute{}
+
+	for i := 0; i < len(rawAttrArray); i++ {
+		attrStringSlice := strings.Split(rawAttrArray[i], "=")
+		attr := &Attribute{
+			Name: attrStringSlice[0],
+			Value: strings.Trim(attrStringSlice[1], "\""),
+		}
+
+		elementAttrs = append(elementAttrs, attr)
+	}
+
+	return elementAttrs
 }
 
 func ParseHTML(document string) *DOM_Node {
@@ -23,6 +61,7 @@ func ParseHTML(document string) *DOM_Node {
 		Element:  "root",
 		Content:  "THDWB",
 		Children: []*DOM_Node{},
+		Style: 		nil,
 		parent:   nil,
 	}
 
@@ -53,10 +92,15 @@ func ParseHTML(document string) *DOM_Node {
 			lastNode = lastNode.parent
 		} else {
 			currentTagName := tagName.FindString(currentTag)
+			extractedAttributes := extractAttributes(currentTag)
+			parsedStylesheet := parseStylesheet(extractedAttributes)
+
 			currentNode = &DOM_Node{
 				Element:  strings.Trim(currentTagName, "<"),
 				Content:  "",
 				Children: []*DOM_Node{},
+				Attributes: extractedAttributes,
+				Style: parsedStylesheet,
 				parent:   lastNode,
 			}
 
