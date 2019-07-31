@@ -1,25 +1,29 @@
 package ketchup
 
-import "regexp"
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
-var xmlTag = regexp.MustCompile(`(\<\w+\>)|(\<//?\w+\>\\?)`)
-var	clTag = regexp.MustCompile(`\<\/\w+\>`)
+var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
+var clTag = regexp.MustCompile(`\<\/\w+\>`)
 var tagContent = regexp.MustCompile(`(.+?)\<\/`)
+var tagName = regexp.MustCompile(`(\<\w+)`)
+var attr = regexp.MustCompile(`[ ]\w+=".+?"`)
 
 type DOM_Node struct {
-	Element string `json:"element"`
-	Content string `json:"content"`
+	Element  string      `json:"element"`
+	Content  string      `json:"content"`
 	Children []*DOM_Node `json:"children"`
-	parent *DOM_Node
+	parent   *DOM_Node
 }
 
 func ParseHTML(document string) *DOM_Node {
 	DOM_Tree := &DOM_Node{
-		Element: "root",
-		Content: "THDWB",
+		Element:  "root",
+		Content:  "THDWB",
 		Children: []*DOM_Node{},
-		parent: nil,
+		parent:   nil,
 	}
 
 	lastNode := DOM_Tree
@@ -48,18 +52,19 @@ func ParseHTML(document string) *DOM_Node {
 
 			lastNode = lastNode.parent
 		} else {
+			currentTagName := tagName.FindString(currentTag)
 			currentNode = &DOM_Node{
-				Element: strings.Trim(currentTag, "></"),
-				Content: "",
+				Element:  strings.Trim(currentTagName, "<"),
+				Content:  "",
 				Children: []*DOM_Node{},
-				parent: lastNode,
+				parent:   lastNode,
 			}
 
 			lastNode.Children = append(lastNode.Children, currentNode)
 			lastNode = currentNode
 		}
 
-		document = document[currentTagIndex[1] : len(document)]
+		document = document[currentTagIndex[1]:len(document)]
 
 		if !xmlTag.MatchString(document) {
 			parseDocument = false

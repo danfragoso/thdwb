@@ -1,10 +1,13 @@
 package mustard
 
-import "github.com/gotk3/gotk3/cairo"
-import "github.com/gotk3/gotk3/gtk"
-import "github.com/danfragoso/thdwb/ketchup"
-import "log"
-import "fmt"
+import (
+	"fmt"
+	"log"
+
+	"github.com/danfragoso/thdwb/ketchup"
+	"github.com/gotk3/gotk3/cairo"
+	"github.com/gotk3/gotk3/gtk"
+)
 
 func getNodeContent(DOM_Node *ketchup.DOM_Node) string {
 	return DOM_Node.Content
@@ -21,17 +24,17 @@ func getNodeChildren(DOM_Node *ketchup.DOM_Node) []*ketchup.DOM_Node {
 func walkDOM(DOM_Tree *ketchup.DOM_Node, d int) {
 	fmt.Println(d, getNodeContent(DOM_Tree))
 	nodeChildren := getNodeChildren(DOM_Tree)
-	
+
 	for i := 0; i < len(nodeChildren); i++ {
-		walkDOM(nodeChildren[i], d + 1)
+		walkDOM(nodeChildren[i], d+1)
 	}
 }
 
 func renderH2(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(28)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 2)
+	cr.Translate(x, y+sizeStep+2)
 	cr.ShowText(content)
 	cr.Translate(0, 10)
 	cr.Fill()
@@ -39,9 +42,9 @@ func renderH2(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderH1(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(36)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 2)
+	cr.Translate(x, y+sizeStep+2)
 	cr.ShowText(content)
 	cr.Translate(0, 10)
 	cr.Fill()
@@ -49,9 +52,9 @@ func renderH1(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderP(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 5)
+	cr.Translate(x, y+sizeStep+5)
 	cr.ShowText(content)
 	cr.Translate(0, 5)
 	cr.Fill()
@@ -59,9 +62,9 @@ func renderP(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderB(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 1)
+	cr.Translate(x, y+sizeStep+1)
 	cr.ShowText(content)
 	cr.Translate(0, 1)
 	cr.Fill()
@@ -69,9 +72,9 @@ func renderB(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderI(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_NORMAL);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 1)
+	cr.Translate(x, y+sizeStep+1)
 	cr.ShowText(content)
 	cr.Translate(0, 1)
 	cr.Fill()
@@ -79,9 +82,9 @@ func renderI(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderDefault(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL);
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y + sizeStep + 2)
+	cr.Translate(x, y+sizeStep+2)
 	cr.ShowText(content)
 	cr.Translate(0, 2)
 	cr.Fill()
@@ -106,14 +109,14 @@ func renderNode(DOM_Node *ketchup.DOM_Node, cr *cairo.Context, x float64, y floa
 	}
 
 	for i := 0; i < len(nodeChildren); i++ {
-		renderNode(nodeChildren[i], cr, x, y * float64(i))
+		renderNode(nodeChildren[i], cr, x, y*float64(i))
 	}
 }
 
 func getPageTitle(DOM_Tree *ketchup.DOM_Node) string {
 	if getElementName(DOM_Tree) == "title" {
 		pageTitle := getNodeContent(DOM_Tree)
-		
+
 		if pageTitle == "" {
 			return "Sem Título"
 		} else {
@@ -133,24 +136,24 @@ func drawDOM(DOM_Tree *ketchup.DOM_Node) func(drawingArea *gtk.DrawingArea, cr *
 
 func RenderDOM(DOM_Tree *ketchup.DOM_Node) {
 	gtk.Init(nil)
-	
+
 	browserWindow, _ := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	drawingArea, _ := gtk.DrawingAreaNew()
-	
+
 	browserWindow.Add(drawingArea)
-	
+
 	header, err := gtk.HeaderBarNew()
 	if err != nil {
 		log.Fatal("Could not create header bar:", err)
 	}
-	
+
 	header.SetShowCloseButton(true)
 	header.SetTitle(getPageTitle(DOM_Tree) + " - THDWB")
-	
+
 	browserWindow.SetTitlebar(header)
 	browserWindow.Connect("destroy", gtk.MainQuit)
 	browserWindow.ShowAll()
-	
+
 	html := DOM_Tree.Children[0]
 	drawingArea.Connect("draw", drawDOM(html.Children[1]))
 	gtk.Main()
