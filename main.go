@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/danfragoso/thdwb/ketchup"
-	//"github.com/danfragoso/thdwb/mustard"
+	"github.com/danfragoso/thdwb/mustard"
 	"github.com/danfragoso/thdwb/sauce"
 )
 
@@ -20,5 +20,5 @@ func main() {
 	js, err := json.MarshalIndent(DOM_Tree.Children, "", " ")
 	fmt.Println(err)
 	fmt.Println(string(js))
-	//mustard.RenderDOM(DOM_Tree)
+	mustard.RenderDOM(DOM_Tree)
 }

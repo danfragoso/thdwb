@@ -1,6 +1,7 @@
 package ketchup
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -12,28 +13,32 @@ var tagName = regexp.MustCompile(`(\<\w+)`)
 var attr = regexp.MustCompile(`\w+=".+?"`)
 
 type Attribute struct {
-	Name string
+	Name  string
 	Value string
 }
 
 type Stylesheet struct {
-	Color string
+	Color    string
 	FontSize int
 }
 
 type DOM_Node struct {
-	Element  string      `json:"element"`
-	Content  string      `json:"content"`
-	Children []*DOM_Node `json:"children"`
+	Element    string      `json:"element"`
+	Content    string      `json:"content"`
+	Children   []*DOM_Node `json:"children"`
 	Attributes []*Attribute
-	Style    *Stylesheet
-	parent   *DOM_Node
+	Style      *Stylesheet
+	parent     *DOM_Node
 }
 
 func parseStylesheet(attributes []*Attribute) *Stylesheet {
-	parsedStylesheet := &Stylesheet{
-		Color: "black",
-		FontSize: 14,
+	var parsedStylesheet *Stylesheet
+
+	for i := 0; i < len(attributes); i++ {
+		attributeName := attributes[i].Name
+		if attributeName == "style" {
+			fmt.Println(attributes[i].Value)
+		}
 	}
 
 	return parsedStylesheet
@@ -46,7 +51,7 @@ func extractAttributes(tag string) []*Attribute {
 	for i := 0; i < len(rawAttrArray); i++ {
 		attrStringSlice := strings.Split(rawAttrArray[i], "=")
 		attr := &Attribute{
-			Name: attrStringSlice[0],
+			Name:  attrStringSlice[0],
 			Value: strings.Trim(attrStringSlice[1], "\""),
 		}
 
@@ -61,7 +66,7 @@ func ParseHTML(document string) *DOM_Node {
 		Element:  "root",
 		Content:  "THDWB",
 		Children: []*DOM_Node{},
-		Style: 		nil,
+		Style:    nil,
 		parent:   nil,
 	}
 
@@ -96,12 +101,12 @@ func ParseHTML(document string) *DOM_Node {
 			parsedStylesheet := parseStylesheet(extractedAttributes)
 
 			currentNode = &DOM_Node{
-				Element:  strings.Trim(currentTagName, "<"),
-				Content:  "",
-				Children: []*DOM_Node{},
+				Element:    strings.Trim(currentTagName, "<"),
+				Content:    "",
+				Children:   []*DOM_Node{},
 				Attributes: extractedAttributes,
-				Style: parsedStylesheet,
-				parent:   lastNode,
+				Style:      parsedStylesheet,
+				parent:     lastNode,
 			}
 
 			lastNode.Children = append(lastNode.Children, currentNode)
