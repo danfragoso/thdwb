@@ -1,9 +1,10 @@
 package ketchup
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/danfragoso/thdwb/mayo"
 )
 
 var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
@@ -17,27 +18,22 @@ type Attribute struct {
 	Value string
 }
 
-type Stylesheet struct {
-	Color    string
-	FontSize int
-}
-
 type DOM_Node struct {
 	Element    string      `json:"element"`
 	Content    string      `json:"content"`
 	Children   []*DOM_Node `json:"children"`
 	Attributes []*Attribute
-	Style      *Stylesheet
+	Style      *mayo.Stylesheet
 	parent     *DOM_Node
 }
 
-func parseStylesheet(attributes []*Attribute) *Stylesheet {
-	var parsedStylesheet *Stylesheet
+func parseStylesheet(attributes []*Attribute) *mayo.Stylesheet {
+	var parsedStylesheet *mayo.Stylesheet
 
 	for i := 0; i < len(attributes); i++ {
 		attributeName := attributes[i].Name
 		if attributeName == "style" {
-			fmt.Println(attributes[i].Value)
+			mayo.ParseInlineStyle(attributes[i].Value)
 		}
 	}
 
