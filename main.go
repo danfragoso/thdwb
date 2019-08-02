@@ -8,17 +8,29 @@ import (
 	"github.com/danfragoso/thdwb/ketchup"
 	"github.com/danfragoso/thdwb/mustard"
 	"github.com/danfragoso/thdwb/sauce"
+	"github.com/danfragoso/thdwb/structs"
 )
+
+func removeParents(TreeDOM *structs.NodeDOM) {
+	nodeChildren := TreeDOM.Children
+	TreeDOM.Parent = nil
+
+	for i := 0; i < len(nodeChildren); i++ {
+		removeParents(nodeChildren[i])
+	}
+}
 
 func main() {
 	url := os.Args[1]
 
 	resource := sauce.GetResource(url)
 	bodyString := string(resource.Body)
+	TreeDOM := ketchup.ParseHTML(bodyString)
+	mustard.RenderDOM(TreeDOM)
 
-	DOM_Tree := ketchup.ParseHTML(bodyString)
-	js, err := json.MarshalIndent(DOM_Tree.Children, "", " ")
+	removeParents(TreeDOM)
+	js, err := json.MarshalIndent(TreeDOM.Children, "", " ")
 	fmt.Println(err)
 	fmt.Println(string(js))
-	mustard.RenderDOM(DOM_Tree)
+
 }

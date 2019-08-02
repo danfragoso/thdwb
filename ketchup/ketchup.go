@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/danfragoso/thdwb/mayo"
+	"github.com/danfragoso/thdwb/structs"
 )
 
 var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
@@ -13,40 +14,13 @@ var tagContent = regexp.MustCompile(`(.+?)\<\/`)
 var tagName = regexp.MustCompile(`(\<\w+)`)
 var attr = regexp.MustCompile(`\w+=".+?"`)
 
-type Attribute struct {
-	Name  string
-	Value string
-}
-
-type DOM_Node struct {
-	Element    string      `json:"element"`
-	Content    string      `json:"content"`
-	Children   []*DOM_Node `json:"children"`
-	Attributes []*Attribute
-	Style      *mayo.Stylesheet
-	parent     *DOM_Node
-}
-
-func parseStylesheet(attributes []*Attribute) *mayo.Stylesheet {
-	var parsedStylesheet *mayo.Stylesheet
-
-	for i := 0; i < len(attributes); i++ {
-		attributeName := attributes[i].Name
-		if attributeName == "style" {
-			mayo.ParseInlineStyle(attributes[i].Value)
-		}
-	}
-
-	return parsedStylesheet
-}
-
-func extractAttributes(tag string) []*Attribute {
+func extractAttributes(tag string) []*structs.Attribute {
 	rawAttrArray := attr.FindAllString(tag, -1)
-	elementAttrs := []*Attribute{}
+	elementAttrs := []*structs.Attribute{}
 
 	for i := 0; i < len(rawAttrArray); i++ {
 		attrStringSlice := strings.Split(rawAttrArray[i], "=")
-		attr := &Attribute{
+		attr := &structs.Attribute{
 			Name:  attrStringSlice[0],
 			Value: strings.Trim(attrStringSlice[1], "\""),
 		}
@@ -57,13 +31,13 @@ func extractAttributes(tag string) []*Attribute {
 	return elementAttrs
 }
 
-func ParseHTML(document string) *DOM_Node {
-	DOM_Tree := &DOM_Node{
+func ParseHTML(document string) *structs.NodeDOM {
+	DOM_Tree := &structs.NodeDOM{
 		Element:  "root",
 		Content:  "THDWB",
-		Children: []*DOM_Node{},
+		Children: []*structs.NodeDOM{},
 		Style:    nil,
-		parent:   nil,
+		Parent:   nil,
 	}
 
 	lastNode := DOM_Tree
@@ -71,7 +45,7 @@ func ParseHTML(document string) *DOM_Node {
 	document = strings.ReplaceAll(document, "\n", "")
 
 	for parseDocument == true {
-		var currentNode *DOM_Node
+		var currentNode *structs.NodeDOM
 
 		currentTag := xmlTag.FindString(document)
 		currentTagIndex := xmlTag.FindStringIndex(document)
@@ -90,19 +64,19 @@ func ParseHTML(document string) *DOM_Node {
 				lastNode.Content = strings.TrimSpace(contentString)
 			}
 
-			lastNode = lastNode.parent
+			lastNode = lastNode.Parent
 		} else {
 			currentTagName := tagName.FindString(currentTag)
 			extractedAttributes := extractAttributes(currentTag)
-			parsedStylesheet := parseStylesheet(extractedAttributes)
+			parsedStylesheet := mayo.ParseInlineStylesheet(extractedAttributes)
 
-			currentNode = &DOM_Node{
+			currentNode = &structs.NodeDOM{
 				Element:    strings.Trim(currentTagName, "<"),
 				Content:    "",
-				Children:   []*DOM_Node{},
+				Children:   []*structs.NodeDOM{},
 				Attributes: extractedAttributes,
 				Style:      parsedStylesheet,
-				parent:     lastNode,
+				Parent:     lastNode,
 			}
 
 			lastNode.Children = append(lastNode.Children, currentNode)

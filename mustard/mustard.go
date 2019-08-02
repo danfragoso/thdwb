@@ -4,24 +4,24 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/danfragoso/thdwb/ketchup"
+	"github.com/danfragoso/thdwb/structs"
 	"github.com/gotk3/gotk3/cairo"
 	"github.com/gotk3/gotk3/gtk"
 )
 
-func getNodeContent(DOM_Node *ketchup.DOM_Node) string {
-	return DOM_Node.Content
+func getNodeContent(NodeDOM *structs.NodeDOM) string {
+	return NodeDOM.Content
 }
 
-func getElementName(DOM_Node *ketchup.DOM_Node) string {
-	return DOM_Node.Element
+func getElementName(NodeDOM *structs.NodeDOM) string {
+	return NodeDOM.Element
 }
 
-func getNodeChildren(DOM_Node *ketchup.DOM_Node) []*ketchup.DOM_Node {
-	return DOM_Node.Children
+func getNodeChildren(NodeDOM *structs.NodeDOM) []*structs.NodeDOM {
+	return NodeDOM.Children
 }
 
-func walkDOM(DOM_Tree *ketchup.DOM_Node, d int) {
+func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
 	fmt.Println(d, getNodeContent(DOM_Tree))
 	nodeChildren := getNodeChildren(DOM_Tree)
 
@@ -90,22 +90,22 @@ func renderDefault(content string, cr *cairo.Context, x float64, y float64) {
 	cr.Fill()
 }
 
-func renderNode(DOM_Node *ketchup.DOM_Node, cr *cairo.Context, x float64, y float64) {
-	nodeChildren := getNodeChildren(DOM_Node)
+func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float64) {
+	nodeChildren := getNodeChildren(NodeDOM)
 
-	switch el := getElementName(DOM_Node); el {
+	switch el := getElementName(NodeDOM); el {
 	case "h1":
-		renderH1(getNodeContent(DOM_Node), cr, x, y)
+		renderH1(getNodeContent(NodeDOM), cr, x, y)
 	case "h2":
-		renderH2(getNodeContent(DOM_Node), cr, x, y)
+		renderH2(getNodeContent(NodeDOM), cr, x, y)
 	case "p":
-		renderP(getNodeContent(DOM_Node), cr, x, y)
+		renderP(getNodeContent(NodeDOM), cr, x, y)
 	case "i":
-		renderI(getNodeContent(DOM_Node), cr, x, y)
+		renderI(getNodeContent(NodeDOM), cr, x, y)
 	case "b":
-		renderB(getNodeContent(DOM_Node), cr, x, y)
+		renderB(getNodeContent(NodeDOM), cr, x, y)
 	default:
-		renderDefault(getNodeContent(DOM_Node), cr, x, y)
+		renderDefault(getNodeContent(NodeDOM), cr, x, y)
 	}
 
 	for i := 0; i < len(nodeChildren); i++ {
@@ -113,7 +113,7 @@ func renderNode(DOM_Node *ketchup.DOM_Node, cr *cairo.Context, x float64, y floa
 	}
 }
 
-func getPageTitle(DOM_Tree *ketchup.DOM_Node) string {
+func getPageTitle(DOM_Tree *structs.NodeDOM) string {
 	if getElementName(DOM_Tree) == "title" {
 		pageTitle := getNodeContent(DOM_Tree)
 
@@ -127,14 +127,14 @@ func getPageTitle(DOM_Tree *ketchup.DOM_Node) string {
 	}
 }
 
-func drawDOM(DOM_Tree *ketchup.DOM_Node) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
+func drawDOM(DOM_Tree *structs.NodeDOM) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
 	return func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
 		cr.SetSourceRGB(0, 0, 0)
 		renderNode(DOM_Tree, cr, 0, 0)
 	}
 }
 
-func RenderDOM(DOM_Tree *ketchup.DOM_Node) {
+func RenderDOM(DOM_Tree *structs.NodeDOM) {
 	gtk.Init(nil)
 
 	browserWindow, _ := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)

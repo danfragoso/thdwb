@@ -3,24 +3,28 @@ package mayo
 import (
 	"fmt"
 	"strings"
+
+	"github.com/danfragoso/thdwb/structs"
 )
 
-type Stylesheet struct {
-	Color    string
-	FontSize int
-}
+func ParseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet {
+	var parsedStylesheet *structs.Stylesheet
 
-func ParseInlineStyle(styleString string) *Stylesheet {
-	styleProps := strings.Split(strings.Replace(styleString, " ", "", -1), ";")
+	for i := 0; i < len(attributes); i++ {
+		attributeName := attributes[i].Name
+		if attributeName == "style" {
 
-	for i := 0; i < len(styleProps); i++ {
-		styledProperty := strings.Split(styleProps[i], ":")
-		if len(styledProperty) >= 2 {
-			fmt.Println(styledProperty)
+			styleString := attributes[i].Value
+			styleProps := strings.Split(strings.Replace(styleString, " ", "", -1), ";")
+
+			for i := 0; i < len(styleProps); i++ {
+				styledProperty := strings.Split(styleProps[i], ":")
+				if len(styledProperty) >= 2 {
+					fmt.Println(styledProperty)
+				}
+			}
 		}
 	}
-
-	parsedStylesheet := &Stylesheet{}
 
 	return parsedStylesheet
 }
