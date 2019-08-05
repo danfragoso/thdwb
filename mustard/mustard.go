@@ -32,6 +32,7 @@ func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
 
 func renderH2(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(28)
+	cr.SetSourceRGB(0, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+2)
@@ -42,6 +43,7 @@ func renderH2(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderH1(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(36)
+	cr.SetSourceRGB(1, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+2)
@@ -52,6 +54,7 @@ func renderH1(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderP(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
+	cr.SetSourceRGB(0, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+5)
@@ -62,6 +65,7 @@ func renderP(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderB(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
+	cr.SetSourceRGB(0, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+1)
@@ -72,6 +76,7 @@ func renderB(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderI(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
+	cr.SetSourceRGB(0, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+1)
@@ -82,6 +87,7 @@ func renderI(content string, cr *cairo.Context, x float64, y float64) {
 
 func renderDefault(content string, cr *cairo.Context, x float64, y float64) {
 	sizeStep := float64(14)
+	cr.SetSourceRGB(0, 0, 0)
 	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 	cr.SetFontSize(sizeStep)
 	cr.Translate(x, y+sizeStep+2)
@@ -129,7 +135,6 @@ func getPageTitle(DOM_Tree *structs.NodeDOM) string {
 
 func drawDOM(DOM_Tree *structs.NodeDOM) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
 	return func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
-		cr.SetSourceRGB(0, 0, 0)
 		renderNode(DOM_Tree, cr, 0, 0)
 	}
 }

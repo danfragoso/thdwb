@@ -7,7 +7,7 @@ type NodeDOM struct {
 	Children   []*NodeDOM   `json:"children"`
 	Attributes []*Attribute `json:"attributes"`
 	Style      *Stylesheet  `json:"style"`
-	Parent     *NodeDOM
+	Parent     *NodeDOM     `json:"-"`
 }
 
 //Resource "HTTP resource struct definition"
@@ -24,6 +24,14 @@ type Attribute struct {
 
 //Stylesheet "Stylesheet definition for DOM Nodes"
 type Stylesheet struct {
-	Color    string
+	Color    *ColorRGBA
 	FontSize int
+}
+
+//ColorRGBA "RGBA color model"
+type ColorRGBA struct {
+	R float32
+	G float32
+	B float32
+	A float32
 }
