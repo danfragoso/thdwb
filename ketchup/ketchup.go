@@ -50,40 +50,44 @@ func ParseHTML(document string) *structs.NodeDOM {
 		currentTag := xmlTag.FindString(document)
 		currentTagIndex := xmlTag.FindStringIndex(document)
 
-		if clTag.MatchString(currentTag) {
-			contentStringMatch := tagContent.FindStringSubmatch(document)
-			contentString := ""
-
-			if len(contentStringMatch) > 1 {
-				contentString = contentStringMatch[1]
-			}
-
-			if clTag.MatchString(contentString) {
-				lastNode.Content = ""
-			} else {
-				lastNode.Content = strings.TrimSpace(contentString)
-			}
-
-			lastNode = lastNode.Parent
+		if string(currentTag[1]) == "!" {
+			document = strings.Replace(document, currentTag, "", 1)
 		} else {
-			currentTagName := strings.Trim(tagName.FindString(currentTag), "<")
-			extractedAttributes := extractAttributes(currentTag)
-			elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
+			if clTag.MatchString(currentTag) {
+				contentStringMatch := tagContent.FindStringSubmatch(document)
+				contentString := ""
 
-			currentNode = &structs.NodeDOM{
-				Element:    currentTagName,
-				Content:    "",
-				Children:   []*structs.NodeDOM{},
-				Attributes: extractedAttributes,
-				Style:      elementStylesheet,
-				Parent:     lastNode,
+				if len(contentStringMatch) > 1 {
+					contentString = contentStringMatch[1]
+				}
+
+				if clTag.MatchString(contentString) {
+					lastNode.Content = ""
+				} else {
+					lastNode.Content = strings.TrimSpace(contentString)
+				}
+
+				lastNode = lastNode.Parent
+			} else {
+				currentTagName := strings.Trim(tagName.FindString(currentTag), "<")
+				extractedAttributes := extractAttributes(currentTag)
+				elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
+
+				currentNode = &structs.NodeDOM{
+					Element:    currentTagName,
+					Content:    "",
+					Children:   []*structs.NodeDOM{},
+					Attributes: extractedAttributes,
+					Style:      elementStylesheet,
+					Parent:     lastNode,
+				}
+
+				lastNode.Children = append(lastNode.Children, currentNode)
+				lastNode = currentNode
 			}
 
-			lastNode.Children = append(lastNode.Children, currentNode)
-			lastNode = currentNode
+			document = document[currentTagIndex[1]:len(document)]
 		}
-
-		document = document[currentTagIndex[1]:len(document)]
 
 		if !xmlTag.MatchString(document) {
 			parseDocument = false
