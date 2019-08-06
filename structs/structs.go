@@ -25,13 +25,13 @@ type Attribute struct {
 //Stylesheet "Stylesheet definition for DOM Nodes"
 type Stylesheet struct {
 	Color    *ColorRGBA
-	FontSize int
+	FontSize float64
 }
 
 //ColorRGBA "RGBA color model"
 type ColorRGBA struct {
-	R float32
-	G float32
-	B float32
-	A float32
+	R float64
+	G float64
+	B float64
+	A float64
 }

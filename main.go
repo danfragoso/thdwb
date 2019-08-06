@@ -20,5 +20,7 @@ func main() {
 	js, _ := json.MarshalIndent(TreeDOM.Children, "", " ")
 	fmt.Println(string(js))
 
-	mustard.RenderDOM(TreeDOM)
+	if os.Args[2] == "render" {
+		mustard.RenderDOM(TreeDOM)
+	}
 }

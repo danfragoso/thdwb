@@ -66,16 +66,16 @@ func ParseHTML(document string) *structs.NodeDOM {
 
 			lastNode = lastNode.Parent
 		} else {
-			currentTagName := tagName.FindString(currentTag)
+			currentTagName := strings.Trim(tagName.FindString(currentTag), "<")
 			extractedAttributes := extractAttributes(currentTag)
-			parsedStylesheet := mayo.ParseInlineStylesheet(extractedAttributes)
+			elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
 
 			currentNode = &structs.NodeDOM{
-				Element:    strings.Trim(currentTagName, "<"),
+				Element:    currentTagName,
 				Content:    "",
 				Children:   []*structs.NodeDOM{},
 				Attributes: extractedAttributes,
-				Style:      parsedStylesheet,
+				Style:      elementStylesheet,
 				Parent:     lastNode,
 			}
 

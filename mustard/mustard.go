@@ -30,89 +30,17 @@ func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
 	}
 }
 
-func renderH2(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(28)
-	cr.SetSourceRGB(0, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+2)
-	cr.ShowText(content)
-	cr.Translate(0, 10)
-	cr.Fill()
-}
-
-func renderH1(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(36)
-	cr.SetSourceRGB(1, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+2)
-	cr.ShowText(content)
-	cr.Translate(0, 10)
-	cr.Fill()
-}
-
-func renderP(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(14)
-	cr.SetSourceRGB(0, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+5)
-	cr.ShowText(content)
-	cr.Translate(0, 5)
-	cr.Fill()
-}
-
-func renderB(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(14)
-	cr.SetSourceRGB(0, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+1)
-	cr.ShowText(content)
-	cr.Translate(0, 1)
-	cr.Fill()
-}
-
-func renderI(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(14)
-	cr.SetSourceRGB(0, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_NORMAL)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+1)
-	cr.ShowText(content)
-	cr.Translate(0, 1)
-	cr.Fill()
-}
-
-func renderDefault(content string, cr *cairo.Context, x float64, y float64) {
-	sizeStep := float64(14)
-	cr.SetSourceRGB(0, 0, 0)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+2)
-	cr.ShowText(content)
-	cr.Translate(0, 2)
-	cr.Fill()
-}
-
 func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float64) {
 	nodeChildren := getNodeChildren(NodeDOM)
 
-	switch el := getElementName(NodeDOM); el {
-	case "h1":
-		renderH1(getNodeContent(NodeDOM), cr, x, y)
-	case "h2":
-		renderH2(getNodeContent(NodeDOM), cr, x, y)
-	case "p":
-		renderP(getNodeContent(NodeDOM), cr, x, y)
-	case "i":
-		renderI(getNodeContent(NodeDOM), cr, x, y)
-	case "b":
-		renderB(getNodeContent(NodeDOM), cr, x, y)
-	default:
-		renderDefault(getNodeContent(NodeDOM), cr, x, y)
-	}
+	sizeStep := NodeDOM.Style.FontSize
+	cr.SetSourceRGB(NodeDOM.Style.Color.R, NodeDOM.Style.Color.G, NodeDOM.Style.Color.B)
+	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+	cr.SetFontSize(sizeStep)
+	cr.Translate(x, y+sizeStep+2)
+	cr.ShowText(getNodeContent(NodeDOM))
+	cr.Translate(0, 2)
+	cr.Fill()
 
 	for i := 0; i < len(nodeChildren); i++ {
 		renderNode(nodeChildren[i], cr, x, y*float64(i))

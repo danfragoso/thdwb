@@ -27,10 +27,16 @@ var colorTable = map[string]*structs.ColorRGBA{
 	"white":   &structs.ColorRGBA{R: 1.0, G: 1.0, B: 1.0, A: 1.0},
 }
 
-func hexValueToFloat(value string) float32 {
+var elementFontTable = map[string]float64{
+	"h1": float64(32),
+	"h2": float64(28),
+	"p":  float64(14),
+}
+
+func hexValueToFloat(value string) float64 {
 	//TODO: round float and fix errors
 	n, _ := strconv.ParseInt(value, 16, 0)
-	return float32(n) / 15
+	return float64(n) / 15
 }
 
 func hexStringToColor(colorString string) *structs.ColorRGBA {
@@ -55,6 +61,17 @@ func mapCSSColor(colorString string) *structs.ColorRGBA {
 	return color
 }
 
+func mapSizeValue(sizeValue string) float64 {
+	valueString := sizeValue[0 : len(sizeValue)-2]
+	value, err := strconv.ParseInt(valueString, 10, 0)
+
+	if err != nil {
+		return float64(14)
+	}
+
+	return float64(value)
+}
+
 func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []string) *structs.Stylesheet {
 	propName := propSlice[0]
 	propValue := propSlice[1]
@@ -63,14 +80,13 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 	case "color":
 		parsedStyleSheet.Color = mapCSSColor(propValue)
 	case "font-size":
-		fontSize, _ := strconv.ParseInt(propValue, 0, 64)
-		parsedStyleSheet.FontSize = int(fontSize)
+		parsedStyleSheet.FontSize = mapSizeValue(propValue)
 	}
 
 	return parsedStyleSheet
 }
 
-func ParseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet {
+func parseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet {
 	parsedStylesheet := &structs.Stylesheet{}
 
 	for i := 0; i < len(attributes); i++ {
@@ -90,4 +106,36 @@ func ParseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet 
 	}
 
 	return parsedStylesheet
+}
+
+func hasInlineStyle(attributes []*structs.Attribute) bool {
+	inlineStyle := false
+
+	for i := 0; i < len(attributes); i++ {
+		attributeName := attributes[i].Name
+		if attributeName == "style" {
+			inlineStyle = true
+		}
+	}
+
+	return inlineStyle
+}
+
+func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
+	elementStylesheet := &structs.Stylesheet{&structs.ColorRGBA{0, 0, 0, 0}, 0}
+
+	if hasInlineStyle(attributes) {
+		elementStylesheet = parseInlineStylesheet(attributes)
+	}
+
+	if elementStylesheet.FontSize == float64(0) {
+		fontSize := elementFontTable[elementName]
+		if fontSize != float64(0) {
+			elementStylesheet.FontSize = fontSize
+		} else {
+			elementStylesheet.FontSize = float64(14)
+		}
+	}
+
+	return elementStylesheet
 }
