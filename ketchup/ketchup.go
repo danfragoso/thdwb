@@ -10,6 +10,7 @@ import (
 
 var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
 var clTag = regexp.MustCompile(`\<\/\w+\>`)
+var selfClosingTag = regexp.MustCompile(`\<.+\/\>`)
 var tagContent = regexp.MustCompile(`(.+?)\<\/`)
 var tagName = regexp.MustCompile(`(\<\w+)`)
 var attr = regexp.MustCompile(`\w+=".+?"`)
@@ -29,6 +30,33 @@ func extractAttributes(tag string) []*structs.Attribute {
 	}
 
 	return elementAttrs
+}
+
+func isVoidElement(tagName string) bool {
+	var isVoid bool
+	switch tagName {
+	case "area",
+		"base",
+		"br",
+		"col",
+		"command",
+		"embed",
+		"hr",
+		"img",
+		"input",
+		"keygen",
+		"link",
+		"meta",
+		"param",
+		"source",
+		"track",
+		"wbr":
+		isVoid = true
+	default:
+		isVoid = false
+	}
+
+	return isVoid
 }
 
 func ParseHTML(document string) *structs.NodeDOM {
@@ -83,7 +111,10 @@ func ParseHTML(document string) *structs.NodeDOM {
 				}
 
 				lastNode.Children = append(lastNode.Children, currentNode)
-				lastNode = currentNode
+
+				if !isVoidElement(currentTagName) {
+					lastNode = currentNode
+				}
 			}
 
 			document = document[currentTagIndex[1]:len(document)]
