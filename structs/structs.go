@@ -26,6 +26,7 @@ type Attribute struct {
 type Stylesheet struct {
 	Color    *ColorRGBA
 	FontSize float64
+	Display  string
 }
 
 //ColorRGBA "RGBA color model"
