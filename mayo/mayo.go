@@ -33,6 +33,19 @@ var elementFontTable = map[string]float64{
 	"p":  float64(14),
 }
 
+func getDefaultElementDisplay(element string) string {
+	displayType := "block"
+
+	switch element {
+	case "script", "style", "meta", "link", "head", "title":
+		displayType = "none"
+	default:
+		displayType = "block"
+	}
+
+	return displayType
+}
+
 func hexValueToFloat(value string) float64 {
 	//TODO: round float and fix errors
 	n, _ := strconv.ParseInt(value, 16, 0)
@@ -81,6 +94,8 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 		parsedStyleSheet.Color = mapCSSColor(propValue)
 	case "font-size":
 		parsedStyleSheet.FontSize = mapSizeValue(propValue)
+	case "display":
+		parsedStyleSheet.Display = propValue
 	}
 
 	return parsedStyleSheet
@@ -122,7 +137,10 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 }
 
 func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
-	elementStylesheet := &structs.Stylesheet{&structs.ColorRGBA{0, 0, 0, 0}, 0}
+	elementStylesheet := &structs.Stylesheet{
+		Color:    &structs.ColorRGBA{0, 0, 0, 0},
+		FontSize: 0,
+		Display:  ""}
 
 	if hasInlineStyle(attributes) {
 		elementStylesheet = parseInlineStylesheet(attributes)
@@ -135,6 +153,10 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 		} else {
 			elementStylesheet.FontSize = float64(14)
 		}
+	}
+
+	if elementStylesheet.Display == "" {
+		elementStylesheet.Display = getDefaultElementDisplay(elementName)
 	}
 
 	return elementStylesheet

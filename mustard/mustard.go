@@ -22,7 +22,7 @@ func getNodeChildren(NodeDOM *structs.NodeDOM) []*structs.NodeDOM {
 }
 
 func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
-	fmt.Println(d, getNodeContent(DOM_Tree))
+	fmt.Println(d, getElementName(DOM_Tree))
 	nodeChildren := getNodeChildren(DOM_Tree)
 
 	for i := 0; i < len(nodeChildren); i++ {
@@ -33,14 +33,16 @@ func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
 func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float64) {
 	nodeChildren := getNodeChildren(NodeDOM)
 
-	sizeStep := NodeDOM.Style.FontSize
-	cr.SetSourceRGB(NodeDOM.Style.Color.R, NodeDOM.Style.Color.G, NodeDOM.Style.Color.B)
-	cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-	cr.SetFontSize(sizeStep)
-	cr.Translate(x, y+sizeStep+2)
-	cr.ShowText(getNodeContent(NodeDOM))
-	cr.Translate(0, 2)
-	cr.Fill()
+	if NodeDOM.Style.Display == "block" {
+		sizeStep := NodeDOM.Style.FontSize
+		cr.SetSourceRGB(NodeDOM.Style.Color.R, NodeDOM.Style.Color.G, NodeDOM.Style.Color.B)
+		cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+		cr.SetFontSize(sizeStep)
+		cr.Translate(x, y+sizeStep+2)
+		cr.ShowText(getNodeContent(NodeDOM))
+		cr.Translate(0, 2)
+		cr.Fill()
+	}
 
 	for i := 0; i < len(nodeChildren); i++ {
 		renderNode(nodeChildren[i], cr, x, y*float64(i))
@@ -48,17 +50,22 @@ func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float6
 }
 
 func getPageTitle(DOM_Tree *structs.NodeDOM) string {
-	if getElementName(DOM_Tree) == "title" {
-		pageTitle := getNodeContent(DOM_Tree)
+	nodeChildren := getNodeChildren(DOM_Tree)
+	pageTitle := "Sem Titulo"
 
-		if pageTitle == "" {
-			return "Sem Título"
-		} else {
-			return pageTitle
-		}
+	if getElementName(DOM_Tree) == "title" {
+		return getNodeContent(DOM_Tree)
 	} else {
-		return getPageTitle(DOM_Tree.Children[0])
+		for i := 0; i < len(nodeChildren); i++ {
+			nPageTitle := getPageTitle(nodeChildren[i])
+
+			if nPageTitle != "Sem Titulo" {
+				pageTitle = nPageTitle
+			}
+		}
 	}
+
+	return pageTitle
 }
 
 func drawDOM(DOM_Tree *structs.NodeDOM) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
@@ -80,14 +87,14 @@ func RenderDOM(DOM_Tree *structs.NodeDOM) {
 		log.Fatal("Could not create header bar:", err)
 	}
 
-	header.SetShowCloseButton(true)
-	header.SetTitle(getPageTitle(DOM_Tree) + " - THDWB")
+	html := DOM_Tree.Children[0]
 
+	header.SetShowCloseButton(true)
+	header.SetTitle(getPageTitle(html) + " - THDWB")
 	browserWindow.SetTitlebar(header)
 	browserWindow.Connect("destroy", gtk.MainQuit)
 	browserWindow.ShowAll()
 
-	html := DOM_Tree.Children[0]
 	drawingArea.Connect("draw", drawDOM(html.Children[1]))
 	gtk.Main()
 }
