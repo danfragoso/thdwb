@@ -2,7 +2,6 @@ package mustard
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/danfragoso/thdwb/structs"
 	"github.com/gotk3/gotk3/cairo"
@@ -32,9 +31,9 @@ func walkDOM(DOM_Tree *structs.NodeDOM, d int) {
 
 func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float64) {
 	nodeChildren := getNodeChildren(NodeDOM)
+	sizeStep := NodeDOM.Style.FontSize
 
 	if NodeDOM.Style.Display == "block" {
-		sizeStep := NodeDOM.Style.FontSize
 		cr.SetSourceRGB(NodeDOM.Style.Color.R, NodeDOM.Style.Color.G, NodeDOM.Style.Color.B)
 		cr.SelectFontFace("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
 		cr.SetFontSize(sizeStep)
@@ -49,7 +48,7 @@ func renderNode(NodeDOM *structs.NodeDOM, cr *cairo.Context, x float64, y float6
 	}
 }
 
-func getPageTitle(DOM_Tree *structs.NodeDOM) string {
+func GetPageTitle(DOM_Tree *structs.NodeDOM) string {
 	nodeChildren := getNodeChildren(DOM_Tree)
 	pageTitle := "Sem Titulo"
 
@@ -57,7 +56,7 @@ func getPageTitle(DOM_Tree *structs.NodeDOM) string {
 		return getNodeContent(DOM_Tree)
 	} else {
 		for i := 0; i < len(nodeChildren); i++ {
-			nPageTitle := getPageTitle(nodeChildren[i])
+			nPageTitle := GetPageTitle(nodeChildren[i])
 
 			if nPageTitle != "Sem Titulo" {
 				pageTitle = nPageTitle
@@ -68,33 +67,11 @@ func getPageTitle(DOM_Tree *structs.NodeDOM) string {
 	return pageTitle
 }
 
-func drawDOM(DOM_Tree *structs.NodeDOM) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
+func DrawDOM(DOM_Tree *structs.NodeDOM) func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
 	return func(drawingArea *gtk.DrawingArea, cr *cairo.Context) {
+		cr.SetSourceRGB(1, 1, 1)
+		cr.Paint()
 		renderNode(DOM_Tree, cr, 0, 0)
+		cr.IdentityMatrix()
 	}
-}
-
-func RenderDOM(DOM_Tree *structs.NodeDOM) {
-	gtk.Init(nil)
-
-	browserWindow, _ := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
-	drawingArea, _ := gtk.DrawingAreaNew()
-
-	browserWindow.Add(drawingArea)
-
-	header, err := gtk.HeaderBarNew()
-	if err != nil {
-		log.Fatal("Could not create header bar:", err)
-	}
-
-	html := DOM_Tree.Children[0]
-
-	header.SetShowCloseButton(true)
-	header.SetTitle(getPageTitle(html) + " - THDWB")
-	browserWindow.SetTitlebar(header)
-	browserWindow.Connect("destroy", gtk.MainQuit)
-	browserWindow.ShowAll()
-
-	drawingArea.Connect("draw", drawDOM(html.Children[1]))
-	gtk.Main()
 }
