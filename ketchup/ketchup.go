@@ -59,7 +59,7 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
-func ParseHTML(document string) *structs.NodeDOM {
+func ParseDocument(document string) *structs.NodeDOM {
 	DOM_Tree := &structs.NodeDOM{
 		Element:  "root",
 		Content:  "THDWB",

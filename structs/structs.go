@@ -1,5 +1,11 @@
 package structs
 
+import (
+	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/tfriedel6/canvas"
+	"github.com/tfriedel6/canvas/backend/goglbackend"
+)
+
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
 	Element    string       `json:"element"`
@@ -35,4 +41,74 @@ type ColorRGBA struct {
 	G float64
 	B float64
 	A float64
+}
+
+//UIElement "User interface elements"
+type UIElement struct {
+	ID    string
+	WType string
+
+	X float64
+	Y float64
+	W float64
+	H float64
+
+	Canvas *canvas.Canvas
+	Cursor *glfw.Cursor
+}
+
+//Redraw "UIElement redraw function"
+func (el UIElement) Redraw() {
+	switch elementType := el.WType; elementType {
+	case "input":
+		DrawInput(el)
+	case "box":
+		DrawBox(el)
+	}
+}
+
+//DrawBox "Draws the box element on it`s Canvas"
+func DrawBox(el UIElement) {
+	el.Canvas.SetFillStyle("#E1E2E1")
+	el.Canvas.FillRect(el.X, el.Y, el.W, el.H)
+}
+
+//DrawInput "Draws the input element on it`s Canvas"
+func DrawInput(el UIElement) {
+	el.Canvas.SetFillStyle("#FFF")
+	el.Canvas.FillRect(el.X, el.Y, el.W, el.H)
+}
+
+//AppWindow "MustardUi Application Window Struct"
+type AppWindow struct {
+	Initialized bool
+
+	Width  int
+	Height int
+
+	ViewportWidth  int
+	ViewportHeight int
+
+	AddressbarWidth  int
+	AddressbarHeight int
+
+	CursorX float64
+	CursorY float64
+
+	DefaultCursor *glfw.Cursor
+
+	Title  string
+	Redraw bool
+	Resize bool
+
+	ViewportOffset int
+
+	Addressbar *canvas.Canvas
+	Viewport   *canvas.Canvas
+
+	AddressbarBackend *goglbackend.GoGLBackend
+	ViewportBackend   *goglbackend.GoGLBackend
+	GlfwWindow        *glfw.Window
+
+	UIElements []*UIElement
 }

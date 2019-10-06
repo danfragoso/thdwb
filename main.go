@@ -14,13 +14,11 @@ func main() {
 	url := os.Args[1]
 
 	resource := sauce.GetResource(url)
-	bodyString := string(resource.Body)
-	TreeDOM := ketchup.ParseHTML(bodyString)
+	htmlString := string(resource.Body)
+	parsedDocument := ketchup.ParseDocument(htmlString)
 
-	js, _ := json.MarshalIndent(TreeDOM.Children, "", " ")
+	js, _ := json.MarshalIndent(parsedDocument.Children, "", " ")
 	fmt.Println(string(js))
 
-	if os.Args[2] == "render" {
-		mustard.RenderDOM(TreeDOM)
-	}
+	mustard.RenderDocument(parsedDocument)
 }
