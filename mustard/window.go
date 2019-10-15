@@ -97,9 +97,11 @@ func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 	browserWindow.GlfwWindow.SetCursorPosCallback(func(w *glfw.Window, x float64, y float64) {
 		if y > float64(browserWindow.AddressbarHeight) {
 		} else {
+			removeUIFocus(browserWindow.UIElements)
 			focusedElement := getFocusedUIElement(browserWindow.UIElements, x, y)
 
 			if focusedElement != nil {
+				focusedElement.Focused = true
 				w.SetCursor(focusedElement.Cursor)
 			} else {
 				w.SetCursor(browserWindow.DefaultCursor)
@@ -109,6 +111,18 @@ func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 		browserWindow.Redraw = true
 		browserWindow.CursorX = x
 		browserWindow.CursorY = y
+	})
+
+	browserWindow.GlfwWindow.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+		if button == glfw.MouseButtonLeft {
+			removeUISelection(browserWindow.UIElements)
+			focusedElement := getFocusedUIElement(browserWindow.UIElements, browserWindow.CursorX, browserWindow.CursorY)
+
+			if focusedElement != nil {
+				focusedElement.Selected = true
+				browserWindow.Redraw = true
+			}
+		}
 	})
 }
 

@@ -55,6 +55,9 @@ type UIElement struct {
 
 	Canvas *canvas.Canvas
 	Cursor *glfw.Cursor
+
+	Focused  bool
+	Selected bool
 }
 
 //Redraw "UIElement redraw function"
@@ -75,7 +78,16 @@ func DrawBox(el UIElement) {
 
 //DrawInput "Draws the input element on it`s Canvas"
 func DrawInput(el UIElement) {
-	el.Canvas.SetFillStyle("#FFF")
+	if el.Focused {
+		el.Canvas.SetFillStyle("#C0C0C0")
+	} else {
+		el.Canvas.SetFillStyle("#CCC")
+	}
+
+	if el.Selected {
+		el.Canvas.SetFillStyle("#FFF")
+	}
+
 	el.Canvas.FillRect(el.X, el.Y, el.W, el.H)
 }
 

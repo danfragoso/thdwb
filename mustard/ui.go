@@ -33,3 +33,15 @@ func getFocusedUIElement(eList []*structs.UIElement, x float64, y float64) *stru
 
 	return focusedElement
 }
+
+func removeUIFocus(eList []*structs.UIElement) {
+	for i := 0; i < len(eList); i++ {
+		eList[i].Focused = false
+	}
+}
+
+func removeUISelection(eList []*structs.UIElement) {
+	for i := 0; i < len(eList); i++ {
+		eList[i].Selected = false
+	}
+}
