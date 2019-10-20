@@ -69,6 +69,30 @@ func createBrowserWindow(document *structs.NodeDOM) structs.AppWindow {
 	return browserWindow
 }
 
+func handleInputChars(key rune, browserWindow *structs.AppWindow) {
+	selectedElement := getSelectedUIElement(browserWindow.UIElements)
+
+	if selectedElement != nil && selectedElement.WType == "input" {
+		selectedElement.Text += string(key)
+	}
+
+	browserWindow.Redraw = true
+}
+
+func removeInputChars(browserWindow *structs.AppWindow) {
+	selectedElement := getSelectedUIElement(browserWindow.UIElements)
+
+	if selectedElement != nil && selectedElement.WType == "input" {
+		inputTextLen := len(selectedElement.Text)
+
+		if inputTextLen > 0 {
+			selectedElement.Text = selectedElement.Text[:inputTextLen-1]
+		}
+	}
+
+	browserWindow.Redraw = true
+}
+
 func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 	browserWindow.GlfwWindow.SetKeyCallback(func(w *glfw.Window, key glfw.Key, scanCode int, action glfw.Action, mods glfw.ModifierKey) {
 		switch key {
@@ -78,10 +102,16 @@ func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 		case glfw.KeyDown:
 			browserWindow.ViewportOffset -= 5
 
+		case glfw.KeyBackspace:
+			removeInputChars(browserWindow)
 		default:
 		}
 
 		browserWindow.Redraw = true
+	})
+
+	browserWindow.GlfwWindow.SetCharCallback(func(w *glfw.Window, char rune) {
+		handleInputChars(char, browserWindow)
 	})
 
 	browserWindow.GlfwWindow.SetScrollCallback(func(w *glfw.Window, xOffset float64, yOffset float64) {
@@ -160,6 +190,8 @@ func browserWindowMainLoop(browserWindow *structs.AppWindow) {
 }
 
 func updateAddressBar(browserWindow *structs.AppWindow) {
+	oldAddressBarInput := getUIElementByID(browserWindow.UIElements, "addressbarInput")
+
 	if browserWindow.Resize {
 		browserWindow.Initialized = false
 		browserWindow.UIElements = nil
@@ -174,7 +206,13 @@ func updateAddressBar(browserWindow *structs.AppWindow) {
 		h := float64(browserWindow.AddressbarHeight)
 
 		addressbarBackground := Box("addressbarBackground", 0, 0, float64(browserWindow.Width), float64(browserWindow.AddressbarHeight), browserWindow.Addressbar)
-		addressbarInput := Input("addressbarInput", w, h, browserWindow.Addressbar)
+
+		addressbarText := ""
+		if oldAddressBarInput != nil {
+			addressbarText = oldAddressBarInput.Text
+		}
+
+		addressbarInput := Input("addressbarInput", w, h, browserWindow.Addressbar, addressbarText)
 
 		browserWindow.UIElements = append(browserWindow.UIElements, &addressbarBackground, &addressbarInput)
 		browserWindow.Initialized = true

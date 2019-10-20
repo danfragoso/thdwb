@@ -1,6 +1,8 @@
 package structs
 
 import (
+	"fmt"
+
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/tfriedel6/canvas"
 	"github.com/tfriedel6/canvas/backend/goglbackend"
@@ -58,6 +60,8 @@ type UIElement struct {
 
 	Focused  bool
 	Selected bool
+
+	Text string
 }
 
 //Redraw "UIElement redraw function"
@@ -89,6 +93,13 @@ func DrawInput(el UIElement) {
 	}
 
 	el.Canvas.FillRect(el.X, el.Y, el.W, el.H)
+
+	if el.Text != "" {
+		el.Canvas.SetFillStyle("#000")
+		el.Canvas.SetFont("roboto.ttf", 20)
+		el.Canvas.FillText(el.Text, el.X+5, el.Y+20)
+		fmt.Println(el.Text)
+	}
 }
 
 //AppWindow "MustardUi Application Window Struct"
