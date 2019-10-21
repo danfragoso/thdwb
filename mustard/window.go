@@ -6,6 +6,7 @@ import (
 	"github.com/danfragoso/thdwb/structs"
 	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/tfriedel6/canvas"
 	"github.com/tfriedel6/canvas/backend/goglbackend"
 )
 
@@ -33,6 +34,8 @@ func createBrowserWindow(document *structs.NodeDOM) structs.AppWindow {
 		Resize: true,
 
 		ViewportOffset: 0,
+
+		DOM: document,
 	}
 
 	glfw.WindowHint(glfw.StencilBits, 8)
@@ -219,6 +222,27 @@ func updateAddressBar(browserWindow *structs.AppWindow) {
 	}
 }
 
+func renderNode(node *structs.NodeDOM, viewport *canvas.Canvas, vOffset float64) {
+	sizeStep := node.Style.FontSize
+
+	if node.Style.Display == "block" {
+		if node.Style.Color != nil {
+			viewport.SetFillStyle(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B)
+		} else {
+			viewport.SetFillStyle("#000")
+		}
+
+		viewport.SetFont("roboto.ttf", sizeStep)
+		viewport.FillText(node.Content, 0, vOffset+sizeStep+2)
+	}
+
+	children := getNodeChildren(node)
+
+	for i := 0; i < len(children); i++ {
+		renderNode(children[i], viewport, vOffset+sizeStep*float64(i)+sizeStep+2)
+	}
+}
+
 func updateViewport(browserWindow *structs.AppWindow) {
 	viewport := browserWindow.Viewport
 	vO := float64(browserWindow.ViewportOffset)
@@ -226,37 +250,7 @@ func updateViewport(browserWindow *structs.AppWindow) {
 	w := float64(browserWindow.ViewportWidth)
 	h := float64(browserWindow.ViewportHeight)
 
-	x := browserWindow.CursorX
-	y := browserWindow.CursorY - float64(browserWindow.AddressbarHeight)
-
-	viewport.SetFillStyle("#A0B")
+	viewport.SetFillStyle("#FFF")
 	viewport.FillRect(0, 0, w, h)
-
-	viewport.SetFillStyle("#111")
-	viewport.FillRect(0, vO, 100, 100)
-
-	viewport.SetFillStyle("#222")
-	viewport.FillRect(50, 50+vO, 100, 100)
-
-	viewport.SetFillStyle("#888")
-	viewport.FillRect(100, 100+vO, 100, 100)
-
-	viewport.SetFillStyle("#333")
-	viewport.FillRect(150, 150+vO, 100, 100)
-
-	viewport.SetFillStyle("#444")
-	viewport.FillRect(200, 200+vO, 100, 100)
-
-	viewport.SetFillStyle("#555")
-	viewport.FillRect(250, 250+vO, 100, 100)
-
-	viewport.SetFillStyle("#666")
-	viewport.FillRect(300, 300+vO, 100, 100)
-
-	viewport.SetFillStyle("#777")
-	viewport.FillRect(350, 350+vO, 100, 100)
-
-	viewport.SetLineWidth(5)
-	viewport.SetStrokeStyle("#0F0")
-	viewport.StrokeRect(x-32, y-32, 64, 64)
+	renderNode(browserWindow.DOM, browserWindow.Viewport, vO)
 }

@@ -131,4 +131,5 @@ type AppWindow struct {
 	GlfwWindow        *glfw.Window
 
 	UIElements []*UIElement
+	DOM        *NodeDOM
 }
