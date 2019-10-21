@@ -9,7 +9,7 @@ import (
 //Input "Creates a new Input element"
 func Input(id string, w float64, h float64, cv *canvas.Canvas, text string) structs.UIElement {
 	elementCursor := glfw.CreateStandardCursor(glfw.IBeamCursor)
-	inputElement := structs.UIElement{ID: id, WType: "input", X: w/2 - w/4, Y: 10, W: w / 2, H: 30, Canvas: cv, Cursor: elementCursor, Text: text}
+	inputElement := structs.UIElement{ID: id, WType: "input", X: w/2 - w/4, Y: 7.5, W: w / 2, H: 25, Canvas: cv, Cursor: elementCursor, Text: text}
 	structs.DrawInput(inputElement)
 	return inputElement
 }

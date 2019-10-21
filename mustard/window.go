@@ -169,7 +169,7 @@ func browserWindowMainLoop(browserWindow *structs.AppWindow) {
 			}
 
 			browserWindow.AddressbarWidth = browserWindow.Width
-			browserWindow.AddressbarHeight = 50
+			browserWindow.AddressbarHeight = 40
 
 			browserWindow.ViewportWidth = browserWindow.Width
 			browserWindow.ViewportHeight = browserWindow.Height - browserWindow.AddressbarHeight
