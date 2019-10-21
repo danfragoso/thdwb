@@ -130,6 +130,8 @@ type AppWindow struct {
 	ViewportBackend   *goglbackend.GoGLBackend
 	GlfwWindow        *glfw.Window
 
+	Location string
+
 	UIElements []*UIElement
 	DOM        *NodeDOM
 }

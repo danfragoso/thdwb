@@ -3,6 +3,8 @@ package mustard
 import (
 	"log"
 
+	"github.com/danfragoso/thdwb/ketchup"
+	"github.com/danfragoso/thdwb/sauce"
 	"github.com/danfragoso/thdwb/structs"
 	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
@@ -10,7 +12,7 @@ import (
 	"github.com/tfriedel6/canvas/backend/goglbackend"
 )
 
-func createBrowserWindow(document *structs.NodeDOM) structs.AppWindow {
+func createBrowserWindow(document *structs.NodeDOM, location string) structs.AppWindow {
 	defaultCursor := glfw.CreateStandardCursor(glfw.ArrowCursor)
 	pageTile := getPageTitle(document) + " - thdwb"
 
@@ -34,6 +36,8 @@ func createBrowserWindow(document *structs.NodeDOM) structs.AppWindow {
 		Resize: true,
 
 		ViewportOffset: 0,
+
+		Location: location,
 
 		DOM: document,
 	}
@@ -101,13 +105,19 @@ func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 		switch key {
 		case glfw.KeyUp:
 			browserWindow.ViewportOffset += 5
+			break
 
 		case glfw.KeyDown:
 			browserWindow.ViewportOffset -= 5
+			break
 
 		case glfw.KeyBackspace:
 			removeInputChars(browserWindow)
-		default:
+			break
+
+		case glfw.KeyEnter:
+			handleEnterKey(browserWindow)
+			break
 		}
 
 		browserWindow.Redraw = true
@@ -210,7 +220,7 @@ func updateAddressBar(browserWindow *structs.AppWindow) {
 
 		addressbarBackground := Box("addressbarBackground", 0, 0, float64(browserWindow.Width), float64(browserWindow.AddressbarHeight), browserWindow.Addressbar)
 
-		addressbarText := ""
+		addressbarText := browserWindow.Location
 		if oldAddressBarInput != nil {
 			addressbarText = oldAddressBarInput.Text
 		}
@@ -233,13 +243,13 @@ func renderNode(node *structs.NodeDOM, viewport *canvas.Canvas, vOffset float64)
 		}
 
 		viewport.SetFont("roboto.ttf", sizeStep)
-		viewport.FillText(node.Content, 0, vOffset+sizeStep+2)
+		viewport.FillText(node.Content, 0, vOffset+sizeStep*2+2)
 	}
 
 	children := getNodeChildren(node)
 
 	for i := 0; i < len(children); i++ {
-		renderNode(children[i], viewport, vOffset+sizeStep*float64(i)+sizeStep+2)
+		renderNode(children[i], viewport, vOffset+sizeStep*float64(i)+sizeStep*2+2)
 	}
 }
 
@@ -253,4 +263,22 @@ func updateViewport(browserWindow *structs.AppWindow) {
 	viewport.SetFillStyle("#FFF")
 	viewport.FillRect(0, 0, w, h)
 	renderNode(browserWindow.DOM, browserWindow.Viewport, vO)
+}
+
+func handleEnterKey(browserWindow *structs.AppWindow) {
+	addressBarInput := getUIElementByID(browserWindow.UIElements, "addressbarInput")
+
+	if addressBarInput != nil && addressBarInput.Focused == true {
+		if addressBarInput.Text != browserWindow.Location {
+			url := addressBarInput.Text
+
+			resource := sauce.GetResource(url)
+			htmlString := string(resource.Body)
+			parsedDocument := ketchup.ParseDocument(htmlString)
+
+			browserWindow.DOM = parsedDocument.Children[0]
+			browserWindow.ViewportOffset = 0
+			browserWindow.Redraw = true
+		}
+	}
 }

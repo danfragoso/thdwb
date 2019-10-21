@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"os"
 
 	"github.com/danfragoso/thdwb/ketchup"
@@ -12,13 +10,12 @@ import (
 
 func main() {
 	url := os.Args[1]
-
 	resource := sauce.GetResource(url)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
 
-	js, _ := json.MarshalIndent(parsedDocument.Children, "", " ")
-	fmt.Println(string(js))
+	//js, _ := json.MarshalIndent(parsedDocument.Children, "", " ")
+	//fmt.Println(string(js))
 
-	mustard.RenderDocument(parsedDocument)
+	mustard.RenderDocument(parsedDocument, url)
 }
