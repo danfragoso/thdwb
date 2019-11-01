@@ -12,7 +12,7 @@ func TestMapCSSColor(t *testing.T) {
 
 	for _, blue := range blues {
 		result := MapCSSColor(blue)
-		expected := &structs.ColorRGBA{0, 0, 1, 1}
+		expected := &structs.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
 		assert.Equal(t, result, expected, "Expecting: &structs.ColorRGBA{0, 0, 1, 1}")
 	}
 }
