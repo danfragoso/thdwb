@@ -4,11 +4,11 @@ import (
 	"log"
 
 	"github.com/danfragoso/thdwb/ketchup"
+	"github.com/danfragoso/thdwb/mayo"
 	"github.com/danfragoso/thdwb/sauce"
 	"github.com/danfragoso/thdwb/structs"
 	"github.com/go-gl/gl/v3.2-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
-	"github.com/tfriedel6/canvas"
 	"github.com/tfriedel6/canvas/backend/goglbackend"
 )
 
@@ -34,6 +34,7 @@ func createBrowserWindow(document *structs.NodeDOM, location string) structs.App
 		Title:  pageTile,
 		Redraw: true,
 		Resize: true,
+		Reflow: true,
 
 		ViewportOffset: 0,
 
@@ -179,6 +180,7 @@ func browserWindowMainLoop(browserWindow *structs.AppWindow) {
 				browserWindow.Width = windowWidth
 				browserWindow.Height = windowHeight
 				browserWindow.Resize = true
+				browserWindow.Reflow = true
 			}
 
 			browserWindow.AddressbarWidth = browserWindow.Width
@@ -191,6 +193,22 @@ func browserWindowMainLoop(browserWindow *structs.AppWindow) {
 			browserWindow.ViewportBackend.SetBounds(0, 0, browserWindow.ViewportWidth, browserWindow.ViewportHeight)
 
 			updateAddressBar(browserWindow)
+
+			if browserWindow.Reflow {
+				browserWindow.DOM.Style.Width = float64(browserWindow.ViewportWidth)
+				browserWindow.DOM.Style.Height = float64(browserWindow.ViewportHeight)
+
+				browserWindow.DOM.Style.Top = 0
+				browserWindow.DOM.Style.Left = 0
+
+				nodeChildren := getNodeChildren(browserWindow.DOM)
+				for i := 0; i < len(nodeChildren); i++ {
+					mayo.ReflowNode(nodeChildren[i], nodeChildren[i], 0)
+				}
+
+				browserWindow.Reflow = false
+			}
+
 			updateViewport(browserWindow)
 
 			browserWindow.Resize = false
@@ -232,25 +250,36 @@ func updateAddressBar(browserWindow *structs.AppWindow) {
 	}
 }
 
-func renderNode(node *structs.NodeDOM, viewport *canvas.Canvas, vOffset float64) {
+func renderNode(node *structs.NodeDOM, browserWindow *structs.AppWindow, vOffset float64) {
 	sizeStep := node.Style.FontSize
 
 	if node.Style.Display == "block" {
 		if node.Style.Color != nil {
-			viewport.SetFillStyle(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B)
+			browserWindow.Viewport.SetFillStyle(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B)
 		} else {
-			viewport.SetFillStyle("#000")
+			browserWindow.Viewport.SetFillStyle("#000")
 		}
 
-		viewport.SetFont("roboto.ttf", sizeStep)
-		viewport.FillText(node.Content, 0, vOffset+sizeStep*2+2)
+		browserWindow.Viewport.SetFont("roboto.ttf", sizeStep)
+		browserWindow.Viewport.FillText(node.Content, 0, vOffset+node.Style.Top)
 	}
 
 	children := getNodeChildren(node)
 
 	for i := 0; i < len(children); i++ {
-		renderNode(children[i], viewport, vOffset+sizeStep*float64(i)+sizeStep*2+2)
+		if isNodeInsideViewportBounds(browserWindow, children[i], vOffset+children[i].Style.Top) {
+			renderNode(children[i], browserWindow, vOffset+children[i].Style.Top)
+		}
 	}
+}
+
+func isNodeInsideViewportBounds(browserWindow *structs.AppWindow, node *structs.NodeDOM, vOffset float64) bool {
+
+	if vOffset > float64(browserWindow.ViewportHeight) {
+		return false
+	}
+
+	return true
 }
 
 func updateViewport(browserWindow *structs.AppWindow) {
@@ -262,7 +291,7 @@ func updateViewport(browserWindow *structs.AppWindow) {
 
 	viewport.SetFillStyle("#FFF")
 	viewport.FillRect(0, 0, w, h)
-	renderNode(browserWindow.DOM, browserWindow.Viewport, vO)
+	renderNode(browserWindow.DOM, browserWindow, vO)
 }
 
 func handleEnterKey(browserWindow *structs.AppWindow) {
@@ -279,6 +308,7 @@ func handleEnterKey(browserWindow *structs.AppWindow) {
 			browserWindow.DOM = parsedDocument.Children[0]
 			browserWindow.ViewportOffset = 0
 			browserWindow.Redraw = true
+			browserWindow.Reflow = true
 		}
 	}
 }

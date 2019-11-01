@@ -30,9 +30,17 @@ type Attribute struct {
 
 //Stylesheet "Stylesheet definition for DOM Nodes"
 type Stylesheet struct {
-	Color    *ColorRGBA
+	Color           *ColorRGBA
+	BackgroundColor *ColorRGBA
+
 	FontSize float64
 	Display  string
+	Position string
+
+	Width  float64
+	Height float64
+	Top    float64
+	Left   float64
 }
 
 //ColorRGBA "RGBA color model"
@@ -120,6 +128,7 @@ type AppWindow struct {
 	Title  string
 	Redraw bool
 	Resize bool
+	Reflow bool
 
 	ViewportOffset int
 

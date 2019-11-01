@@ -62,7 +62,7 @@ func hexStringToColor(colorString string) *structs.ColorRGBA {
 	return color
 }
 
-func mapCSSColor(colorString string) *structs.ColorRGBA {
+func MapCSSColor(colorString string) *structs.ColorRGBA {
 	var color *structs.ColorRGBA
 
 	if string(colorString[0]) == "#" {
@@ -91,11 +91,13 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 
 	switch propName {
 	case "color":
-		parsedStyleSheet.Color = mapCSSColor(propValue)
+		parsedStyleSheet.Color = MapCSSColor(propValue)
 	case "font-size":
 		parsedStyleSheet.FontSize = mapSizeValue(propValue)
 	case "display":
 		parsedStyleSheet.Display = propValue
+	case "postion":
+		parsedStyleSheet.Position = propValue
 	}
 
 	return parsedStyleSheet
@@ -140,7 +142,9 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 	elementStylesheet := &structs.Stylesheet{
 		Color:    &structs.ColorRGBA{0, 0, 0, 0},
 		FontSize: 0,
-		Display:  ""}
+		Display:  "",
+		Position: "Normal",
+	}
 
 	if hasInlineStyle(attributes) {
 		elementStylesheet = parseInlineStylesheet(attributes)
@@ -148,10 +152,15 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 
 	if elementStylesheet.FontSize == float64(0) {
 		fontSize := elementFontTable[elementName]
+
 		if fontSize != float64(0) {
 			elementStylesheet.FontSize = fontSize
 		} else {
 			elementStylesheet.FontSize = float64(14)
+		}
+
+		if elementStylesheet.Height == float64(0) {
+			elementStylesheet.Height = elementStylesheet.FontSize
 		}
 	}
 

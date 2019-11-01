@@ -14,8 +14,5 @@ func main() {
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
 
-	//js, _ := json.MarshalIndent(parsedDocument.Children, "", " ")
-	//fmt.Println(string(js))
-
 	mustard.RenderDocument(parsedDocument, url)
 }
