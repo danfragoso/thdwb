@@ -7,6 +7,7 @@ import (
 	"github.com/danfragoso/thdwb/structs"
 )
 
+// GetResource - Makes an http request and returns a resource struct
 func GetResource(url string) *structs.Resource {
 	res, err := http.Get(url)
 	if err != nil {

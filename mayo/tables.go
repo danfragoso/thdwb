@@ -1,6 +1,13 @@
 package mayo
 
-import "github.com/danfragoso/thdwb/structs"
+import (
+	"regexp"
+
+	"github.com/danfragoso/thdwb/structs"
+)
+
+var rgba = regexp.MustCompile(`rgba?\([\.?\d?\.?\d?%?\s?,?]+\)`)
+var rgbaParams = regexp.MustCompile(`\([\.?\d?\.?\d?%?\s?,?]+\)`)
 
 var colorTable = map[string]*structs.ColorRGBA{
 	"maroon":  &structs.ColorRGBA{R: 0.5, G: 0.0, B: 0.0, A: 1.0},
