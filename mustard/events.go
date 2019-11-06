@@ -9,25 +9,29 @@ import (
 
 func attachBrowserWindowEvents(browserWindow *structs.AppWindow) {
 	browserWindow.GlfwWindow.SetKeyCallback(func(w *glfw.Window, key glfw.Key, scanCode int, action glfw.Action, mods glfw.ModifierKey) {
-		switch key {
-		case glfw.KeyUp:
-			browserWindow.ViewportOffset += 5
-			break
+		shouldFireKeyEvent := action != 0
 
-		case glfw.KeyDown:
-			browserWindow.ViewportOffset -= 5
-			break
+		if shouldFireKeyEvent {
+			switch key {
+			case glfw.KeyUp:
+				browserWindow.ViewportOffset += 5
+				break
 
-		case glfw.KeyBackspace:
-			removeInputChars(browserWindow)
-			break
+			case glfw.KeyDown:
+				browserWindow.ViewportOffset -= 5
+				break
 
-		case glfw.KeyEnter:
-			handleEnterKey(browserWindow)
-			break
+			case glfw.KeyBackspace:
+				removeInputChars(browserWindow)
+				break
+
+			case glfw.KeyEnter:
+				handleEnterKey(browserWindow)
+				break
+			}
+
+			browserWindow.Redraw = true
 		}
-
-		browserWindow.Redraw = true
 	})
 
 	browserWindow.GlfwWindow.SetCharCallback(func(w *glfw.Window, char rune) {
