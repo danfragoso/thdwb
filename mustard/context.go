@@ -50,18 +50,14 @@ func (context *ContextWidget) SetHeight(height int) {
 }
 
 func drawContextWidget(context *gg.Context, widget *ContextWidget, top, left, width, height int) {
-	if widget.context != nil {
-		if widget.context.Width() != width || widget.context.Height() != height {
-			widget.context = gg.NewContext(width, height)
-		}
-	} else {
+	if widget.context == nil || widget.context.Width() != width || widget.context.Height() != height {
 		widget.context = gg.NewContext(width, height)
+
+		widget.context.SetRGB(1, 1, 1)
+		widget.context.Clear()
+
+		widget.renderer(widget.context)
 	}
-
-	widget.context.SetRGB(1, 1, 1)
-	widget.context.Clear()
-
-	widget.renderer(widget.context)
 
 	context.DrawImage(widget.context.Image(), left, top)
 }

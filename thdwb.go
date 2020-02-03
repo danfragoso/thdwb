@@ -34,7 +34,7 @@ func main() {
 
 	appBar := mustard.CreateFrame(mustard.VerticalFrame)
 
-	titleBar := mustard.CreateLabelWidget("THDWB - nil")
+	titleBar := mustard.CreateLabelWidget("THDWB - " + url)
 	titleBar.SetFontColor("#fff")
 
 	logo := mustard.CreateImageWidget("logo.png")
@@ -47,15 +47,6 @@ func main() {
 
 	rootFrame.AttachWidget(appBar)
 
-	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		ctx.SetHexColor("#000000")
-		ctx.LoadFontFace("roboto.ttf", 12)
-		ctx.DrawStringWrapped(string(res), float64(0+12/4), float64(0+12*2/2), float64(0), float64(0), float64(ctx.Width()), 2, gg.AlignLeft)
-		ctx.Fill()
-	})
-
-	rootFrame.AttachWidget(viewPort)
-
 	statusBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	statusBar.SetBackgroundColor("#babcbe")
 	statusBar.SetHeight(20)
@@ -67,8 +58,14 @@ func main() {
 	rootFrame.AttachWidget(statusBar)
 	statusBar.AttachWidget(statusLabel)
 
-	window.SetRootFrame(rootFrame)
+	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
+		ctx.SetHexColor("#000000")
+		ctx.DrawStringWrapped(string(res), float64(0+12/4), float64(0+12*2/2), float64(0), float64(0), float64(ctx.Width()), 2, gg.AlignLeft)
+		ctx.Fill()
+	})
 
+	rootFrame.AttachWidget(viewPort)
+	window.SetRootFrame(rootFrame)
 	app.AddWindow(window)
 
 	window.Show()
@@ -77,5 +74,4 @@ func main() {
 		width, height := window.GetSize()
 		statusLabel.SetContent("Processed Events: " + strconv.Itoa(frameEvents) + "; Resolution: " + strconv.Itoa(width) + "X" + strconv.Itoa(height))
 	})
-
 }
