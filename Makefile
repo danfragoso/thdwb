@@ -3,7 +3,7 @@ all:
 
 build:
 	@echo -e "Building THDWB - 🌭"
-	@go build -o thdwb *.go
+	@go build -o thdwb -ldflags "-s -w" *.go
 	@mv thdwb	bin/thdwb
 	@chmod 755 bin/thdwb
 
