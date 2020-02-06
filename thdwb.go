@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"os"
 	"runtime"
 	"strconv"
 
+	bun "./bun"
 	ketchup "./ketchup"
 	mustard "./mustard"
 	sauce "./sauce"
@@ -26,7 +26,6 @@ func main() {
 	resource := sauce.GetResource(url)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
-	res, _ := json.MarshalIndent(parsedDocument.Children[0], "", "--")
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
@@ -59,9 +58,7 @@ func main() {
 	statusBar.AttachWidget(statusLabel)
 
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		ctx.SetHexColor("#000000")
-		ctx.DrawStringWrapped(string(res), float64(0+12/4), float64(0+12*2/2), float64(0), float64(0), float64(ctx.Width()), 2, gg.AlignLeft)
-		ctx.Fill()
+		bun.RenderTree(ctx, parsedDocument.Children[0])
 	})
 
 	rootFrame.AttachWidget(viewPort)
