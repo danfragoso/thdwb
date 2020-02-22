@@ -37,7 +37,6 @@ func walkDOM(TreeDOM *structs.NodeDOM, d string) {
 
 func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	nodeChildren := getNodeChildren(node)
-
 	if node.Style.Display == "block" {
 		calculateBlockLayout(ctx, node, childIdx)
 
@@ -62,7 +61,13 @@ func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) 
 	}
 
 	if childIdx > 0 {
-		node.Style.Top = node.Parent.Children[childIdx-1].Style.Top + node.Parent.Children[childIdx-1].Style.Height
+		prev := node.Parent.Children[childIdx-1]
+
+		if prev.Style.Display == "block" {
+			node.Style.Top = prev.Style.Top + prev.Style.Height
+		} else {
+			node.Style.Top = prev.Style.Top
+		}
 	}
 }
 
