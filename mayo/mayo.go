@@ -86,7 +86,7 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 
 func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
 	elementStylesheet := &structs.Stylesheet{
-		Color:    &structs.ColorRGBA{0, 0, 0, 0},
+		Color:    &structs.ColorRGBA{0, 0, 0, 1},
 		FontSize: 0,
 		Display:  "",
 		Position: "Normal",
