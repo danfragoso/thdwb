@@ -11,7 +11,6 @@ func RenderTree(ctx *gg.Context, tree *structs.NodeDOM) {
 	tree.Children[1].Style.Width = float64(ctx.Width())
 	tree.Children[1].Style.Height = float64(ctx.Height())
 
-	fmt.Println("--------")
 	layoutDOM(ctx, tree.Children[1], 0)
 }
 
@@ -46,7 +45,7 @@ func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 			layoutDOM(ctx, nodeChildren[i], i)
 		}
 
-		ctx.SetHexColor("#000")
+		ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
 		ctx.DrawString(node.Content, 1, node.Style.Top+node.Style.Height)
 		ctx.Fill()
 	}
