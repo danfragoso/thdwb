@@ -1,5 +1,11 @@
 package structs
 
+type HTMLDocument struct {
+	Title       string
+	RootElement *NodeDOM
+	Styles      []*StyleElement
+}
+
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
 	Element    string       `json:"element"`
@@ -35,6 +41,12 @@ type Stylesheet struct {
 	Height float64
 	Top    float64
 	Left   float64
+}
+
+//StyleElement "hmtl <style> element"
+type StyleElement struct {
+	Selector string
+	Style    *Stylesheet
 }
 
 //ColorRGBA "RGBA color model"

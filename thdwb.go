@@ -58,7 +58,7 @@ func main() {
 	statusBar.AttachWidget(statusLabel)
 
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		bun.RenderTree(ctx, parsedDocument.Children[0])
+		bun.RenderTree(ctx, parsedDocument.RootElement)
 	})
 
 	rootFrame.AttachWidget(viewPort)

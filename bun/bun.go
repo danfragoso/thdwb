@@ -8,10 +8,13 @@ import (
 )
 
 func RenderTree(ctx *gg.Context, tree *structs.NodeDOM) {
-	tree.Children[1].Style.Width = float64(ctx.Width())
-	tree.Children[1].Style.Height = float64(ctx.Height())
+	//tree.Children[0] is head
+	body := tree.Children[1]
 
-	layoutDOM(ctx, tree.Children[1], 0)
+	body.Style.Width = float64(ctx.Width())
+	body.Style.Height = float64(ctx.Height())
+
+	layoutDOM(ctx, body, 0)
 }
 
 func getNodeContent(NodeDOM *structs.NodeDOM) string {
@@ -37,6 +40,7 @@ func walkDOM(TreeDOM *structs.NodeDOM, d string) {
 
 func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	nodeChildren := getNodeChildren(node)
+
 	if node.Style.Display == "block" {
 		calculateBlockLayout(ctx, node, childIdx)
 
