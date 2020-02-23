@@ -1,14 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 
 	bun "./bun"
 	ketchup "./ketchup"
 	mustard "./mustard"
 	sauce "./sauce"
+	structs "./structs"
 
 	"github.com/fogleman/gg"
 	"github.com/go-gl/gl/v4.1-core/gl"
@@ -70,11 +73,59 @@ func main() {
 	rootFrame.AttachWidget(viewPort)
 	window.SetRootFrame(rootFrame)
 	app.AddWindow(window)
-
 	window.Show()
+
+	if len(os.Args) >= 3 && os.Args[2] == "debug" {
+		debugFrame := createDebugFrame(parsedDocument)
+		rootFrame.AttachWidget(debugFrame)
+	}
+
 	app.Run(func() {
 		frameEvents++
 		width, height := window.GetSize()
 		statusLabel.SetContent("Processed Events: " + strconv.Itoa(frameEvents) + "; Resolution: " + strconv.Itoa(width) + "X" + strconv.Itoa(height))
 	})
+}
+
+func createDebugFrame(document *structs.HTMLDocument) *mustard.Frame {
+	debugFrame := mustard.CreateFrame(mustard.HorizontalFrame)
+	debugBar := mustard.CreateFrame(mustard.HorizontalFrame)
+	debugContent := mustard.CreateFrame(mustard.VerticalFrame)
+
+	debugTitleBar := mustard.CreateLabelWidget("Debug View")
+	debugTitleBar.SetFontSize(15)
+	debugTitleBar.SetFontColor("#111")
+
+	vd := mustard.CreateFrame(mustard.VerticalFrame)
+	vd.SetHeight(1)
+	vd.SetBackgroundColor("#bdbdbd")
+
+	hd := mustard.CreateFrame(mustard.VerticalFrame)
+	hd.SetWidth(1)
+	hd.SetBackgroundColor("#bdbdbd")
+
+	debugBar.SetHeight(22)
+	debugBar.AttachWidget(vd)
+	debugBar.AttachWidget(debugTitleBar)
+
+	debugBar.SetBackgroundColor("#ccc")
+
+	debugFrame.SetBackgroundColor("#fff")
+	debugFrame.AttachWidget(debugBar)
+	debugFrame.AttachWidget(debugContent)
+
+	documentSource := mustard.CreateTextWidget(strings.Replace(document.RawDocument, " ", "--", -1))
+	documentSource.SetFontSize(11)
+	documentSource.SetBackgroundColor("#fcfcfc")
+
+	treeStr, _ := json.MarshalIndent(document.RootElement, "", "--")
+	jsonTree := mustard.CreateTextWidget(string(treeStr))
+	jsonTree.SetFontSize(11)
+	jsonTree.SetBackgroundColor("#fcfcfc")
+
+	debugContent.AttachWidget(documentSource)
+	debugContent.AttachWidget(hd)
+	debugContent.AttachWidget(jsonTree)
+
+	return debugFrame
 }

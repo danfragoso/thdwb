@@ -84,6 +84,15 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				label.height = childrenLayout[i].height
 
 				drawLabelWidget(context, label, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+			case *TextWidget:
+				text := frame.widgets[i].(*TextWidget)
+				text.top = childrenLayout[i].top
+				text.left = childrenLayout[i].left
+				text.width = childrenLayout[i].width
+				text.height = childrenLayout[i].height
+
+				drawTextWidget(context, text, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
 			case *ImageWidget:
 				image := frame.widgets[i].(*ImageWidget)
 				image.top = childrenLayout[i].top
