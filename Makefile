@@ -1,8 +1,11 @@
 all:
-	@go run *.go http://example.com
+	@go run *.go http://localhost:8080/nocss2.html
 
 run:
 	@go run *.go $(url)
+
+serve:
+	@http-server tests &
 
 debug:
 	@go run *.go $(url) debug
@@ -10,8 +13,7 @@ debug:
 build:
 	@echo -e "Building THDWB - 🌭"
 	@go build -o thdwb -ldflags "-s -w" *.go
-	@mv thdwb	bin/thdwb
-	@chmod 755 bin/thdwb
+	@chmod 755 thdwb
 
 test:
 	@echo -e "Testing Sauce...\n"
