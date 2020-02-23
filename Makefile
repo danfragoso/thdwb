@@ -1,5 +1,11 @@
 all:
-	@go run *.go http://example.com render
+	@go run *.go http://example.com
+
+run:
+	@go run *.go $(url)
+
+debug:
+	@go run *.go $(url) debug
 
 build:
 	@echo -e "Building THDWB - 🌭"
