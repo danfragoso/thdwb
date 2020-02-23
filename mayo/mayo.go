@@ -48,6 +48,8 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 		parsedStyleSheet.Position = propValue
 	case "height":
 		parsedStyleSheet.Height = mapSizeValue(propValue)
+	case "width":
+		parsedStyleSheet.Width = mapSizeValue(propValue)
 	}
 
 	return parsedStyleSheet

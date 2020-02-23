@@ -7,12 +7,12 @@ import (
 	"github.com/fogleman/gg"
 )
 
-func RenderTree(ctx *gg.Context, tree *structs.NodeDOM) {
+func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	//tree.Children[0] is head
-	body := tree.Children[1]
+	body := document.RootElement.Children[1]
 
-	tree.Style.Width = float64(ctx.Width())
-	tree.Style.Height = float64(ctx.Height())
+	document.RootElement.Style.Width = float64(ctx.Width())
+	document.RootElement.Style.Height = float64(ctx.Height())
 
 	layoutDOM(ctx, body, 0)
 }
@@ -63,7 +63,9 @@ func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
 }
 
 func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
-	node.Style.Width = node.Parent.Style.Width
+	if node.Style.Width == 0 {
+		node.Style.Width = node.Parent.Style.Width
+	}
 
 	if node.Style.Height == 0 && len(node.Content) > 0 {
 		_, height := ctx.MeasureMultilineString(node.Content, 2)

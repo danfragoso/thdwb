@@ -62,6 +62,7 @@ func isVoidElement(tagName string) bool {
 func ParseDocument(document string) *structs.HTMLDocument {
 	HTMLDocument := &structs.HTMLDocument{}
 
+	HTMLDocument.RawDocument = document
 	lastNode := HTMLDocument.RootElement
 	parseDocument := xmlTag.MatchString(document)
 	document = strings.ReplaceAll(document, "\n", "")

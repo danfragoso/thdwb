@@ -3,6 +3,7 @@ package structs
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
+	RawDocument string
 	Styles      []*StyleElement
 }
 

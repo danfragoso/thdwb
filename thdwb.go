@@ -58,7 +58,13 @@ func main() {
 	statusBar.AttachWidget(statusLabel)
 
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		bun.RenderTree(ctx, parsedDocument.RootElement)
+		/*
+			Parsing the document again is a very hacky solution to solve
+			layout problems, the solution to those problems is to never modify
+			the DOM Tree itself, it should be deep cloned as the render tree
+			which will be modified inside this callback.
+		*/
+		bun.RenderDocument(ctx, ketchup.ParseDocument(parsedDocument.RawDocument))
 	})
 
 	rootFrame.AttachWidget(viewPort)
