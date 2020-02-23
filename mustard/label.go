@@ -1,7 +1,7 @@
 package mustard
 
 import (
-	"github.com/fogleman/gg"
+	gg "../gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 

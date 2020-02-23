@@ -3,8 +3,8 @@ package bun
 import (
 	"fmt"
 
+	gg "../gg"
 	structs "../structs"
-	"github.com/fogleman/gg"
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {

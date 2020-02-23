@@ -1,8 +1,6 @@
 package mustard
 
-import (
-	"github.com/fogleman/gg"
-)
+import gg "../gg"
 
 //CreateFrame - Creates and returns a new Frame
 func CreateFrame(orientation FrameOrientation) *Frame {
