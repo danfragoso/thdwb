@@ -11,8 +11,8 @@ func RenderTree(ctx *gg.Context, tree *structs.NodeDOM) {
 	//tree.Children[0] is head
 	body := tree.Children[1]
 
-	body.Style.Width = float64(ctx.Width())
-	body.Style.Height = float64(ctx.Height())
+	tree.Style.Width = float64(ctx.Width())
+	tree.Style.Height = float64(ctx.Height())
 
 	layoutDOM(ctx, body, 0)
 }
@@ -48,20 +48,27 @@ func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 			layoutDOM(ctx, nodeChildren[i], i)
 		}
 
-		ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
-		ctx.DrawString(node.Content, 1, node.Style.Top+node.Style.Height)
-		ctx.Fill()
+		paintBlockElement(ctx, node)
 	}
+}
+
+func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
+	ctx.DrawRectangle(node.Style.Left, node.Style.Top, node.Style.Width, node.Style.Height)
+	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
+	ctx.Fill()
+
+	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
+	ctx.DrawString(node.Content, node.Style.Left, node.Style.Top+11)
+	ctx.Fill()
 }
 
 func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	node.Style.Width = node.Parent.Style.Width
-	if len(node.Content) > 0 {
+
+	if node.Style.Height == 0 && len(node.Content) > 0 {
 		_, height := ctx.MeasureMultilineString(node.Content, 2)
 
 		node.Style.Height = height
-	} else {
-		node.Style.Height = 0
 	}
 
 	if childIdx > 0 {

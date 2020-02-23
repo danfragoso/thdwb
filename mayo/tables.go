@@ -15,7 +15,7 @@ var colorTable = map[string]*structs.ColorRGBA{
 	"orange":  &structs.ColorRGBA{R: 1.0, G: 0.6, B: 0.0, A: 1.0},
 	"yellow":  &structs.ColorRGBA{R: 1.0, G: 1.0, B: 0.0, A: 1.0},
 	"olive":   &structs.ColorRGBA{R: 0.5, G: 0.5, B: 0.0, A: 1.0},
-	"green":   &structs.ColorRGBA{R: 0.0, G: 1.0, B: 0.0, A: 1.0},
+	"green":   &structs.ColorRGBA{R: 0.0, G: 0.5, B: 0.0, A: 1.0},
 	"purple":  &structs.ColorRGBA{R: 0.5, G: 0.0, B: 0.5, A: 1.0},
 	"fuchsia": &structs.ColorRGBA{R: 1.0, G: 0.0, B: 1.0, A: 1.0},
 	"lime":    &structs.ColorRGBA{R: 0.0, G: 1.0, B: 0.0, A: 1.0},
