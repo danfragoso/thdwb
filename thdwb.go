@@ -5,7 +5,6 @@ import (
 	"os"
 	"runtime"
 	"strconv"
-	"strings"
 
 	bun "./bun"
 	gg "./gg"
@@ -114,11 +113,11 @@ func createDebugFrame(document *structs.HTMLDocument) *mustard.Frame {
 	debugFrame.AttachWidget(debugBar)
 	debugFrame.AttachWidget(debugContent)
 
-	documentSource := mustard.CreateTextWidget(strings.Replace(document.RawDocument, " ", "--", -1))
+	documentSource := mustard.CreateTextWidget(document.RawDocument)
 	documentSource.SetFontSize(11)
 	documentSource.SetBackgroundColor("#fcfcfc")
 
-	treeStr, _ := json.MarshalIndent(document.RootElement, "", "--")
+	treeStr, _ := json.MarshalIndent(document.RootElement, "", "  ")
 	jsonTree := mustard.CreateTextWidget(string(treeStr))
 	jsonTree.SetFontSize(11)
 	jsonTree.SetBackgroundColor("#fcfcfc")
