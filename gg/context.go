@@ -791,6 +791,16 @@ func (dc *Context) DrawStringWrapped(s string, x, y, ax, ay, width, lineSpacing 
 	}
 }
 
+func (dc *Context) MeasureStringWrapped(s string, width, lineSpacing float64) float64 {
+	lines := dc.WordWrap(s, width)
+
+	// sync h formula with MeasureMultilineString
+	h := float64(len(lines)) * dc.fontHeight * lineSpacing
+	h -= (lineSpacing - 1) * dc.fontHeight
+
+	return h
+}
+
 func (dc *Context) MeasureMultilineString(s string, lineSpacing float64) (width, height float64) {
 	lines := strings.Split(s, "\n")
 

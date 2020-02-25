@@ -122,9 +122,9 @@ func createDebugFrame(document *structs.HTMLDocument) *mustard.Frame {
 	jsonTree.SetFontSize(11)
 	jsonTree.SetBackgroundColor("#fcfcfc")
 
-	debugContent.AttachWidget(documentSource)
-	debugContent.AttachWidget(hd)
 	debugContent.AttachWidget(jsonTree)
+	debugContent.AttachWidget(hd)
+	debugContent.AttachWidget(documentSource)
 
 	return debugFrame
 }

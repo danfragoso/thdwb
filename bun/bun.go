@@ -58,7 +58,7 @@ func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
 	ctx.Fill()
 
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
-	ctx.DrawString(node.Content, node.Style.Left, node.Style.Top+11)
+	ctx.DrawStringWrapped(node.Content, node.Style.Left, node.Style.Top, 0, 0, node.Style.Width, 1, gg.AlignLeft)
 	ctx.Fill()
 }
 
@@ -68,9 +68,7 @@ func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) 
 	}
 
 	if node.Style.Height == 0 && len(node.Content) > 0 {
-		_, height := ctx.MeasureMultilineString(node.Content, 2)
-
-		node.Style.Height = height
+		node.Style.Height = ctx.MeasureStringWrapped(node.Content, node.Style.Width, 1) + 2
 	}
 
 	if childIdx > 0 {
