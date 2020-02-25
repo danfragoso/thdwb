@@ -1,10 +1,15 @@
 package structs
 
+import (
+	profiler "../profiler"
+)
+
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
 	RawDocument string
 	Styles      []*StyleElement
+	Profiler    *profiler.Profiler
 }
 
 //NodeDOM "DOM Node Struct definition"

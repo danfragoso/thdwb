@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"runtime"
 	"strconv"
@@ -10,6 +11,7 @@ import (
 	gg "./gg"
 	ketchup "./ketchup"
 	mustard "./mustard"
+	profiler "./profiler"
 	sauce "./sauce"
 	structs "./structs"
 
@@ -23,12 +25,22 @@ func main() {
 	gl.Init()
 
 	mustard.SetGLFWHints()
+	perf := profiler.CreateProfiler()
 
 	url := os.Args[1]
+
+	perf.Start("fetching")
 	resource := sauce.GetResource(url)
 	htmlString := string(resource.Body)
-	parsedDocument := ketchup.ParseDocument(htmlString)
+	perf.Stop("fetching")
 
+	perf.Start("parsing")
+	parsedDocument := ketchup.ParseDocument(htmlString)
+	perf.Stop("parsing")
+
+	parsedDocument.Profiler = perf
+
+	perf.Start("ui-creation")
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
@@ -66,13 +78,22 @@ func main() {
 			the DOM Tree itself, it should be deep cloned as the render tree
 			which will be modified inside this callback.
 		*/
+		perf.Start("render")
 		bun.RenderDocument(ctx, ketchup.ParseDocument(parsedDocument.RawDocument))
+		perf.Stop("render")
+
+		profiles := perf.GetAllProfiles()
+		fmt.Println("-----------------")
+		for _, profile := range profiles {
+			fmt.Println(profile.GetName(), "took", profile.GetElapsedTime())
+		}
 	})
 
 	rootFrame.AttachWidget(viewPort)
 	window.SetRootFrame(rootFrame)
 	app.AddWindow(window)
 	window.Show()
+	perf.Stop("ui-creation")
 
 	if len(os.Args) >= 3 && os.Args[2] == "debug" {
 		debugFrame := createDebugFrame(parsedDocument)
