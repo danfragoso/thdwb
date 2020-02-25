@@ -8,7 +8,7 @@ import (
 )
 
 func TestProfiler(t *testing.T) {
-	profiler := createProfiler()
+	profiler := CreateProfiler()
 
 	profiler.Start("test")
 	time.Sleep(2 * time.Second)
@@ -16,6 +16,6 @@ func TestProfiler(t *testing.T) {
 
 	stopProfile := profiler.GetProfile("test")
 
-	t.Log(stopProfile.getElapsedTime())
+	t.Log(stopProfile.GetElapsedTime())
 	assert.Equal(t, true, true, "")
 }

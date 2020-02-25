@@ -101,6 +101,11 @@ func (window *Window) addEvents() {
 		gl.Viewport(0, 0, int32(width), int32(height))
 		window.isDirty = true
 	})
+
+	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {
+		window.ProcessPointerPosition(x, y)
+		window.RequestRepaint()
+	})
 }
 
 func (window *Window) generateTexture() {
