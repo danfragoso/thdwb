@@ -96,7 +96,7 @@ func main() {
 	perf.Stop("ui-creation")
 
 	if len(os.Args) >= 3 && os.Args[2] == "debug" {
-		debugFrame := createDebugFrame(parsedDocument)
+		debugFrame := createDebugFrame(window, parsedDocument)
 		rootFrame.AttachWidget(debugFrame)
 	}
 
@@ -107,7 +107,7 @@ func main() {
 	})
 }
 
-func createDebugFrame(document *structs.HTMLDocument) *mustard.Frame {
+func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *mustard.Frame {
 	debugFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 	debugBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	debugContent := mustard.CreateFrame(mustard.VerticalFrame)
@@ -146,6 +146,12 @@ func createDebugFrame(document *structs.HTMLDocument) *mustard.Frame {
 	debugContent.AttachWidget(jsonTree)
 	debugContent.AttachWidget(hd)
 	debugContent.AttachWidget(documentSource)
+
+	bt := mustard.CreateButtonWidget("bt")
+	debugBar.AttachWidget(bt)
+	window.RegisterButton(bt, func() {
+		debugFrame.SetHeight(30)
+	})
 
 	return debugFrame
 }

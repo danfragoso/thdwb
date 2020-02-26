@@ -50,6 +50,11 @@ func (frame *Frame) SetHeight(height int) {
 	frame.fixedHeight = true
 }
 
+//SetHeight - Sets the frame height
+func (frame *Frame) GetHeight() int {
+	return frame.height
+}
+
 func drawRootFrame(window *Window) {
 	drawFrame(window.context, window.rootFrame, 0, 0, window.width, window.height)
 }
@@ -107,6 +112,15 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				ctx.height = childrenLayout[i].height
 
 				drawContextWidget(context, ctx, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
+			case *ButtonWidget:
+				button := frame.widgets[i].(*ButtonWidget)
+				button.top = childrenLayout[i].top
+				button.left = childrenLayout[i].left
+				button.width = childrenLayout[i].width
+				button.height = childrenLayout[i].height
+
+				drawButtonWidget(context, button, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
 			}
 		}
 	}

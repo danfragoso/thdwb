@@ -25,7 +25,9 @@ type Window struct {
 	context *gg.Context
 	backend *glBackend
 
-	rootFrame *Frame
+	defaultCursor     *glfw.Cursor
+	registeredButtons []*ButtonWidget
+	rootFrame         *Frame
 }
 
 type glBackend struct {
@@ -107,4 +109,14 @@ type ContextWidget struct {
 
 	context  *gg.Context
 	renderer func(*gg.Context)
+}
+
+type ButtonWidget struct {
+	widget
+	content string
+
+	fontSize  float64
+	fontColor string
+	selected  bool
+	onClick   func()
 }

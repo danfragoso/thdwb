@@ -30,6 +30,8 @@ func CreateNewWindow(title string, width int, height int) *Window {
 		width:  width,
 		height: height,
 		glw:    glw,
+
+		defaultCursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 	}
 
 	window.RecreateContext()
@@ -106,6 +108,12 @@ func (window *Window) addEvents() {
 		window.ProcessPointerPosition(x, y)
 		window.RequestRepaint()
 	})
+
+	window.glw.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
+		if button == glfw.MouseButtonLeft && action == glfw.Release {
+			window.ProcessPointerClick()
+		}
+	})
 }
 
 func (window *Window) generateTexture() {
@@ -128,4 +136,9 @@ func (window *Window) generateTexture() {
 		0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(rgba.Pix),
 	)
 
+}
+
+func (window *Window) RegisterButton(button *ButtonWidget, callback func()) {
+	button.onClick = callback
+	window.registeredButtons = append(window.registeredButtons, button)
 }
