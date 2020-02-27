@@ -118,5 +118,6 @@ type ButtonWidget struct {
 	fontSize  float64
 	fontColor string
 	selected  bool
+	padding   float64
 	onClick   func()
 }

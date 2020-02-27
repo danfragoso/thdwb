@@ -129,10 +129,39 @@ func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *m
 	debugBar.AttachWidget(debugTitleBar)
 
 	debugBar.SetBackgroundColor("#ccc")
+	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
 
 	debugFrame.SetBackgroundColor("#fff")
 	debugFrame.AttachWidget(debugBar)
+	debugFrame.AttachWidget(buttonFrame)
 	debugFrame.AttachWidget(debugContent)
+
+	buttonFrame.SetHeight(50)
+
+	bt := mustard.CreateButtonWidget("bt")
+	bt.SetPadding(10)
+
+	window.RegisterButton(bt, func() {
+		debugFrame.SetHeight(30)
+	})
+
+	ct := mustard.CreateButtonWidget("ct")
+	ct.SetPadding(10)
+
+	window.RegisterButton(ct, func() {
+		debugFrame.SetHeight(30)
+	})
+
+	dt := mustard.CreateButtonWidget("dt")
+	dt.SetPadding(10)
+
+	window.RegisterButton(dt, func() {
+		debugFrame.SetHeight(30)
+	})
+
+	buttonFrame.AttachWidget(bt)
+	buttonFrame.AttachWidget(ct)
+	buttonFrame.AttachWidget(dt)
 
 	documentSource := mustard.CreateTextWidget(document.RawDocument)
 	documentSource.SetFontSize(11)
@@ -146,12 +175,6 @@ func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *m
 	debugContent.AttachWidget(jsonTree)
 	debugContent.AttachWidget(hd)
 	debugContent.AttachWidget(documentSource)
-
-	bt := mustard.CreateButtonWidget("bt")
-	debugBar.AttachWidget(bt)
-	window.RegisterButton(bt, func() {
-		debugFrame.SetHeight(30)
-	})
 
 	return debugFrame
 }

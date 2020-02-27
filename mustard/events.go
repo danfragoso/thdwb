@@ -10,9 +10,13 @@ func (window *Window) ProcessPointerClick() {
 
 func (window *Window) ProcessButtons(x, y float64) {
 	for _, button := range window.registeredButtons {
-		if x > float64(button.left) && x < float64(button.left+button.width) && y > float64(button.top) && y < float64(button.top+button.height) {
+		if x > float64(button.left)+button.padding &&
+			x < float64(button.left+button.width)-button.padding &&
+			y > float64(button.top)+button.padding &&
+			y < float64(button.top+button.height)-button.padding {
 			button.selected = true
 			window.glw.SetCursor(button.cursor)
+			break
 		} else {
 			button.selected = false
 			window.glw.SetCursor(window.defaultCursor)

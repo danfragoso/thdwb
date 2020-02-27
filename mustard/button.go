@@ -29,6 +29,7 @@ func CreateButtonWidget(content string) *ButtonWidget {
 		content: content,
 
 		fontSize:  20,
+		padding:   0,
 		fontColor: "#000",
 		selected:  false,
 	}
@@ -55,6 +56,12 @@ func (button *ButtonWidget) SetHeight(height int) {
 //SetFontSize - Sets the button font size
 func (button *ButtonWidget) SetFontSize(fontSize float64) {
 	button.fontSize = fontSize
+	button.dirty = true
+}
+
+//SetFontSize - Sets the button font size
+func (button *ButtonWidget) SetPadding(padding float64) {
+	button.padding = padding
 	button.dirty = true
 }
 
@@ -92,9 +99,14 @@ func drawButtonWidget(context *gg.Context, widget *ButtonWidget, top, left, widt
 		context.SetHexColor("#ddd")
 	}
 
-	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
-	context.Fill()
+	context.DrawRectangle(
+		float64(left)+widget.padding,
+		float64(top)+widget.padding,
+		float64(width)-(widget.padding*2),
+		float64(height)-(widget.padding*2),
+	)
 
+	context.Fill()
 	context.SetHexColor(widget.fontColor)
 	context.LoadFontFace("roboto.ttf", widget.fontSize)
 
