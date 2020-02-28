@@ -95,10 +95,8 @@ func main() {
 	window.Show()
 	perf.Stop("ui-creation")
 
-	if len(os.Args) >= 3 && os.Args[2] == "debug" {
-		debugFrame := createDebugFrame(window, parsedDocument)
-		rootFrame.AttachWidget(debugFrame)
-	}
+	debugFrame := createDebugFrame(window, parsedDocument)
+	rootFrame.AttachWidget(debugFrame)
 
 	app.Run(func() {
 		frameEvents++
@@ -109,72 +107,47 @@ func main() {
 
 func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *mustard.Frame {
 	debugFrame := mustard.CreateFrame(mustard.HorizontalFrame)
-	debugBar := mustard.CreateFrame(mustard.HorizontalFrame)
+	debugBar := mustard.CreateFrame(mustard.VerticalFrame)
 	debugContent := mustard.CreateFrame(mustard.VerticalFrame)
 
-	debugTitleBar := mustard.CreateLabelWidget("Debug View")
-	debugTitleBar.SetFontSize(15)
-	debugTitleBar.SetFontColor("#111")
-
-	vd := mustard.CreateFrame(mustard.VerticalFrame)
-	vd.SetHeight(1)
-	vd.SetBackgroundColor("#bdbdbd")
-
-	hd := mustard.CreateFrame(mustard.VerticalFrame)
-	hd.SetWidth(1)
-	hd.SetBackgroundColor("#bdbdbd")
-
 	debugBar.SetHeight(22)
-	debugBar.AttachWidget(vd)
-	debugBar.AttachWidget(debugTitleBar)
+	debugBar.SetBackgroundColor("#ddd")
+	toggleDebugButton := mustard.CreateButtonWidget("*")
+	toggleDebugButton.SetFontSize(16)
+	toggleDebugButton.SetWidth(22)
+	toggleDebugButton.SetPadding(2)
+	debugFrame.SetHeight(400)
 
-	debugBar.SetBackgroundColor("#ccc")
-	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
+	source := mustard.CreateTextWidget(document.RawDocument)
+	source.SetFontSize(12)
 
-	debugFrame.SetBackgroundColor("#fff")
+	dv := mustard.CreateFrame(mustard.HorizontalFrame)
+	dv.SetBackgroundColor("#999")
+	dv.SetWidth(1)
+
+	jsonByte, _ := json.MarshalIndent(document.RootElement, "", "  ")
+	json := mustard.CreateTextWidget(string(jsonByte))
+	json.SetWidth(200)
+	json.SetFontSize(12)
+
+	debugContent.AttachWidget(json)
+	debugContent.AttachWidget(dv)
+	debugContent.AttachWidget(source)
+
+	window.RegisterButton(toggleDebugButton, func() {
+		if debugFrame.GetHeight() == 22 {
+			debugFrame.SetHeight(400)
+		} else {
+			debugFrame.SetHeight(22)
+		}
+	})
+
+	debugTitle := mustard.CreateLabelWidget("Show Source")
+	debugTitle.SetFontSize(16)
+
+	debugBar.AttachWidget(toggleDebugButton)
+	debugBar.AttachWidget(debugTitle)
 	debugFrame.AttachWidget(debugBar)
-	debugFrame.AttachWidget(buttonFrame)
 	debugFrame.AttachWidget(debugContent)
-
-	buttonFrame.SetHeight(50)
-
-	bt := mustard.CreateButtonWidget("bt")
-	bt.SetPadding(10)
-
-	window.RegisterButton(bt, func() {
-		debugFrame.SetHeight(30)
-	})
-
-	ct := mustard.CreateButtonWidget("ct")
-	ct.SetPadding(10)
-
-	window.RegisterButton(ct, func() {
-		debugFrame.SetHeight(30)
-	})
-
-	dt := mustard.CreateButtonWidget("dt")
-	dt.SetPadding(10)
-
-	window.RegisterButton(dt, func() {
-		debugFrame.SetHeight(30)
-	})
-
-	buttonFrame.AttachWidget(bt)
-	buttonFrame.AttachWidget(ct)
-	buttonFrame.AttachWidget(dt)
-
-	documentSource := mustard.CreateTextWidget(document.RawDocument)
-	documentSource.SetFontSize(11)
-	documentSource.SetBackgroundColor("#fcfcfc")
-
-	treeStr, _ := json.MarshalIndent(document.RootElement, "", "  ")
-	jsonTree := mustard.CreateTextWidget(string(treeStr))
-	jsonTree.SetFontSize(11)
-	jsonTree.SetBackgroundColor("#fcfcfc")
-
-	debugContent.AttachWidget(jsonTree)
-	debugContent.AttachWidget(hd)
-	debugContent.AttachWidget(documentSource)
-
 	return debugFrame
 }
