@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strconv"
 
 	bun "./bun"
 	gg "./gg"
@@ -19,14 +18,16 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
+var perf *profiler.Profiler
+
 func main() {
 	runtime.LockOSThread()
 	glfw.Init()
 	gl.Init()
 
 	mustard.SetGLFWHints()
-	perf := profiler.CreateProfiler()
 
+	perf = profiler.CreateProfiler()
 	url := os.Args[1]
 
 	perf.Start("fetching")
@@ -36,6 +37,7 @@ func main() {
 
 	perf.Start("parsing")
 	parsedDocument := ketchup.ParseDocument(htmlString)
+	parsedDocument.URL = url
 	perf.Stop("parsing")
 
 	parsedDocument.Profiler = perf
@@ -45,64 +47,21 @@ func main() {
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
-	appBar := mustard.CreateFrame(mustard.VerticalFrame)
-
-	titleBar := mustard.CreateLabelWidget("THDWB - " + url)
-	titleBar.SetFontColor("#fff")
-
-	logo := mustard.CreateImageWidget("logo.png")
-	logo.SetWidth(20)
-
-	appBar.SetHeight(28)
-	appBar.AttachWidget(logo)
-	appBar.AttachWidget(titleBar)
-	appBar.SetBackgroundColor("#5f6368")
-
+	appBar := createMainBar(window, parsedDocument)
 	rootFrame.AttachWidget(appBar)
 
-	statusBar := mustard.CreateFrame(mustard.HorizontalFrame)
-	statusBar.SetBackgroundColor("#babcbe")
-	statusBar.SetHeight(20)
-
-	statusLabel := mustard.CreateLabelWidget("Processed Events:")
-	statusLabel.SetFontSize(16)
-	frameEvents := 0
-
-	rootFrame.AttachWidget(statusBar)
-	statusBar.AttachWidget(statusLabel)
-
-	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		/*
-			Parsing the document again is a very hacky solution to solve
-			layout problems, the solution to those problems is to never modify
-			the DOM Tree itself, it should be deep cloned as the render tree
-			which will be modified inside this callback.
-		*/
-		perf.Start("render")
-		bun.RenderDocument(ctx, ketchup.ParseDocument(parsedDocument.RawDocument))
-		perf.Stop("render")
-
-		profiles := perf.GetAllProfiles()
-		fmt.Println("-----------------")
-		for _, profile := range profiles {
-			fmt.Println(profile.GetName(), "took", profile.GetElapsedTime())
-		}
-	})
-
+	viewPort := createViewport(window, parsedDocument)
 	rootFrame.AttachWidget(viewPort)
+
+	debugFrame := createDebugFrame(window, parsedDocument)
+	rootFrame.AttachWidget(debugFrame)
+
 	window.SetRootFrame(rootFrame)
 	app.AddWindow(window)
 	window.Show()
 	perf.Stop("ui-creation")
 
-	debugFrame := createDebugFrame(window, parsedDocument)
-	rootFrame.AttachWidget(debugFrame)
-
-	app.Run(func() {
-		frameEvents++
-		width, height := window.GetSize()
-		statusLabel.SetContent("Processed Events: " + strconv.Itoa(frameEvents) + "; Resolution: " + strconv.Itoa(width) + "X" + strconv.Itoa(height))
-	})
+	app.Run(func() {})
 }
 
 func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *mustard.Frame {
@@ -145,14 +104,72 @@ func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *m
 	debugTitle := mustard.CreateLabelWidget("Show Source")
 	debugTitle.SetFontSize(16)
 
-	inputTitle := mustard.CreateInputWidget()
-	window.RegisterInput(inputTitle)
-
-	debugBar.AttachWidget(inputTitle)
-
 	debugBar.AttachWidget(toggleDebugButton)
 	debugBar.AttachWidget(debugTitle)
 	debugFrame.AttachWidget(debugBar)
 	debugFrame.AttachWidget(debugContent)
+	debugFrame.SetHeight(22)
 	return debugFrame
+}
+
+func createMainBar(window *mustard.Window, document *structs.HTMLDocument) *mustard.Frame {
+	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
+	appBar.SetHeight(40)
+
+	inputFrame := mustard.CreateFrame(mustard.VerticalFrame)
+	urlInput := mustard.CreateInputWidget()
+	urlInput.SetValue(document.URL)
+	icon := mustard.CreateFrame(mustard.VerticalFrame)
+	img := mustard.CreateImageWidget("logo.png")
+	img.SetWidth(50)
+	icon.AttachWidget(img)
+	icon.SetBackgroundColor("#ddd")
+	icon.SetWidth(100)
+
+	inputFrame.AttachWidget(icon)
+	inputFrame.AttachWidget(urlInput)
+
+	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
+	button := mustard.CreateButtonWidget("Ir")
+	button.SetPadding(2)
+	button.SetWidth(40)
+
+	window.RegisterButton(button, func() {
+		fmt.Println(urlInput.GetValue())
+	})
+
+	buttonFrame.AttachWidget(button)
+	buttonFrame.SetWidth(100)
+	buttonFrame.SetBackgroundColor("#ddd")
+	inputFrame.AttachWidget(buttonFrame)
+	window.RegisterInput(urlInput)
+
+	dv := mustard.CreateFrame(mustard.HorizontalFrame)
+	dv.SetBackgroundColor("#ddd")
+	dv.SetHeight(4)
+
+	appBar.AttachWidget(dv)
+	appBar.AttachWidget(inputFrame)
+	appBar.AttachWidget(dv)
+	return appBar
+}
+
+func createViewport(window *mustard.Window, document *structs.HTMLDocument) *mustard.ContextWidget {
+	return mustard.CreateContextWidget(func(ctx *gg.Context) {
+		/*
+			Parsing the document again is a very hacky solution to solve
+			layout problems, the solution to those problems is to never modify
+			the DOM Tree itself, it should be deep cloned as the render tree
+			which will be modified inside this callback.
+		*/
+		perf.Start("render")
+		bun.RenderDocument(ctx, ketchup.ParseDocument(document.RawDocument))
+		perf.Stop("render")
+
+		profiles := perf.GetAllProfiles()
+		fmt.Println("-----------------")
+		for _, profile := range profiles {
+			fmt.Println(profile.GetName(), "took", profile.GetElapsedTime())
+		}
+	})
 }

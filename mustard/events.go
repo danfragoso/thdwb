@@ -1,6 +1,7 @@
 package mustard
 
 func (window *Window) ProcessPointerPosition(x, y float64) {
+	window.glw.SetCursor(window.defaultCursor)
 	window.ProcessButtons(x, y)
 	window.ProcessInputs(x, y)
 }
@@ -21,7 +22,6 @@ func (window *Window) ProcessButtons(x, y float64) {
 			break
 		} else {
 			button.selected = false
-			window.glw.SetCursor(window.defaultCursor)
 		}
 	}
 }
@@ -37,7 +37,6 @@ func (window *Window) ProcessInputs(x, y float64) {
 			break
 		} else {
 			input.selected = false
-			window.glw.SetCursor(window.defaultCursor)
 		}
 	}
 }

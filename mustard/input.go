@@ -68,6 +68,11 @@ func (input *InputWidget) SetValue(value string) {
 	input.value = value
 }
 
+//SetFontColor - Sets the input font color
+func (input *InputWidget) GetValue() string {
+	return input.value
+}
+
 //SetBackgroundColor - Sets the input background color
 func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
@@ -97,19 +102,19 @@ func drawInputWidget(context *gg.Context, widget *InputWidget, top, left, width,
 	context.Fill()
 
 	context.SetHexColor("#000")
-	context.SetLineWidth(1)
+	context.SetLineWidth(.5)
 
 	context.DrawRectangle(
-		float64(left)+2+widget.padding,
-		float64(top)+2+widget.padding,
-		float64(width)-4-(widget.padding*2),
-		float64(height)-4-(widget.padding*2),
+		float64(left)+1+widget.padding,
+		float64(top)+1+widget.padding,
+		float64(width)-2-(widget.padding*2),
+		float64(height)-2-(widget.padding*2),
 	)
 
 	context.Stroke()
 
 	context.LoadFontFace("roboto.ttf", widget.fontSize)
-	context.DrawString(widget.value, float64(left)+widget.fontSize/4, float64(top)+widget.fontSize*2/2-2)
+	context.DrawString(widget.value, float64(left)+widget.fontSize/4, float64(top)+float64(height)/2+2+widget.fontSize/4)
 	context.Fill()
 	//debugLayout(surface, top, left, width, height)
 }

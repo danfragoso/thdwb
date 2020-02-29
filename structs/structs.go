@@ -7,6 +7,7 @@ import (
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
+	URL         string
 	RawDocument string
 	Styles      []*StyleElement
 	Profiler    *profiler.Profiler
