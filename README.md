@@ -4,11 +4,18 @@
 
 This is the hotdog web browser, it's a web browser written from scratch entirely in golang.
 
+### Screenshot
+<p align="center">
+  <img src="screenshot.png?raw=true"></img>
+</p>
+
 ### Components
-- ketchup (html parser, DOM and Render Tree builder)
-- mayo (css parser, stylesheet and layout calculator)
-- mustard (browser UI, window and renderer)
+- ketchup (html parser and DOM Tree builder)
+- mayo (css parser and Render Tree builder)
+- mustard (UI Toolkit, events and OpenGL)
 - sauce (requests, cache and filesystem)
+- bun (css layout calculator)
+- [gg](https://github.com/fogleman/gg) (drawing routines and text rendering)
 
 ### Getting started
 - Running 
@@ -30,9 +37,4 @@ This is the hotdog web browser, it's a web browser written from scratch entirely
   ```sh
   make build
   ```
-  This command will build the binary and move it to the bin/ folder
-
-### Screenshot
-<p align="center">
-  <img src="screenshot.png?raw=true"></img>
-</p>
+  This command will build the binary version
