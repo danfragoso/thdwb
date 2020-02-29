@@ -11,11 +11,20 @@ func getCoreWidgets(widgets []interface{}) []*widget {
 		case *LabelWidget:
 			widget := widgets[i].(*LabelWidget)
 			coreWidgets = append(coreWidgets, &widget.widget)
+		case *TextWidget:
+			widget := widgets[i].(*TextWidget)
+			coreWidgets = append(coreWidgets, &widget.widget)
 		case *ImageWidget:
 			widget := widgets[i].(*ImageWidget)
 			coreWidgets = append(coreWidgets, &widget.widget)
 		case *ContextWidget:
 			widget := widgets[i].(*ContextWidget)
+			coreWidgets = append(coreWidgets, &widget.widget)
+		case *ButtonWidget:
+			widget := widgets[i].(*ButtonWidget)
+			coreWidgets = append(coreWidgets, &widget.widget)
+		case *InputWidget:
+			widget := widgets[i].(*InputWidget)
 			coreWidgets = append(coreWidgets, &widget.widget)
 		}
 	}

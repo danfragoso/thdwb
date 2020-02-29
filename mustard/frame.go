@@ -1,8 +1,6 @@
 package mustard
 
-import (
-	"github.com/fogleman/gg"
-)
+import gg "../gg"
 
 //CreateFrame - Creates and returns a new Frame
 func CreateFrame(orientation FrameOrientation) *Frame {
@@ -52,6 +50,11 @@ func (frame *Frame) SetHeight(height int) {
 	frame.fixedHeight = true
 }
 
+//SetHeight - Sets the frame height
+func (frame *Frame) GetHeight() int {
+	return frame.height
+}
+
 func drawRootFrame(window *Window) {
 	drawFrame(window.context, window.rootFrame, 0, 0, window.width, window.height)
 }
@@ -84,6 +87,15 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				label.height = childrenLayout[i].height
 
 				drawLabelWidget(context, label, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+			case *TextWidget:
+				text := frame.widgets[i].(*TextWidget)
+				text.top = childrenLayout[i].top
+				text.left = childrenLayout[i].left
+				text.width = childrenLayout[i].width
+				text.height = childrenLayout[i].height
+
+				drawTextWidget(context, text, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
 			case *ImageWidget:
 				image := frame.widgets[i].(*ImageWidget)
 				image.top = childrenLayout[i].top
@@ -100,6 +112,24 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				ctx.height = childrenLayout[i].height
 
 				drawContextWidget(context, ctx, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
+			case *ButtonWidget:
+				button := frame.widgets[i].(*ButtonWidget)
+				button.top = childrenLayout[i].top
+				button.left = childrenLayout[i].left
+				button.width = childrenLayout[i].width
+				button.height = childrenLayout[i].height
+
+				drawButtonWidget(context, button, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
+			case *InputWidget:
+				input := frame.widgets[i].(*InputWidget)
+				input.top = childrenLayout[i].top
+				input.left = childrenLayout[i].left
+				input.width = childrenLayout[i].width
+				input.height = childrenLayout[i].height
+
+				drawInputWidget(context, input, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
 			}
 		}
 	}

@@ -38,20 +38,24 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 	switch propName {
 	case "color":
 		parsedStyleSheet.Color = MapCSSColor(propValue)
+	case "background-color":
+		parsedStyleSheet.BackgroundColor = MapCSSColor(propValue)
 	case "font-size":
 		parsedStyleSheet.FontSize = mapSizeValue(propValue)
 	case "display":
 		parsedStyleSheet.Display = propValue
 	case "postion":
 		parsedStyleSheet.Position = propValue
+	case "height":
+		parsedStyleSheet.Height = mapSizeValue(propValue)
+	case "width":
+		parsedStyleSheet.Width = mapSizeValue(propValue)
 	}
 
 	return parsedStyleSheet
 }
 
-func parseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet {
-	parsedStylesheet := &structs.Stylesheet{}
-
+func parseInlineStylesheet(attributes []*structs.Attribute, elementStylesheet *structs.Stylesheet) *structs.Stylesheet {
 	for i := 0; i < len(attributes); i++ {
 		attributeName := attributes[i].Name
 		if attributeName == "style" {
@@ -62,13 +66,13 @@ func parseInlineStylesheet(attributes []*structs.Attribute) *structs.Stylesheet 
 			for i := 0; i < len(styleProps); i++ {
 				styledProperty := strings.Split(styleProps[i], ":")
 				if len(styledProperty) >= 2 {
-					parsedStylesheet = mapPropToStylesheet(parsedStylesheet, styledProperty)
+					elementStylesheet = mapPropToStylesheet(elementStylesheet, styledProperty)
 				}
 			}
 		}
 	}
 
-	return parsedStylesheet
+	return elementStylesheet
 }
 
 func hasInlineStyle(attributes []*structs.Attribute) bool {
@@ -86,14 +90,15 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 
 func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
 	elementStylesheet := &structs.Stylesheet{
-		Color:    &structs.ColorRGBA{0, 0, 0, 0},
-		FontSize: 0,
-		Display:  "",
-		Position: "Normal",
+		Color:           &structs.ColorRGBA{0, 0, 0, 1},
+		BackgroundColor: &structs.ColorRGBA{1, 1, 1, 1},
+		FontSize:        0,
+		Display:         "",
+		Position:        "Normal",
 	}
 
 	if hasInlineStyle(attributes) {
-		elementStylesheet = parseInlineStylesheet(attributes)
+		elementStylesheet = parseInlineStylesheet(attributes, elementStylesheet)
 	}
 
 	if elementStylesheet.FontSize == float64(0) {
@@ -103,10 +108,6 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 			elementStylesheet.FontSize = fontSize
 		} else {
 			elementStylesheet.FontSize = float64(14)
-		}
-
-		if elementStylesheet.Height == float64(0) {
-			elementStylesheet.Height = elementStylesheet.FontSize
 		}
 	}
 

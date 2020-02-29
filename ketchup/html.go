@@ -59,16 +59,11 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
-func ParseDocument(document string) *structs.NodeDOM {
-	DOM_Tree := &structs.NodeDOM{
-		Element:  "root",
-		Content:  "THDWB",
-		Children: []*structs.NodeDOM{},
-		Style:    nil,
-		Parent:   nil,
-	}
+func ParseDocument(document string) *structs.HTMLDocument {
+	HTMLDocument := &structs.HTMLDocument{}
 
-	lastNode := DOM_Tree
+	HTMLDocument.RawDocument = document
+	lastNode := HTMLDocument.RootElement
 	parseDocument := xmlTag.MatchString(document)
 	document = strings.ReplaceAll(document, "\n", "")
 
@@ -98,6 +93,7 @@ func ParseDocument(document string) *structs.NodeDOM {
 				lastNode = lastNode.Parent
 			} else {
 				currentTagName := strings.Trim(tagName.FindString(currentTag), "<")
+
 				extractedAttributes := extractAttributes(currentTag)
 				elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
 
@@ -110,10 +106,15 @@ func ParseDocument(document string) *structs.NodeDOM {
 					Parent:     lastNode,
 				}
 
-				lastNode.Children = append(lastNode.Children, currentNode)
+				if currentTagName == "html" {
+					HTMLDocument.RootElement = currentNode
+					lastNode = HTMLDocument.RootElement
+				} else {
+					lastNode.Children = append(lastNode.Children, currentNode)
 
-				if !isVoidElement(currentTagName) {
-					lastNode = currentNode
+					if !isVoidElement(currentTagName) {
+						lastNode = currentNode
+					}
 				}
 			}
 
@@ -125,5 +126,5 @@ func ParseDocument(document string) *structs.NodeDOM {
 		}
 	}
 
-	return DOM_Tree
+	return HTMLDocument
 }

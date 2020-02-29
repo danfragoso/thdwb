@@ -1,5 +1,18 @@
 package structs
 
+import (
+	profiler "../profiler"
+)
+
+type HTMLDocument struct {
+	Title       string
+	RootElement *NodeDOM
+	URL         string
+	RawDocument string
+	Styles      []*StyleElement
+	Profiler    *profiler.Profiler
+}
+
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
 	Element    string       `json:"element"`
@@ -35,6 +48,12 @@ type Stylesheet struct {
 	Height float64
 	Top    float64
 	Left   float64
+}
+
+//StyleElement "hmtl <style> element"
+type StyleElement struct {
+	Selector string
+	Style    *Stylesheet
 }
 
 //ColorRGBA "RGBA color model"

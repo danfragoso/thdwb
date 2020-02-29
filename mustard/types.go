@@ -3,7 +3,8 @@ package mustard
 import (
 	"image"
 
-	"github.com/fogleman/gg"
+	gg "../gg"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -24,7 +25,11 @@ type Window struct {
 	context *gg.Context
 	backend *glBackend
 
-	rootFrame *Frame
+	defaultCursor     *glfw.Cursor
+	registeredButtons []*ButtonWidget
+	registeredInputs  []*InputWidget
+	activeInput       *InputWidget
+	rootFrame         *Frame
 }
 
 type glBackend struct {
@@ -86,6 +91,14 @@ type LabelWidget struct {
 	fontColor string
 }
 
+type TextWidget struct {
+	widget
+	content string
+
+	fontSize  float64
+	fontColor string
+}
+
 type ImageWidget struct {
 	widget
 
@@ -98,4 +111,26 @@ type ContextWidget struct {
 
 	context  *gg.Context
 	renderer func(*gg.Context)
+}
+
+type ButtonWidget struct {
+	widget
+	content string
+
+	fontSize  float64
+	fontColor string
+	selected  bool
+	padding   float64
+	onClick   func()
+}
+
+type InputWidget struct {
+	widget
+
+	value     string
+	selected  bool
+	active    bool
+	padding   float64
+	fontSize  float64
+	fontColor string
 }
