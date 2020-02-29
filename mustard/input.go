@@ -22,7 +22,7 @@ func CreateInputWidget() *InputWidget {
 
 			ref: "input",
 
-			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
+			cursor: glfw.CreateStandardCursor(glfw.IBeamCursor),
 
 			backgroundColor: "#fff",
 		},
@@ -63,6 +63,11 @@ func (input *InputWidget) SetFontColor(fontColor string) {
 	}
 }
 
+//SetFontColor - Sets the input font color
+func (input *InputWidget) SetValue(value string) {
+	input.value = value
+}
+
 //SetBackgroundColor - Sets the input background color
 func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
@@ -72,9 +77,39 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 }
 
 func drawInputWidget(context *gg.Context, widget *InputWidget, top, left, width, height int) {
-	context.SetHexColor(widget.fontColor)
+	if widget.selected {
+		context.SetHexColor("#bbb")
+	} else {
+		context.SetHexColor("#ddd")
+	}
+
+	if widget.active {
+		context.SetHexColor("#fff")
+	}
+
+	context.DrawRectangle(
+		float64(left)+widget.padding,
+		float64(top)+widget.padding,
+		float64(width)-(widget.padding*2),
+		float64(height)-(widget.padding*2),
+	)
+
+	context.Fill()
+
+	context.SetHexColor("#000")
+	context.SetLineWidth(1)
+
+	context.DrawRectangle(
+		float64(left)+2+widget.padding,
+		float64(top)+2+widget.padding,
+		float64(width)-4-(widget.padding*2),
+		float64(height)-4-(widget.padding*2),
+	)
+
+	context.Stroke()
+
 	context.LoadFontFace("roboto.ttf", widget.fontSize)
-	context.DrawString("memes", float64(left)+widget.fontSize/4, float64(top)+widget.fontSize*2/2)
+	context.DrawString(widget.value, float64(left)+widget.fontSize/4, float64(top)+widget.fontSize*2/2-2)
 	context.Fill()
 	//debugLayout(surface, top, left, width, height)
 }

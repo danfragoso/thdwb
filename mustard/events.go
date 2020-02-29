@@ -2,10 +2,12 @@ package mustard
 
 func (window *Window) ProcessPointerPosition(x, y float64) {
 	window.ProcessButtons(x, y)
+	window.ProcessInputs(x, y)
 }
 
 func (window *Window) ProcessPointerClick() {
 	window.ProcessButtonClick()
+	window.ProcessInputActivation()
 }
 
 func (window *Window) ProcessButtons(x, y float64) {
@@ -20,6 +22,39 @@ func (window *Window) ProcessButtons(x, y float64) {
 		} else {
 			button.selected = false
 			window.glw.SetCursor(window.defaultCursor)
+		}
+	}
+}
+
+func (window *Window) ProcessInputs(x, y float64) {
+	for _, input := range window.registeredInputs {
+		if x > float64(input.left)+input.padding &&
+			x < float64(input.left+input.width)-input.padding &&
+			y > float64(input.top)+input.padding &&
+			y < float64(input.top+input.height)-input.padding {
+			input.selected = true
+			window.glw.SetCursor(input.cursor)
+			break
+		} else {
+			input.selected = false
+			window.glw.SetCursor(window.defaultCursor)
+		}
+	}
+}
+
+func (window *Window) ProcessInputActivation() {
+	for _, input := range window.registeredInputs {
+		if input.selected == true {
+			window.activeInput = input
+			input.active = true
+			window.RequestRepaint()
+			return
+		}
+
+		if input.active {
+			input.active = false
+			window.activeInput = nil
+			window.RequestRepaint()
 		}
 	}
 }

@@ -145,6 +145,11 @@ func createDebugFrame(window *mustard.Window, document *structs.HTMLDocument) *m
 	debugTitle := mustard.CreateLabelWidget("Show Source")
 	debugTitle.SetFontSize(16)
 
+	inputTitle := mustard.CreateInputWidget()
+	window.RegisterInput(inputTitle)
+
+	debugBar.AttachWidget(inputTitle)
+
 	debugBar.AttachWidget(toggleDebugButton)
 	debugBar.AttachWidget(debugTitle)
 	debugFrame.AttachWidget(debugBar)

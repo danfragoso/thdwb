@@ -27,6 +27,8 @@ type Window struct {
 
 	defaultCursor     *glfw.Cursor
 	registeredButtons []*ButtonWidget
+	registeredInputs  []*InputWidget
+	activeInput       *InputWidget
 	rootFrame         *Frame
 }
 
@@ -89,13 +91,6 @@ type LabelWidget struct {
 	fontColor string
 }
 
-type InputWidget struct {
-	widget
-
-	fontSize  float64
-	fontColor string
-}
-
 type TextWidget struct {
 	widget
 	content string
@@ -127,4 +122,15 @@ type ButtonWidget struct {
 	selected  bool
 	padding   float64
 	onClick   func()
+}
+
+type InputWidget struct {
+	widget
+
+	value     string
+	selected  bool
+	active    bool
+	padding   float64
+	fontSize  float64
+	fontColor string
 }

@@ -109,6 +109,22 @@ func (window *Window) addEvents() {
 		window.RequestRepaint()
 	})
 
+	window.glw.SetCharCallback(func(w *glfw.Window, char rune) {
+		if window.activeInput != nil {
+			window.activeInput.value += string(char)
+			window.RequestRepaint()
+		}
+	})
+
+	window.glw.SetKeyCallback(func(w *glfw.Window, key glfw.Key, sc int, action glfw.Action, mods glfw.ModifierKey) {
+		if key == glfw.KeyBackspace && action == glfw.Release {
+			if window.activeInput != nil && len(window.activeInput.value) > 0 {
+				window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
+				window.RequestRepaint()
+			}
+		}
+	})
+
 	window.glw.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
 		if button == glfw.MouseButtonLeft && action == glfw.Release {
 			window.ProcessPointerClick()
@@ -141,4 +157,8 @@ func (window *Window) generateTexture() {
 func (window *Window) RegisterButton(button *ButtonWidget, callback func()) {
 	button.onClick = callback
 	window.registeredButtons = append(window.registeredButtons, button)
+}
+
+func (window *Window) RegisterInput(input *InputWidget) {
+	window.registeredInputs = append(window.registeredInputs, input)
 }
