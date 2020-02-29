@@ -121,6 +121,15 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				button.height = childrenLayout[i].height
 
 				drawButtonWidget(context, button, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+
+			case *InputWidget:
+				input := frame.widgets[i].(*InputWidget)
+				input.top = childrenLayout[i].top
+				input.left = childrenLayout[i].left
+				input.width = childrenLayout[i].width
+				input.height = childrenLayout[i].height
+
+				drawInputWidget(context, input, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
 			}
 		}
 	}

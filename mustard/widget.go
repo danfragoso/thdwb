@@ -23,6 +23,9 @@ func getCoreWidgets(widgets []interface{}) []*widget {
 		case *ButtonWidget:
 			widget := widgets[i].(*ButtonWidget)
 			coreWidgets = append(coreWidgets, &widget.widget)
+		case *InputWidget:
+			widget := widgets[i].(*InputWidget)
+			coreWidgets = append(coreWidgets, &widget.widget)
 		}
 	}
 	return coreWidgets

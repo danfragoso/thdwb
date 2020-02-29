@@ -89,6 +89,13 @@ type LabelWidget struct {
 	fontColor string
 }
 
+type InputWidget struct {
+	widget
+
+	fontSize  float64
+	fontColor string
+}
+
 type TextWidget struct {
 	widget
 	content string
