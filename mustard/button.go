@@ -94,7 +94,7 @@ func (button *ButtonWidget) SetBackgroundColor(backgroundColor string) {
 
 func drawButtonWidget(context *gg.Context, widget *ButtonWidget, top, left, width, height int) {
 	if widget.selected {
-		context.SetHexColor("#bbb")
+		context.SetHexColor("#ccc")
 	} else {
 		context.SetHexColor("#ddd")
 	}

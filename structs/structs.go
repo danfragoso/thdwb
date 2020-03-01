@@ -4,6 +4,10 @@ import (
 	profiler "../profiler"
 )
 
+type WebBrowser struct {
+	Document *HTMLDocument
+}
+
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM

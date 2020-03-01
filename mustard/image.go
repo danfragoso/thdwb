@@ -57,5 +57,5 @@ func (label *ImageWidget) SetHeight(height int) {
 }
 
 func drawImageWidget(context *gg.Context, widget *ImageWidget, top, left, width, height int) {
-	context.DrawImage(widget.img, left+2, top+2)
+	context.DrawImage(widget.img, left+15, top+3)
 }
