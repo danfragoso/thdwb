@@ -1,6 +1,7 @@
 package gg
 
 import (
+	"bytes"
 	"fmt"
 	"image"
 	"image/draw"
@@ -33,6 +34,11 @@ func LoadImage(path string) (image.Image, error) {
 	}
 	defer file.Close()
 	im, _, err := image.Decode(file)
+	return im, err
+}
+
+func LoadAsset(asset []byte) (image.Image, error) {
+	im, _, err := image.Decode(bytes.NewReader(asset))
 	return im, err
 }
 

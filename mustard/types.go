@@ -117,6 +117,7 @@ type ButtonWidget struct {
 	widget
 	content string
 
+	icon      image.Image
 	fontSize  float64
 	fontColor string
 	selected  bool

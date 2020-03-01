@@ -27,6 +27,8 @@ var colorTable = map[string]*structs.ColorRGBA{
 	"gray":    &structs.ColorRGBA{R: 0.5, G: 0.5, B: 0.5, A: 1.0},
 	"silver":  &structs.ColorRGBA{R: 0.7, G: 0.7, B: 0.7, A: 1.0},
 	"white":   &structs.ColorRGBA{R: 1.0, G: 1.0, B: 1.0, A: 1.0},
+	"tomato":  &structs.ColorRGBA{R: 1.0, G: 0.38, B: 0.27, A: 1.0},
+	"crimson": &structs.ColorRGBA{R: 0.8, G: 0.07, B: 0.2, A: 1.0},
 }
 
 var elementFontTable = map[string]float64{

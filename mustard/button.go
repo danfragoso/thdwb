@@ -6,9 +6,10 @@ import (
 )
 
 //CreateButtonWidget - Creates and returns a new Button Widget
-func CreateButtonWidget(content string) *ButtonWidget {
+func CreateButtonWidget(asset []byte) *ButtonWidget {
 	var widgets []interface{}
 
+	icon, _ := gg.LoadAsset(asset)
 	return &ButtonWidget{
 		widget: widget{
 			top:  0,
@@ -26,8 +27,8 @@ func CreateButtonWidget(content string) *ButtonWidget {
 
 			backgroundColor: "#fff",
 		},
-		content: content,
 
+		icon:      icon,
 		fontSize:  20,
 		padding:   0,
 		fontColor: "#000",
@@ -110,12 +111,13 @@ func drawButtonWidget(context *gg.Context, widget *ButtonWidget, top, left, widt
 	context.SetHexColor(widget.fontColor)
 	context.LoadFontFace("roboto.ttf", widget.fontSize)
 
-	cW, cH := context.MeasureString(widget.content)
-	context.DrawString(
-		widget.content,
-		float64(left+width/2)-cW/2,
-		float64(top+height/2)+cH/2,
-	)
+	// cW, cH := context.MeasureString(widget.content)
+	context.DrawImage(widget.icon, left+4, top+2)
+	// context.DrawString(
+	// 	widget.content,
+	// 	float64(left+width/2)-cW/2,
+	// 	float64(top+height/2)+cH/2,
+	// )
 
 	context.Fill()
 }

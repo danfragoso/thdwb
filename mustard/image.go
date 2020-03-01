@@ -8,10 +8,10 @@ import (
 )
 
 //CreateImageWidget - Creates and returns a new Image Widget
-func CreateImageWidget(path string) *ImageWidget {
+func CreateImageWidget(path []byte) *ImageWidget {
 	var widgets []interface{}
 
-	img, err := gg.LoadImage(path)
+	img, err := gg.LoadAsset(path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -34,8 +34,8 @@ func CreateImageWidget(path string) *ImageWidget {
 			backgroundColor: "#fff",
 		},
 
-		path: path,
-		img:  img,
+		//path: path,
+		img: img,
 	}
 }
 

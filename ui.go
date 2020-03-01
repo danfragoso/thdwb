@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 
+	assets "./assets"
 	mustard "./mustard"
 	structs "./structs"
 )
@@ -14,10 +15,6 @@ func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *must
 
 	debugBar.SetHeight(22)
 	debugBar.SetBackgroundColor("#eee")
-	toggleDebugButton := mustard.CreateButtonWidget("*")
-	toggleDebugButton.SetFontSize(16)
-	toggleDebugButton.SetWidth(22)
-	toggleDebugButton.SetPadding(2)
 	debugFrame.SetHeight(400)
 
 	source := mustard.CreateTextWidget(browser.Document.RawDocument)
@@ -36,34 +33,26 @@ func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *must
 	debugContent.AttachWidget(dv)
 	debugContent.AttachWidget(source)
 
-	window.RegisterButton(toggleDebugButton, func() {
-		if debugFrame.GetHeight() == 22 {
-			debugFrame.SetHeight(400)
-		} else {
-			debugFrame.SetHeight(22)
-		}
-	})
-
-	debugTitle := mustard.CreateLabelWidget("Show Source")
+	debugTitle := mustard.CreateLabelWidget("Source")
 	debugTitle.SetFontSize(16)
 
-	debugBar.AttachWidget(toggleDebugButton)
 	debugBar.AttachWidget(debugTitle)
 	debugFrame.AttachWidget(debugBar)
 	debugFrame.AttachWidget(debugContent)
-	debugFrame.SetHeight(22)
+	debugFrame.SetHeight(0)
 	return debugFrame
 }
 
-func createMainBar(window *mustard.Window, browser *structs.WebBrowser) *mustard.Frame {
+func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget) {
 	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
-	appBar.SetHeight(40)
+	appBar.SetHeight(62)
 
 	inputFrame := mustard.CreateFrame(mustard.VerticalFrame)
 	urlInput := mustard.CreateInputWidget()
 	urlInput.SetValue(browser.Document.URL)
 	icon := mustard.CreateFrame(mustard.VerticalFrame)
-	img := mustard.CreateImageWidget("logo.png")
+	img := mustard.CreateImageWidget(assets.Logo())
+
 	img.SetWidth(50)
 	icon.AttachWidget(img)
 	icon.SetBackgroundColor("#ddd")
@@ -74,18 +63,18 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) *mustard
 	urlInput.SetFontSize(15)
 
 	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
-	button := mustard.CreateButtonWidget("Ir")
-	button.SetPadding(2)
-	button.SetWidth(40)
 
-	window.RegisterButton(button, func() {
-		browser.Document = loadDocument(urlInput.GetValue())
+	goButton := mustard.CreateButtonWidget(assets.ArrowRight())
+	goButton.SetWidth(30)
+	goButton.SetPadding(1)
 
-		window.RequestRepaint()
-	})
+	toolsButton := mustard.CreateButtonWidget(assets.Menu())
+	toolsButton.SetWidth(34)
+	toolsButton.SetPadding(1)
 
-	buttonFrame.AttachWidget(button)
-	buttonFrame.SetWidth(50)
+	buttonFrame.AttachWidget(goButton)
+	buttonFrame.AttachWidget(toolsButton)
+	buttonFrame.SetWidth(68)
 	buttonFrame.SetBackgroundColor("#ddd")
 	inputFrame.AttachWidget(buttonFrame)
 	window.RegisterInput(urlInput)
@@ -94,8 +83,25 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) *mustard
 	dv.SetBackgroundColor("#ddd")
 	dv.SetHeight(6)
 
+	pv := mustard.CreateFrame(mustard.HorizontalFrame)
+	pv.SetBackgroundColor("#bfbfbf")
+	pv.SetHeight(1)
+
+	statusBar := mustard.CreateFrame(mustard.HorizontalFrame)
+	statusBar.SetBackgroundColor("#ddd")
+
+	statusLabel := mustard.CreateLabelWidget("Loading;")
+	statusLabel.SetFontColor("#333")
+	statusLabel.SetFontSize(15)
+	statusBar.AttachWidget(statusLabel)
+	statusBar.SetHeight(20)
+
 	appBar.AttachWidget(dv)
 	appBar.AttachWidget(inputFrame)
 	appBar.AttachWidget(dv)
-	return appBar
+	appBar.AttachWidget(pv)
+	appBar.AttachWidget(statusBar)
+	appBar.AttachWidget(pv)
+
+	return appBar, statusLabel, toolsButton, goButton
 }

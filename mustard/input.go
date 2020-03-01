@@ -111,6 +111,7 @@ func drawInputWidget(context *gg.Context, widget *InputWidget, top, left, width,
 		float64(height)-2-(widget.padding*2),
 	)
 
+	context.SetLineJoinRound()
 	context.Stroke()
 
 	context.SetHexColor("#2f2f2f")
