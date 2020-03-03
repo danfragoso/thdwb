@@ -1,5 +1,5 @@
 all:
-	@go run *.go http://localhost:8080/nocss2.html
+	@go run *.go
 
 run:
 	@go run *.go $(url)

@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"runtime"
 
+	assets "./assets"
 	bun "./bun"
 	gg "./gg"
 	ketchup "./ketchup"
@@ -26,28 +25,33 @@ func main() {
 	mustard.SetGLFWHints()
 
 	perf = profiler.CreateProfiler()
-	url := os.Args[1]
 
 	browser := &structs.WebBrowser{
-		Document: loadDocument(url),
+		Document: loadDocumentFromAsset(assets.HomePage()),
 	}
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
-	appBar, statusLabel, menuButton, goButton := createMainBar(window, browser)
+	appBar, statusLabel, menuButton, goButton, urlInput := createMainBar(window, browser)
 	debugFrame := createDebugFrame(window, browser)
-	fmt.Println(statusLabel, goButton, menuButton)
 	rootFrame.AttachWidget(appBar)
 
-	// window.RegisterButton(menuButton, func() {
-	// 	if debugFrame.GetHeight() != 300 {
-	// 		debugFrame.SetHeight(300)
-	// 	} else {
-	// 		debugFrame.SetHeight(0)
-	// 	}
-	// })
+	window.RegisterButton(menuButton, func() {
+		if debugFrame.GetHeight() != 300 {
+			debugFrame.SetHeight(300)
+		} else {
+			debugFrame.SetHeight(0)
+		}
+	})
+
+	window.RegisterButton(goButton, func() {
+		if urlInput.GetValue() != browser.Document.URL {
+			browser.Document = loadDocument(urlInput.GetValue())
+			statusLabel.SetContent("Loading: " + urlInput.GetValue())
+		}
+	})
 
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
 		perf.Start("parse")
@@ -68,7 +72,7 @@ func main() {
 	window.SetRootFrame(rootFrame)
 	app.AddWindow(window)
 	window.Show()
-	perf.Stop("ui-creation")
 
-	app.Run(func() {})
+	app.Run(func() {
+	})
 }

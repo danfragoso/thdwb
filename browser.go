@@ -14,3 +14,10 @@ func loadDocument(url string) *structs.HTMLDocument {
 
 	return parsedDocument
 }
+
+func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
+	parsedDocument := ketchup.ParseDocument(string(document))
+	parsedDocument.URL = "thdwb://homepage/"
+
+	return parsedDocument
+}

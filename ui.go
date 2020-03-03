@@ -43,7 +43,7 @@ func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *must
 	return debugFrame
 }
 
-func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget) {
+func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
 	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	appBar.SetHeight(62)
 
@@ -103,5 +103,5 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	appBar.AttachWidget(statusBar)
 	appBar.AttachWidget(pv)
 
-	return appBar, statusLabel, toolsButton, goButton
+	return appBar, statusLabel, toolsButton, goButton, urlInput
 }
