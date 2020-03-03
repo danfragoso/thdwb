@@ -5,7 +5,7 @@
 This is the hotdog web browser, it's a web browser written from scratch entirely in golang.
 
 <p align="center">
-  <img src="thdwb_screenshot.png?raw=true"></img>
+  <img src="screenshot.png?raw=true"></img>
 </p>
 
 ### Components
