@@ -72,6 +72,10 @@ func (button *ButtonWidget) SetContent(content string) {
 	button.dirty = true
 }
 
+func (button *ButtonWidget) Click() {
+	button.onClick()
+}
+
 //GetContent - Gets the button content
 func (button *ButtonWidget) GetContent() string {
 	return button.content

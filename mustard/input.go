@@ -55,6 +55,10 @@ func (input *InputWidget) SetFontSize(fontSize float64) {
 	input.dirty = true
 }
 
+func (input *InputWidget) SetReturnCallback(returnCallback func()) {
+	input.returnCallback = returnCallback
+}
+
 //SetFontColor - Sets the input font color
 func (input *InputWidget) SetFontColor(fontColor string) {
 	if len(fontColor) > 0 && string(fontColor[0]) == "#" {

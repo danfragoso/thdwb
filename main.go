@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
 	assets "./assets"
@@ -35,6 +36,12 @@ func main() {
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
 	appBar, statusLabel, menuButton, goButton, urlInput := createMainBar(window, browser)
+	urlInput.SetReturnCallback(func() {
+		fmt.Println("enter")
+		goButton.Click()
+		window.RequestRepaint()
+	})
+
 	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
 

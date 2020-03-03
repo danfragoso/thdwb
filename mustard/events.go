@@ -11,6 +11,16 @@ func (window *Window) ProcessPointerClick() {
 	window.ProcessInputActivation()
 }
 
+func (window *Window) ProcessReturnKey() {
+	if window.activeInput != nil && window.activeInput.active == true {
+		window.activeInput.active = false
+		window.activeInput.selected = false
+		window.RequestRepaint()
+		window.activeInput.returnCallback()
+		window.activeInput = nil
+	}
+}
+
 func (window *Window) ProcessButtons(x, y float64) {
 	for _, button := range window.registeredButtons {
 		if x > float64(button.left)+button.padding &&

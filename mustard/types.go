@@ -128,10 +128,11 @@ type ButtonWidget struct {
 type InputWidget struct {
 	widget
 
-	value     string
-	selected  bool
-	active    bool
-	padding   float64
-	fontSize  float64
-	fontColor string
+	value          string
+	selected       bool
+	active         bool
+	padding        float64
+	fontSize       float64
+	fontColor      string
+	returnCallback func()
 }

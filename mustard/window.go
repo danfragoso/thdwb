@@ -117,10 +117,25 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetKeyCallback(func(w *glfw.Window, key glfw.Key, sc int, action glfw.Action, mods glfw.ModifierKey) {
-		if key == glfw.KeyBackspace && action == glfw.Release {
-			if window.activeInput != nil && len(window.activeInput.value) > 0 {
-				window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
-				window.RequestRepaint()
+		if action == glfw.Release {
+			switch key {
+			case glfw.KeyBackspace:
+				if window.activeInput != nil && len(window.activeInput.value) > 0 {
+					window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
+					window.RequestRepaint()
+				}
+				break
+			case glfw.KeyEscape:
+				if window.activeInput != nil {
+					window.activeInput.active = false
+					window.activeInput.selected = false
+					window.activeInput = nil
+					window.RequestRepaint()
+				}
+				break
+			case glfw.KeyEnter:
+				window.ProcessReturnKey()
+				break
 			}
 		}
 	})
