@@ -38,21 +38,6 @@ func main() {
 	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
 
-	window.RegisterButton(menuButton, func() {
-		if debugFrame.GetHeight() != 300 {
-			debugFrame.SetHeight(300)
-		} else {
-			debugFrame.SetHeight(0)
-		}
-	})
-
-	window.RegisterButton(goButton, func() {
-		if urlInput.GetValue() != browser.Document.URL {
-			browser.Document = loadDocument(urlInput.GetValue())
-			statusLabel.SetContent("Loading: " + urlInput.GetValue())
-		}
-	})
-
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
 		perf.Start("parse")
 		parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
@@ -65,6 +50,37 @@ func main() {
 		statusLabel.SetContent("Loaded; " +
 			"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
 			"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ")
+	})
+
+	window.RegisterButton(menuButton, func() {
+		if debugFrame.GetHeight() != 300 {
+			debugFrame.SetHeight(300)
+		} else {
+			debugFrame.SetHeight(0)
+		}
+	})
+
+	window.RegisterButton(goButton, func() {
+		if urlInput.GetValue() != browser.Document.URL {
+			statusLabel.SetContent("Loading: " + urlInput.GetValue())
+			go loadDocument(browser, urlInput.GetValue(), func() {
+				ctx := viewPort.GetContext()
+				ctx.SetRGB(1, 1, 1)
+				ctx.Clear()
+				perf.Start("parse")
+				parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
+				perf.Stop("parse")
+
+				perf.Start("render")
+				bun.RenderDocument(ctx, parsedDoc)
+				perf.Stop("render")
+
+				statusLabel.SetContent("Loaded; " +
+					"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
+					"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ")
+				window.RequestRepaint()
+			})
+		}
 	})
 
 	rootFrame.AttachWidget(viewPort)

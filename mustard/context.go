@@ -49,6 +49,10 @@ func (context *ContextWidget) SetHeight(height int) {
 	context.fixedHeight = true
 }
 
+func (context *ContextWidget) GetContext() *gg.Context {
+	return context.context
+}
+
 func drawContextWidget(context *gg.Context, widget *ContextWidget, top, left, width, height int) {
 	if widget.context == nil || widget.context.Width() != width || widget.context.Height() != height {
 		widget.context = gg.NewContext(width, height)

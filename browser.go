@@ -6,13 +6,14 @@ import (
 	structs "./structs"
 )
 
-func loadDocument(url string) *structs.HTMLDocument {
+func loadDocument(browser *structs.WebBrowser, url string, callback func()) {
 	resource := sauce.GetResource(url)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
 	parsedDocument.URL = url
 
-	return parsedDocument
+	browser.Document = parsedDocument
+	callback()
 }
 
 func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
