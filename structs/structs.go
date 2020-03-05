@@ -29,8 +29,9 @@ type NodeDOM struct {
 
 //Resource "HTTP resource struct definition"
 type Resource struct {
-	Body string
-	Code int
+	Body        string
+	ContentType string
+	Code        int
 }
 
 //Attribute "Generic key:value attribute definition"

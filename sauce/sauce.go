@@ -29,6 +29,7 @@ func GetResource(url string) *structs.Resource {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
+	resource.ContentType = resp.Header.Get("Content-Type")
 	resource.Body = string(body)
 	return resource
 }
