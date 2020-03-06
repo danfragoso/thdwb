@@ -1,7 +1,6 @@
 package mustard
 
 import (
-	gg "../gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -85,7 +84,9 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func drawInputWidget(context *gg.Context, widget *InputWidget, top, left, width, height int) {
+func drawInputWidget(window *Window, widget *InputWidget, top, left, width, height int) {
+	context := window.context
+
 	if widget.selected {
 		context.SetHexColor("#e4e4e4")
 	} else {
@@ -122,5 +123,19 @@ func drawInputWidget(context *gg.Context, widget *InputWidget, top, left, width,
 	context.LoadFontFace("roboto.ttf", widget.fontSize)
 	context.DrawString(widget.value, float64(left)+widget.fontSize/4+4, float64(top)+float64(height)/2+2+widget.fontSize/4)
 	context.Fill()
+
+	if widget.active {
+		w, _ := context.MeasureString(widget.value)
+
+		context.SetHexColor("#000")
+		context.DrawRectangle(
+			float64(left)+widget.fontSize/4+4+w,
+			float64(top)+float64(height)/2-widget.fontSize/2+.5,
+			1.3,
+			float64(widget.fontSize),
+		)
+		context.Fill()
+	}
+
 	//debugLayout(surface, top, left, width, height)
 }

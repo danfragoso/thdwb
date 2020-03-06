@@ -1,7 +1,5 @@
 package mustard
 
-import gg "../gg"
-
 //CreateFrame - Creates and returns a new Frame
 func CreateFrame(orientation FrameOrientation) *Frame {
 	var widgets []interface{}
@@ -56,10 +54,11 @@ func (frame *Frame) GetHeight() int {
 }
 
 func drawRootFrame(window *Window) {
-	drawFrame(window.context, window.rootFrame, 0, 0, window.width, window.height)
+	drawFrame(window, window.rootFrame, 0, 0, window.width, window.height)
 }
 
-func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) {
+func drawFrame(window *Window, frame *Frame, top, left, width, height int) {
+	context := window.context
 	context.SetHexColor(frame.backgroundColor)
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.Fill()
@@ -78,7 +77,7 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				frame.width = childrenLayout[i].width
 				frame.height = childrenLayout[i].height
 
-				drawFrame(context, frame, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawFrame(window, frame, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
 			case *LabelWidget:
 				label := frame.widgets[i].(*LabelWidget)
 				label.top = childrenLayout[i].top
@@ -129,7 +128,7 @@ func drawFrame(context *gg.Context, frame *Frame, top, left, width, height int) 
 				input.width = childrenLayout[i].width
 				input.height = childrenLayout[i].height
 
-				drawInputWidget(context, input, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawInputWidget(window, input, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
 			}
 		}
 	}
