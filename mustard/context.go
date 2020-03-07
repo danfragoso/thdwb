@@ -59,4 +59,5 @@ func (ctx *ContextWidget) draw(context *gg.Context) {
 	}
 
 	context.DrawImage(ctx.context.Image(), left, top)
+	ctx.needsRepaint = false
 }

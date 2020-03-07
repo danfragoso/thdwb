@@ -132,4 +132,6 @@ func (input *InputWidget) draw(window *Window) {
 		)
 		context.Fill()
 	}
+
+	input.needsRepaint = false
 }

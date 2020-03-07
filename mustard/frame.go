@@ -59,6 +59,7 @@ func (frame *Frame) draw(window *Window) {
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.Fill()
 
+	frame.needsRepaint = false
 	childrenLen := len(frame.widgets)
 	if childrenLen > 0 {
 		childrenWidgets := getCoreWidgets(frame.widgets)

@@ -95,9 +95,8 @@ func main() {
 	rootFrame.AttachWidget(viewPort)
 	rootFrame.AttachWidget(debugFrame)
 	window.SetRootFrame(rootFrame)
+
 	app.AddWindow(window)
 	window.Show()
-
-	app.Run(func() {
-	})
+	app.Run(func() {})
 }

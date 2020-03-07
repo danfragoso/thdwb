@@ -85,4 +85,6 @@ func (label *LabelWidget) draw(context *gg.Context) {
 	context.LoadFontFace("roboto.ttf", label.fontSize)
 	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
+
+	label.needsRepaint = false
 }

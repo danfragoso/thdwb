@@ -54,4 +54,5 @@ func (label *ImageWidget) SetHeight(height int) {
 func (image *ImageWidget) draw(context *gg.Context) {
 	top, left, _, _ := image.computedBox.GetCoords()
 	context.DrawImage(image.img, left+15, top+3)
+	image.needsRepaint = false
 }

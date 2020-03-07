@@ -113,4 +113,5 @@ func (button *ButtonWidget) draw(context *gg.Context) {
 	context.DrawImage(button.icon, left+4, top+2)
 
 	context.Fill()
+	button.needsRepaint = false
 }

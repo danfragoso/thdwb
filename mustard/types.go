@@ -83,6 +83,8 @@ type widget struct {
 
 	focused  bool
 	selected bool
+
+	window *Window
 }
 
 type FrameOrientation int
