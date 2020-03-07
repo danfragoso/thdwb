@@ -52,6 +52,17 @@ type box struct {
 	height int
 }
 
+func (box *box) SetCoords(top, left, width, height int) {
+	box.top = top
+	box.left = left
+	box.width = width
+	box.height = height
+}
+
+func (box *box) GetCoords() (int, int, int, int) {
+	return box.top, box.left, box.width, box.height
+}
+
 type widget struct {
 	box         box
 	computedBox box

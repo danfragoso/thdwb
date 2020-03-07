@@ -48,10 +48,12 @@ func (frame *Frame) GetHeight() int {
 }
 
 func drawRootFrame(window *Window) {
-	drawFrame(window, window.rootFrame, 0, 0, window.width, window.height)
+	window.rootFrame.computedBox.SetCoords(0, 0, window.width, window.height)
+	window.rootFrame.draw(window)
 }
 
-func drawFrame(window *Window, frame *Frame, top, left, width, height int) {
+func (frame *Frame) draw(window *Window) {
+	top, left, width, height := frame.computedBox.GetCoords()
 	context := window.context
 	context.SetHexColor(frame.backgroundColor)
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
@@ -66,63 +68,38 @@ func drawFrame(window *Window, frame *Frame, top, left, width, height int) {
 			switch frame.widgets[i].(type) {
 			case *Frame:
 				frame := frame.widgets[i].(*Frame)
-				frame.box.top = childrenLayout[i].box.top
-				frame.box.left = childrenLayout[i].box.left
-				frame.box.width = childrenLayout[i].box.width
-				frame.box.height = childrenLayout[i].box.height
+				frame.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				frame.draw(window)
 
-				drawFrame(window, frame, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *LabelWidget:
 				label := frame.widgets[i].(*LabelWidget)
-				label.box.top = childrenLayout[i].box.top
-				label.box.left = childrenLayout[i].box.left
-				label.box.width = childrenLayout[i].box.width
-				label.box.height = childrenLayout[i].box.height
+				label.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				label.draw(context)
 
-				drawLabelWidget(context, label, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *TextWidget:
 				text := frame.widgets[i].(*TextWidget)
-				text.box.top = childrenLayout[i].box.top
-				text.box.left = childrenLayout[i].box.left
-				text.box.width = childrenLayout[i].box.width
-				text.box.height = childrenLayout[i].box.height
-
-				drawTextWidget(context, text, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
+				text.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				text.draw(context)
 
 			case *ImageWidget:
 				image := frame.widgets[i].(*ImageWidget)
-				image.box.top = childrenLayout[i].box.top
-				image.box.left = childrenLayout[i].box.left
-				image.box.width = childrenLayout[i].box.width
-				image.box.height = childrenLayout[i].box.height
+				image.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				image.draw(context)
 
-				drawImageWidget(context, image, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *ContextWidget:
 				ctx := frame.widgets[i].(*ContextWidget)
-				ctx.box.top = childrenLayout[i].box.top
-				ctx.box.left = childrenLayout[i].box.left
-				ctx.box.width = childrenLayout[i].box.width
-				ctx.box.height = childrenLayout[i].box.height
-
-				drawContextWidget(context, ctx, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
+				ctx.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				ctx.draw(context)
 
 			case *ButtonWidget:
 				button := frame.widgets[i].(*ButtonWidget)
-				button.box.top = childrenLayout[i].box.top
-				button.box.left = childrenLayout[i].box.left
-				button.box.width = childrenLayout[i].box.width
-				button.box.height = childrenLayout[i].box.height
-
-				drawButtonWidget(context, button, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
+				button.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				button.draw(context)
 
 			case *InputWidget:
 				input := frame.widgets[i].(*InputWidget)
-				input.box.top = childrenLayout[i].box.top
-				input.box.left = childrenLayout[i].box.left
-				input.box.width = childrenLayout[i].box.width
-				input.box.height = childrenLayout[i].box.height
-
-				drawInputWidget(window, input, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
+				input.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				input.draw(window)
 			}
 		}
 	}

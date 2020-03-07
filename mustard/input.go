@@ -79,24 +79,25 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func drawInputWidget(window *Window, widget *InputWidget, top, left, width, height int) {
+func (input *InputWidget) draw(window *Window) {
+	top, left, width, height := input.computedBox.GetCoords()
 	context := window.context
 
-	if widget.selected {
+	if input.selected {
 		context.SetHexColor("#e4e4e4")
 	} else {
 		context.SetHexColor("#efefef")
 	}
 
-	if widget.active {
+	if input.active {
 		context.SetHexColor("#fff")
 	}
 
 	context.DrawRectangle(
-		float64(left)+widget.padding,
-		float64(top)+widget.padding,
-		float64(width)-(widget.padding*2),
-		float64(height)-(widget.padding*2),
+		float64(left)+input.padding,
+		float64(top)+input.padding,
+		float64(width)-(input.padding*2),
+		float64(height)-(input.padding*2),
 	)
 
 	context.Fill()
@@ -105,32 +106,30 @@ func drawInputWidget(window *Window, widget *InputWidget, top, left, width, heig
 	context.SetLineWidth(.4)
 
 	context.DrawRectangle(
-		float64(left)+1+widget.padding,
-		float64(top)+1+widget.padding,
-		float64(width)-2-(widget.padding*2),
-		float64(height)-2-(widget.padding*2),
+		float64(left)+1+input.padding,
+		float64(top)+1+input.padding,
+		float64(width)-2-(input.padding*2),
+		float64(height)-2-(input.padding*2),
 	)
 
 	context.SetLineJoinRound()
 	context.Stroke()
 
 	context.SetHexColor("#2f2f2f")
-	context.LoadFontFace("roboto.ttf", widget.fontSize)
-	context.DrawString(widget.value, float64(left)+widget.fontSize/4+4, float64(top)+float64(height)/2+2+widget.fontSize/4)
+	context.LoadFontFace("roboto.ttf", input.fontSize)
+	context.DrawString(input.value, float64(left)+input.fontSize/4+4, float64(top)+float64(height)/2+2+input.fontSize/4)
 	context.Fill()
 
-	if widget.active {
-		w, _ := context.MeasureString(widget.value)
+	if input.active {
+		w, _ := context.MeasureString(input.value)
 
 		context.SetHexColor("#000")
 		context.DrawRectangle(
-			float64(left)+widget.fontSize/4+4+w,
-			float64(top)+float64(height)/2-widget.fontSize/2+.5,
+			float64(left)+input.fontSize/4+4+w,
+			float64(top)+float64(height)/2-input.fontSize/2+.5,
 			1.3,
-			float64(widget.fontSize),
+			float64(input.fontSize),
 		)
 		context.Fill()
 	}
-
-	//debugLayout(surface, top, left, width, height)
 }

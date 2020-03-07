@@ -91,31 +91,26 @@ func (button *ButtonWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func drawButtonWidget(context *gg.Context, widget *ButtonWidget, top, left, width, height int) {
-	if widget.selected {
+func (button *ButtonWidget) draw(context *gg.Context) {
+	top, left, width, height := button.computedBox.GetCoords()
+
+	if button.selected {
 		context.SetHexColor("#ccc")
 	} else {
 		context.SetHexColor("#ddd")
 	}
 
 	context.DrawRectangle(
-		float64(left)+widget.padding,
-		float64(top)+widget.padding,
-		float64(width)-(widget.padding*2),
-		float64(height)-(widget.padding*2),
+		float64(left)+button.padding,
+		float64(top)+button.padding,
+		float64(width)-(button.padding*2),
+		float64(height)-(button.padding*2),
 	)
 
 	context.Fill()
-	context.SetHexColor(widget.fontColor)
-	context.LoadFontFace("roboto.ttf", widget.fontSize)
-
-	// cW, cH := context.MeasureString(widget.content)
-	context.DrawImage(widget.icon, left+4, top+2)
-	// context.DrawString(
-	// 	widget.content,
-	// 	float64(left+width/2)-cW/2,
-	// 	float64(top+height/2)+cH/2,
-	// )
+	context.SetHexColor(button.fontColor)
+	context.LoadFontFace("roboto.ttf", button.fontSize)
+	context.DrawImage(button.icon, left+4, top+2)
 
 	context.Fill()
 }

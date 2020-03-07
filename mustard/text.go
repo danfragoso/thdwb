@@ -78,14 +78,15 @@ func (text *TextWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func drawTextWidget(context *gg.Context, widget *TextWidget, top, left, width, height int) {
-	context.LoadFontFace("roboto.ttf", widget.fontSize)
+func (text *TextWidget) draw(context *gg.Context) {
+	top, left, width, height := text.computedBox.GetCoords()
+
+	context.LoadFontFace("roboto.ttf", text.fontSize)
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
-	context.SetHexColor(widget.backgroundColor)
+	context.SetHexColor(text.backgroundColor)
 	context.Fill()
 
-	context.SetHexColor(widget.fontColor)
-	context.DrawStringWrapped(widget.content, float64(left)+widget.fontSize/4, float64(top)+widget.fontSize*2/2, 0, 0, float64(width), widget.fontSize*0.15, gg.AlignLeft)
+	context.SetHexColor(text.fontColor)
+	context.DrawStringWrapped(text.content, float64(left)+text.fontSize/4, float64(top)+text.fontSize*2/2, 0, 0, float64(width), text.fontSize*0.15, gg.AlignLeft)
 	context.Fill()
-	//debugLayout(surface, top, left, width, height)
 }

@@ -78,10 +78,11 @@ func (label *LabelWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func drawLabelWidget(context *gg.Context, widget *LabelWidget, top, left, width, height int) {
-	context.SetHexColor(widget.fontColor)
-	context.LoadFontFace("roboto.ttf", widget.fontSize)
-	context.DrawString(widget.content, float64(left)+widget.fontSize/4, float64(top)+widget.fontSize*2/2)
+func (label *LabelWidget) draw(context *gg.Context) {
+	top, left, _, _ := label.computedBox.GetCoords()
+
+	context.SetHexColor(label.fontColor)
+	context.LoadFontFace("roboto.ttf", label.fontSize)
+	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
-	//debugLayout(surface, top, left, width, height)
 }

@@ -47,15 +47,16 @@ func (context *ContextWidget) GetContext() *gg.Context {
 	return context.context
 }
 
-func drawContextWidget(context *gg.Context, widget *ContextWidget, top, left, width, height int) {
-	if widget.context == nil || widget.context.Width() != width || widget.context.Height() != height {
-		widget.context = gg.NewContext(width, height)
+func (ctx *ContextWidget) draw(context *gg.Context) {
+	top, left, width, height := ctx.computedBox.GetCoords()
+	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height {
+		ctx.context = gg.NewContext(width, height)
 
-		widget.context.SetRGB(1, 1, 1)
-		widget.context.Clear()
+		ctx.context.SetRGB(1, 1, 1)
+		ctx.context.Clear()
 
-		widget.renderer(widget.context)
+		ctx.renderer(ctx.context)
 	}
 
-	context.DrawImage(widget.context.Image(), left, top)
+	context.DrawImage(ctx.context.Image(), left, top)
 }

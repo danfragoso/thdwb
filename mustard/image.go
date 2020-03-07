@@ -51,6 +51,7 @@ func (label *ImageWidget) SetHeight(height int) {
 	label.fixedHeight = true
 }
 
-func drawImageWidget(context *gg.Context, widget *ImageWidget, top, left, width, height int) {
-	context.DrawImage(widget.img, left+15, top+3)
+func (image *ImageWidget) draw(context *gg.Context) {
+	top, left, _, _ := image.computedBox.GetCoords()
+	context.DrawImage(image.img, left+15, top+3)
 }
