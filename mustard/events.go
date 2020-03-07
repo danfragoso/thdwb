@@ -1,9 +1,9 @@
 package mustard
 
-func (window *Window) ProcessPointerPosition(x, y float64) {
+func (window *Window) ProcessPointerPosition() {
 	window.glw.SetCursor(window.defaultCursor)
-	window.ProcessButtons(x, y)
-	window.ProcessInputs(x, y)
+	window.ProcessButtons()
+	window.ProcessInputs()
 }
 
 func (window *Window) ProcessPointerClick() {
@@ -21,7 +21,9 @@ func (window *Window) ProcessReturnKey() {
 	}
 }
 
-func (window *Window) ProcessButtons(x, y float64) {
+func (window *Window) ProcessButtons() {
+	x, y := window.cursorX, window.cursorY
+
 	for _, button := range window.registeredButtons {
 		if x > float64(button.left)+button.padding &&
 			x < float64(button.left+button.width)-button.padding &&
@@ -36,7 +38,9 @@ func (window *Window) ProcessButtons(x, y float64) {
 	}
 }
 
-func (window *Window) ProcessInputs(x, y float64) {
+func (window *Window) ProcessInputs() {
+	x, y := window.cursorX, window.cursorY
+
 	for _, input := range window.registeredInputs {
 		if x > float64(input.left)+input.padding &&
 			x < float64(input.left+input.width)-input.padding &&

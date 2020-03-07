@@ -82,9 +82,11 @@ func main() {
 				bun.RenderDocument(ctx, parsedDoc)
 				perf.Stop("render")
 
-				statusLabel.SetContent("Loaded; " +
-					"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
-					"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ")
+				statusLabel.SetContent(
+					"Loaded; " +
+						"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
+						"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ",
+				)
 				window.RequestRepaint()
 			})
 		}

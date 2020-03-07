@@ -105,7 +105,8 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {
-		window.ProcessPointerPosition(x, y)
+		window.cursorX, window.cursorY = x, y
+		window.ProcessPointerPosition()
 		window.RequestRepaint()
 	})
 
@@ -117,26 +118,28 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetKeyCallback(func(w *glfw.Window, key glfw.Key, sc int, action glfw.Action, mods glfw.ModifierKey) {
-		if action == glfw.Release {
-			switch key {
-			case glfw.KeyBackspace:
+		switch key {
+		case glfw.KeyBackspace:
+			if action == glfw.Repeat || action == glfw.Release {
 				if window.activeInput != nil && len(window.activeInput.value) > 0 {
 					window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
 					window.RequestRepaint()
 				}
-				break
-			case glfw.KeyEscape:
-				if window.activeInput != nil {
-					window.activeInput.active = false
-					window.activeInput.selected = false
-					window.activeInput = nil
-					window.RequestRepaint()
-				}
-				break
-			case glfw.KeyEnter:
-				window.ProcessReturnKey()
-				break
 			}
+			break
+		case glfw.KeyEscape:
+			if window.activeInput != nil && action == glfw.Release {
+				window.activeInput.active = false
+				window.activeInput.selected = false
+				window.activeInput = nil
+				window.RequestRepaint()
+			}
+			break
+		case glfw.KeyEnter:
+			if action == glfw.Release {
+				window.ProcessReturnKey()
+			}
+			break
 		}
 	})
 

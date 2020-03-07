@@ -30,6 +30,9 @@ type Window struct {
 	registeredInputs  []*InputWidget
 	activeInput       *InputWidget
 	rootFrame         *Frame
+
+	cursorX float64
+	cursorY float64
 }
 
 type glBackend struct {
