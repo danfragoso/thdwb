@@ -18,14 +18,9 @@ func CreateImageWidget(path []byte) *ImageWidget {
 
 	return &ImageWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
 
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "image",
 
@@ -46,13 +41,13 @@ func (label *ImageWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the label width
 func (label *ImageWidget) SetWidth(width int) {
-	label.width = width
+	label.box.width = width
 	label.fixedWidth = true
 }
 
 //SetHeight - Sets the label height
 func (label *ImageWidget) SetHeight(height int) {
-	label.height = height
+	label.box.height = height
 	label.fixedHeight = true
 }
 

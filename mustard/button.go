@@ -12,14 +12,8 @@ func CreateButtonWidget(asset []byte) *ButtonWidget {
 	icon, _ := gg.LoadAsset(asset)
 	return &ButtonWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
-
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "button",
 
@@ -44,32 +38,32 @@ func (button *ButtonWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the button width
 func (button *ButtonWidget) SetWidth(width int) {
-	button.width = width
+	button.box.width = width
 	button.fixedWidth = true
 }
 
 //SetHeight - Sets the button height
 func (button *ButtonWidget) SetHeight(height int) {
-	button.height = height
+	button.box.height = height
 	button.fixedHeight = true
 }
 
 //SetFontSize - Sets the button font size
 func (button *ButtonWidget) SetFontSize(fontSize float64) {
 	button.fontSize = fontSize
-	button.dirty = true
+	button.needsRepaint = true
 }
 
 //SetFontSize - Sets the button font size
 func (button *ButtonWidget) SetPadding(padding float64) {
 	button.padding = padding
-	button.dirty = true
+	button.needsRepaint = true
 }
 
 //SetContent - Sets the button content
 func (button *ButtonWidget) SetContent(content string) {
 	button.content = content
-	button.dirty = true
+	button.needsRepaint = true
 }
 
 func (button *ButtonWidget) Click() {
@@ -85,7 +79,7 @@ func (button *ButtonWidget) GetContent() string {
 func (button *ButtonWidget) SetFontColor(fontColor string) {
 	if len(fontColor) > 0 && string(fontColor[0]) == "#" {
 		button.fontColor = fontColor
-		button.dirty = true
+		button.needsRepaint = true
 	}
 }
 
@@ -93,7 +87,7 @@ func (button *ButtonWidget) SetFontColor(fontColor string) {
 func (button *ButtonWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
 		button.backgroundColor = backgroundColor
-		button.dirty = true
+		button.needsRepaint = true
 	}
 }
 

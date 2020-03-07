@@ -11,14 +11,9 @@ func CreateLabelWidget(content string) *LabelWidget {
 
 	return &LabelWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
 
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "label",
 
@@ -40,26 +35,26 @@ func (label *LabelWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the label width
 func (label *LabelWidget) SetWidth(width int) {
-	label.width = width
+	label.box.width = width
 	label.fixedWidth = true
 }
 
 //SetHeight - Sets the label height
 func (label *LabelWidget) SetHeight(height int) {
-	label.height = height
+	label.box.height = height
 	label.fixedHeight = true
 }
 
 //SetFontSize - Sets the label font size
 func (label *LabelWidget) SetFontSize(fontSize float64) {
 	label.fontSize = fontSize
-	label.dirty = true
+	label.needsRepaint = true
 }
 
 //SetContent - Sets the label content
 func (label *LabelWidget) SetContent(content string) {
 	label.content = content
-	label.dirty = true
+	label.needsRepaint = true
 }
 
 //GetContent - Gets the label content
@@ -71,7 +66,7 @@ func (label *LabelWidget) GetContent() string {
 func (label *LabelWidget) SetFontColor(fontColor string) {
 	if len(fontColor) > 0 && string(fontColor[0]) == "#" {
 		label.fontColor = fontColor
-		label.dirty = true
+		label.needsRepaint = true
 	}
 }
 
@@ -79,7 +74,7 @@ func (label *LabelWidget) SetFontColor(fontColor string) {
 func (label *LabelWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
 		label.backgroundColor = backgroundColor
-		label.dirty = true
+		label.needsRepaint = true
 	}
 }
 

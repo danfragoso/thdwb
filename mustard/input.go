@@ -10,14 +10,9 @@ func CreateInputWidget() *InputWidget {
 
 	return &InputWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
 
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "input",
 
@@ -38,20 +33,20 @@ func (input *InputWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the input width
 func (input *InputWidget) SetWidth(width int) {
-	input.width = width
+	input.box.width = width
 	input.fixedWidth = true
 }
 
 //SetHeight - Sets the input height
 func (input *InputWidget) SetHeight(height int) {
-	input.height = height
+	input.box.height = height
 	input.fixedHeight = true
 }
 
 //SetFontSize - Sets the input font size
 func (input *InputWidget) SetFontSize(fontSize float64) {
 	input.fontSize = fontSize
-	input.dirty = true
+	input.needsRepaint = true
 }
 
 func (input *InputWidget) SetReturnCallback(returnCallback func()) {
@@ -62,7 +57,7 @@ func (input *InputWidget) SetReturnCallback(returnCallback func()) {
 func (input *InputWidget) SetFontColor(fontColor string) {
 	if len(fontColor) > 0 && string(fontColor[0]) == "#" {
 		input.fontColor = fontColor
-		input.dirty = true
+		input.needsRepaint = true
 	}
 }
 
@@ -80,7 +75,7 @@ func (input *InputWidget) GetValue() string {
 func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
 		input.backgroundColor = backgroundColor
-		input.dirty = true
+		input.needsRepaint = true
 	}
 }
 

@@ -45,7 +45,7 @@ func CreateNewWindow(title string, width int, height int) *Window {
 
 //Show - Show the window
 func (window *Window) Show() {
-	window.isDirty = true
+	window.needsReflow = true
 	window.visible = true
 	window.glw.Show()
 }
@@ -61,8 +61,8 @@ func (window *Window) GetSize() (int, int) {
 }
 
 func (window *Window) processFrame() {
-	if window.isDirty {
-		window.isDirty = false
+	if window.needsReflow {
+		window.needsReflow = false
 		window.glw.MakeContextCurrent()
 
 		drawRootFrame(window)
@@ -76,7 +76,7 @@ func (window *Window) processFrame() {
 }
 
 func (window *Window) RequestRepaint() {
-	window.isDirty = true
+	window.needsReflow = true
 }
 
 func (window *Window) RecreateContext() {
@@ -101,7 +101,7 @@ func (window *Window) addEvents() {
 		window.RecreateContext()
 
 		gl.Viewport(0, 0, int32(width), int32(height))
-		window.isDirty = true
+		window.needsReflow = true
 	})
 
 	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {

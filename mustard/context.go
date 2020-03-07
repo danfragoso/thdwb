@@ -11,14 +11,8 @@ func CreateContextWidget(renderer func(*gg.Context)) *ContextWidget {
 
 	return &ContextWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
-
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "context",
 
@@ -39,13 +33,13 @@ func (context *ContextWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the label width
 func (context *ContextWidget) SetWidth(width int) {
-	context.width = width
+	context.box.width = width
 	context.fixedWidth = true
 }
 
 //SetHeight - Sets the label height
 func (context *ContextWidget) SetHeight(height int) {
-	context.height = height
+	context.box.height = height
 	context.fixedHeight = true
 }
 

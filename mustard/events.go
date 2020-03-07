@@ -25,10 +25,10 @@ func (window *Window) ProcessButtons() {
 	x, y := window.cursorX, window.cursorY
 
 	for _, button := range window.registeredButtons {
-		if x > float64(button.left)+button.padding &&
-			x < float64(button.left+button.width)-button.padding &&
-			y > float64(button.top)+button.padding &&
-			y < float64(button.top+button.height)-button.padding {
+		if x > float64(button.box.left)+button.padding &&
+			x < float64(button.box.left+button.box.width)-button.padding &&
+			y > float64(button.box.top)+button.padding &&
+			y < float64(button.box.top+button.box.height)-button.padding {
 			button.selected = true
 			window.glw.SetCursor(button.cursor)
 			break
@@ -42,10 +42,10 @@ func (window *Window) ProcessInputs() {
 	x, y := window.cursorX, window.cursorY
 
 	for _, input := range window.registeredInputs {
-		if x > float64(input.left)+input.padding &&
-			x < float64(input.left+input.width)-input.padding &&
-			y > float64(input.top)+input.padding &&
-			y < float64(input.top+input.height)-input.padding {
+		if x > float64(input.box.left)+input.padding &&
+			x < float64(input.box.left+input.box.width)-input.padding &&
+			y > float64(input.box.top)+input.padding &&
+			y < float64(input.box.top+input.box.height)-input.padding {
 			input.selected = true
 			window.glw.SetCursor(input.cursor)
 			break

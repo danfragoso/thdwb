@@ -2,7 +2,6 @@ package mustard
 
 import (
 	gg "../gg"
-
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -12,14 +11,9 @@ func CreateTextWidget(content string) *TextWidget {
 
 	return &TextWidget{
 		widget: widget{
-			top:  0,
-			left: 0,
 
-			width:  0,
-			height: 0,
-
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			ref: "text",
 
@@ -41,26 +35,26 @@ func (text *TextWidget) AttachWidget(widget interface{}) {
 
 //SetWidth - Sets the text width
 func (text *TextWidget) SetWidth(width int) {
-	text.width = width
+	text.box.width = width
 	text.fixedWidth = true
 }
 
 //SetHeight - Sets the text height
 func (text *TextWidget) SetHeight(height int) {
-	text.height = height
+	text.box.height = height
 	text.fixedHeight = true
 }
 
 //SetFontSize - Sets the text font size
 func (text *TextWidget) SetFontSize(fontSize float64) {
 	text.fontSize = fontSize
-	text.dirty = true
+	text.needsRepaint = true
 }
 
 //SetContent - Sets the text content
 func (text *TextWidget) SetContent(content string) {
 	text.content = content
-	text.dirty = true
+	text.needsRepaint = true
 }
 
 //GetContent - Gets the text content
@@ -72,7 +66,7 @@ func (text *TextWidget) GetContent() string {
 func (text *TextWidget) SetFontColor(fontColor string) {
 	if len(fontColor) > 0 && string(fontColor[0]) == "#" {
 		text.fontColor = fontColor
-		text.dirty = true
+		text.needsRepaint = true
 	}
 }
 
@@ -80,7 +74,7 @@ func (text *TextWidget) SetFontColor(fontColor string) {
 func (text *TextWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
 		text.backgroundColor = backgroundColor
-		text.dirty = true
+		text.needsRepaint = true
 	}
 }
 

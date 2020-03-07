@@ -18,8 +18,8 @@ type Window struct {
 	width  int
 	height int
 
-	isDirty bool
-	visible bool
+	needsReflow bool
+	visible     bool
 
 	glw     *glfw.Window
 	context *gg.Context
@@ -45,15 +45,20 @@ type glBackend struct {
 	quad    []float32
 }
 
-type widget struct {
+type box struct {
 	top    int
 	left   int
 	width  int
 	height int
+}
 
-	dirty       bool
-	fixedWidth  bool
-	fixedHeight bool
+type widget struct {
+	box         box
+	computedBox box
+
+	needsRepaint bool
+	fixedWidth   bool
+	fixedHeight  bool
 
 	widgets []interface{}
 

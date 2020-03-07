@@ -43,37 +43,37 @@ func calculateChildrenWidgetsLayout(children []*widget, top, left, width, height
 			remainingWidth := calculateFlexibleWidth(width, fixedWidthElemens)
 
 			if i > 0 {
-				currentLayout.left = childrenLayout[i-1].left + childrenLayout[i-1].width
+				currentLayout.box.left = childrenLayout[i-1].box.left + childrenLayout[i-1].box.width
 			} else {
-				currentLayout.left = left
+				currentLayout.box.left = left
 			}
 
 			if children[i].fixedWidth {
-				currentLayout.width = children[i].width
+				currentLayout.box.width = children[i].box.width
 			} else {
-				currentLayout.width = remainingWidth / len(volatileWidthElements)
+				currentLayout.box.width = remainingWidth / len(volatileWidthElements)
 			}
 
-			currentLayout.top = top
-			currentLayout.height = height
+			currentLayout.box.top = top
+			currentLayout.box.height = height
 		} else {
 			fixedHeightElements, volatileHeightElements := getFixedHeightElements(children)
 			remainingHeight := calculateFlexibleHeight(height, fixedHeightElements)
 
 			if i > 0 {
-				currentLayout.top = childrenLayout[i-1].top + childrenLayout[i-1].height
+				currentLayout.box.top = childrenLayout[i-1].box.top + childrenLayout[i-1].box.height
 			} else {
-				currentLayout.top = top
+				currentLayout.box.top = top
 			}
 
 			if children[i].fixedHeight {
-				currentLayout.height = children[i].height
+				currentLayout.box.height = children[i].box.height
 			} else {
-				currentLayout.height = remainingHeight / len(volatileHeightElements)
+				currentLayout.box.height = remainingHeight / len(volatileHeightElements)
 			}
 
-			currentLayout.left = left
-			currentLayout.width = width
+			currentLayout.box.left = left
+			currentLayout.box.width = width
 		}
 
 		childrenLayout = append(childrenLayout, currentLayout)
@@ -112,7 +112,7 @@ func getFixedHeightElements(elements []*widget) ([]*widget, []*widget) {
 
 func calculateFlexibleWidth(avaiableWidth int, elements []*widget) int {
 	for _, el := range elements {
-		avaiableWidth = avaiableWidth - el.width
+		avaiableWidth = avaiableWidth - el.box.width
 	}
 
 	return avaiableWidth
@@ -120,7 +120,7 @@ func calculateFlexibleWidth(avaiableWidth int, elements []*widget) int {
 
 func calculateFlexibleHeight(avaiableHeight int, elements []*widget) int {
 	for _, el := range elements {
-		avaiableHeight = avaiableHeight - el.height
+		avaiableHeight = avaiableHeight - el.box.height
 	}
 
 	return avaiableHeight

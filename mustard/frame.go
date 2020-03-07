@@ -6,16 +6,10 @@ func CreateFrame(orientation FrameOrientation) *Frame {
 
 	return &Frame{
 		widget: widget{
-			top:  0,
-			left: 0,
-
-			width:  100,
-			height: 100,
-
 			ref: "frame",
 
-			dirty:   true,
-			widgets: widgets,
+			needsRepaint: true,
+			widgets:      widgets,
 
 			backgroundColor: "#fff"},
 
@@ -32,25 +26,25 @@ func (frame *Frame) AttachWidget(widget interface{}) {
 func (frame *Frame) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
 		frame.backgroundColor = backgroundColor
-		frame.dirty = true
+		frame.needsRepaint = true
 	}
 }
 
 //SetWidth - Sets the frame width
 func (frame *Frame) SetWidth(width int) {
-	frame.width = width
+	frame.box.width = width
 	frame.fixedWidth = true
 }
 
 //SetHeight - Sets the frame height
 func (frame *Frame) SetHeight(height int) {
-	frame.height = height
+	frame.box.height = height
 	frame.fixedHeight = true
 }
 
 //SetHeight - Sets the frame height
 func (frame *Frame) GetHeight() int {
-	return frame.height
+	return frame.box.height
 }
 
 func drawRootFrame(window *Window) {
@@ -72,66 +66,64 @@ func drawFrame(window *Window, frame *Frame, top, left, width, height int) {
 			switch frame.widgets[i].(type) {
 			case *Frame:
 				frame := frame.widgets[i].(*Frame)
-				frame.top = childrenLayout[i].top
-				frame.left = childrenLayout[i].left
-				frame.width = childrenLayout[i].width
-				frame.height = childrenLayout[i].height
+				frame.box.top = childrenLayout[i].box.top
+				frame.box.left = childrenLayout[i].box.left
+				frame.box.width = childrenLayout[i].box.width
+				frame.box.height = childrenLayout[i].box.height
 
-				drawFrame(window, frame, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawFrame(window, frame, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *LabelWidget:
 				label := frame.widgets[i].(*LabelWidget)
-				label.top = childrenLayout[i].top
-				label.left = childrenLayout[i].left
-				label.width = childrenLayout[i].width
-				label.height = childrenLayout[i].height
+				label.box.top = childrenLayout[i].box.top
+				label.box.left = childrenLayout[i].box.left
+				label.box.width = childrenLayout[i].box.width
+				label.box.height = childrenLayout[i].box.height
 
-				drawLabelWidget(context, label, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawLabelWidget(context, label, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *TextWidget:
 				text := frame.widgets[i].(*TextWidget)
-				text.top = childrenLayout[i].top
-				text.left = childrenLayout[i].left
-				text.width = childrenLayout[i].width
-				text.height = childrenLayout[i].height
+				text.box.top = childrenLayout[i].box.top
+				text.box.left = childrenLayout[i].box.left
+				text.box.width = childrenLayout[i].box.width
+				text.box.height = childrenLayout[i].box.height
 
-				drawTextWidget(context, text, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawTextWidget(context, text, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 
 			case *ImageWidget:
 				image := frame.widgets[i].(*ImageWidget)
-				image.top = childrenLayout[i].top
-				image.left = childrenLayout[i].left
-				image.width = childrenLayout[i].width
-				image.height = childrenLayout[i].height
+				image.box.top = childrenLayout[i].box.top
+				image.box.left = childrenLayout[i].box.left
+				image.box.width = childrenLayout[i].box.width
+				image.box.height = childrenLayout[i].box.height
 
-				drawImageWidget(context, image, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawImageWidget(context, image, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			case *ContextWidget:
 				ctx := frame.widgets[i].(*ContextWidget)
-				ctx.top = childrenLayout[i].top
-				ctx.left = childrenLayout[i].left
-				ctx.width = childrenLayout[i].width
-				ctx.height = childrenLayout[i].height
+				ctx.box.top = childrenLayout[i].box.top
+				ctx.box.left = childrenLayout[i].box.left
+				ctx.box.width = childrenLayout[i].box.width
+				ctx.box.height = childrenLayout[i].box.height
 
-				drawContextWidget(context, ctx, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawContextWidget(context, ctx, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 
 			case *ButtonWidget:
 				button := frame.widgets[i].(*ButtonWidget)
-				button.top = childrenLayout[i].top
-				button.left = childrenLayout[i].left
-				button.width = childrenLayout[i].width
-				button.height = childrenLayout[i].height
+				button.box.top = childrenLayout[i].box.top
+				button.box.left = childrenLayout[i].box.left
+				button.box.width = childrenLayout[i].box.width
+				button.box.height = childrenLayout[i].box.height
 
-				drawButtonWidget(context, button, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawButtonWidget(context, button, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 
 			case *InputWidget:
 				input := frame.widgets[i].(*InputWidget)
-				input.top = childrenLayout[i].top
-				input.left = childrenLayout[i].left
-				input.width = childrenLayout[i].width
-				input.height = childrenLayout[i].height
+				input.box.top = childrenLayout[i].box.top
+				input.box.left = childrenLayout[i].box.left
+				input.box.width = childrenLayout[i].box.width
+				input.box.height = childrenLayout[i].box.height
 
-				drawInputWidget(window, input, childrenLayout[i].top, childrenLayout[i].left, childrenLayout[i].width, childrenLayout[i].height)
+				drawInputWidget(window, input, childrenLayout[i].box.top, childrenLayout[i].box.left, childrenLayout[i].box.width, childrenLayout[i].box.height)
 			}
 		}
 	}
-
-	//debugLayout(surface, top, left, width, height)
 }
