@@ -35,12 +35,14 @@ func (input *InputWidget) AttachWidget(widget interface{}) {
 func (input *InputWidget) SetWidth(width int) {
 	input.box.width = width
 	input.fixedWidth = true
+	input.RequestReflow()
 }
 
 //SetHeight - Sets the input height
 func (input *InputWidget) SetHeight(height int) {
 	input.box.height = height
 	input.fixedHeight = true
+	input.RequestReflow()
 }
 
 //SetFontSize - Sets the input font size
@@ -64,6 +66,7 @@ func (input *InputWidget) SetFontColor(fontColor string) {
 //SetFontColor - Sets the input font color
 func (input *InputWidget) SetValue(value string) {
 	input.value = value
+	input.needsRepaint = true
 }
 
 //SetFontColor - Sets the input font color
@@ -79,8 +82,9 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func (input *InputWidget) draw(window *Window) {
+func (input *InputWidget) draw() {
 	top, left, width, height := input.computedBox.GetCoords()
+	window := input.window
 	context := window.context
 
 	if input.selected {

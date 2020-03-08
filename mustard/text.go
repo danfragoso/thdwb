@@ -37,12 +37,14 @@ func (text *TextWidget) AttachWidget(widget interface{}) {
 func (text *TextWidget) SetWidth(width int) {
 	text.box.width = width
 	text.fixedWidth = true
+	text.RequestReflow()
 }
 
 //SetHeight - Sets the text height
 func (text *TextWidget) SetHeight(height int) {
 	text.box.height = height
 	text.fixedHeight = true
+	text.RequestReflow()
 }
 
 //SetFontSize - Sets the text font size
@@ -55,6 +57,7 @@ func (text *TextWidget) SetFontSize(fontSize float64) {
 func (text *TextWidget) SetContent(content string) {
 	text.content = content
 	text.needsRepaint = true
+	text.RequestReflow()
 }
 
 //GetContent - Gets the text content
@@ -78,7 +81,8 @@ func (text *TextWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func (text *TextWidget) draw(context *gg.Context) {
+func (text *TextWidget) draw() {
+	context := text.window.context
 	top, left, width, height := text.computedBox.GetCoords()
 
 	context.LoadFontFace("roboto.ttf", text.fontSize)

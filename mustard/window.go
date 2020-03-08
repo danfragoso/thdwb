@@ -60,8 +60,9 @@ func (window *Window) GetSize() (int, int) {
 	return window.width, window.height
 }
 
-func (window *Window) processFrame() {
+func (window *Window) brocessFrame() {
 	if window.needsReflow {
+
 		window.needsReflow = false
 		window.glw.MakeContextCurrent()
 
@@ -75,7 +76,27 @@ func (window *Window) processFrame() {
 	glfw.WaitEvents()
 }
 
-func (window *Window) RequestRepaint() {
+func (window *Window) processFrame() {
+	if window.needsReflow {
+		window.needsReflow = false
+		window.glw.MakeContextCurrent()
+
+		drawRootFrame(window)
+		window.generateTexture()
+
+		gl.DrawArrays(gl.TRIANGLES, 0, 6)
+		window.glw.SwapBuffers()
+	} else {
+		redrawWidgets(window.rootFrame)
+		window.generateTexture()
+		gl.DrawArrays(gl.TRIANGLES, 0, 6)
+		window.glw.SwapBuffers()
+	}
+
+	glfw.WaitEvents()
+}
+
+func (window *Window) RequestReflow() {
 	window.needsReflow = true
 }
 
@@ -92,7 +113,7 @@ func (window *Window) RecreateContext() {
 func (window *Window) addEvents() {
 	window.glw.SetFocusCallback(func(w *glfw.Window, focused bool) {
 		if focused {
-			window.RequestRepaint()
+			window.RequestReflow()
 		}
 	})
 
@@ -107,13 +128,12 @@ func (window *Window) addEvents() {
 	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {
 		window.cursorX, window.cursorY = x, y
 		window.ProcessPointerPosition()
-		window.RequestRepaint()
 	})
 
 	window.glw.SetCharCallback(func(w *glfw.Window, char rune) {
 		if window.activeInput != nil {
 			window.activeInput.value += string(char)
-			window.RequestRepaint()
+			window.activeInput.needsRepaint = true
 		}
 	})
 
@@ -123,7 +143,7 @@ func (window *Window) addEvents() {
 			if action == glfw.Repeat || action == glfw.Release {
 				if window.activeInput != nil && len(window.activeInput.value) > 0 {
 					window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
-					window.RequestRepaint()
+					window.activeInput.needsRepaint = true
 				}
 			}
 			break
@@ -131,8 +151,8 @@ func (window *Window) addEvents() {
 			if window.activeInput != nil && action == glfw.Release {
 				window.activeInput.active = false
 				window.activeInput.selected = false
+				window.activeInput.needsRepaint = true
 				window.activeInput = nil
-				window.RequestRepaint()
 			}
 			break
 		case glfw.KeyEnter:

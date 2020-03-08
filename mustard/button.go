@@ -40,12 +40,14 @@ func (button *ButtonWidget) AttachWidget(widget interface{}) {
 func (button *ButtonWidget) SetWidth(width int) {
 	button.box.width = width
 	button.fixedWidth = true
+	button.RequestReflow()
 }
 
 //SetHeight - Sets the button height
 func (button *ButtonWidget) SetHeight(height int) {
 	button.box.height = height
 	button.fixedHeight = true
+	button.RequestReflow()
 }
 
 //SetFontSize - Sets the button font size
@@ -91,7 +93,8 @@ func (button *ButtonWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func (button *ButtonWidget) draw(context *gg.Context) {
+func (button *ButtonWidget) draw() {
+	context := button.window.context
 	top, left, width, height := button.computedBox.GetCoords()
 
 	if button.selected {

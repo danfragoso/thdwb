@@ -15,7 +15,7 @@ func (window *Window) ProcessReturnKey() {
 	if window.activeInput != nil && window.activeInput.active == true {
 		window.activeInput.active = false
 		window.activeInput.selected = false
-		window.RequestRepaint()
+		window.activeInput.needsRepaint = true
 		window.activeInput.returnCallback()
 		window.activeInput = nil
 	}
@@ -30,10 +30,12 @@ func (window *Window) ProcessButtons() {
 			y > float64(button.computedBox.top)+button.padding &&
 			y < float64(button.computedBox.top+button.computedBox.height)-button.padding {
 			button.selected = true
+			button.needsRepaint = true
 			window.glw.SetCursor(button.cursor)
 			break
 		} else {
 			button.selected = false
+			button.needsRepaint = true
 		}
 	}
 }
@@ -47,10 +49,12 @@ func (window *Window) ProcessInputs() {
 			y > float64(input.computedBox.top)+input.padding &&
 			y < float64(input.computedBox.top+input.computedBox.height)-input.padding {
 			input.selected = true
+			input.needsRepaint = true
 			window.glw.SetCursor(input.cursor)
 			break
 		} else {
 			input.selected = false
+			input.needsRepaint = true
 		}
 	}
 }
@@ -60,14 +64,14 @@ func (window *Window) ProcessInputActivation() {
 		if input.selected == true {
 			window.activeInput = input
 			input.active = true
-			window.RequestRepaint()
+			input.needsRepaint = true
 			return
 		}
 
 		if input.active {
 			input.active = false
+			input.needsRepaint = true
 			window.activeInput = nil
-			window.RequestRepaint()
 		}
 	}
 }
@@ -76,7 +80,7 @@ func (window *Window) ProcessButtonClick() {
 	for _, button := range window.registeredButtons {
 		if button.selected == true {
 			button.onClick()
-			window.RequestRepaint()
+			button.needsRepaint = true
 			return
 		}
 	}

@@ -33,13 +33,13 @@ func main() {
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
+
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
 	appBar, statusLabel, menuButton, goButton, urlInput := createMainBar(window, browser)
 	urlInput.SetReturnCallback(func() {
 		fmt.Println("enter")
 		goButton.Click()
-		window.RequestRepaint()
 	})
 
 	debugFrame := createDebugFrame(window, browser)
@@ -70,10 +70,12 @@ func main() {
 	window.RegisterButton(goButton, func() {
 		if urlInput.GetValue() != browser.Document.URL {
 			statusLabel.SetContent("Loading: " + urlInput.GetValue())
-			go loadDocument(browser, urlInput.GetValue(), func() {
+			go func() {
+				loadDocument(browser, urlInput.GetValue(), func() {})
 				ctx := viewPort.GetContext()
 				ctx.SetRGB(1, 1, 1)
 				ctx.Clear()
+
 				perf.Start("parse")
 				parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
 				perf.Stop("parse")
@@ -87,16 +89,19 @@ func main() {
 						"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
 						"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ",
 				)
-				window.RequestRepaint()
-			})
+
+				viewPort.RequestRepaint()
+				statusLabel.RequestRepaint()
+			}()
 		}
 	})
 
 	rootFrame.AttachWidget(viewPort)
 	rootFrame.AttachWidget(debugFrame)
+
 	window.SetRootFrame(rootFrame)
+	window.Show()
 
 	app.AddWindow(window)
-	window.Show()
 	app.Run(func() {})
 }

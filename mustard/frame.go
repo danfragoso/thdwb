@@ -34,12 +34,14 @@ func (frame *Frame) SetBackgroundColor(backgroundColor string) {
 func (frame *Frame) SetWidth(width int) {
 	frame.box.width = width
 	frame.fixedWidth = true
+	frame.RequestReflow()
 }
 
 //SetHeight - Sets the frame height
 func (frame *Frame) SetHeight(height int) {
 	frame.box.height = height
 	frame.fixedHeight = true
+	frame.RequestReflow()
 }
 
 //SetHeight - Sets the frame height
@@ -49,11 +51,12 @@ func (frame *Frame) GetHeight() int {
 
 func drawRootFrame(window *Window) {
 	window.rootFrame.computedBox.SetCoords(0, 0, window.width, window.height)
-	window.rootFrame.draw(window)
+	window.rootFrame.draw()
 }
 
-func (frame *Frame) draw(window *Window) {
+func (frame *Frame) draw() {
 	top, left, width, height := frame.computedBox.GetCoords()
+	window := frame.window
 	context := window.context
 	context.SetHexColor(frame.backgroundColor)
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
@@ -70,37 +73,37 @@ func (frame *Frame) draw(window *Window) {
 			case *Frame:
 				frame := frame.widgets[i].(*Frame)
 				frame.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				frame.draw(window)
+				frame.draw()
 
 			case *LabelWidget:
 				label := frame.widgets[i].(*LabelWidget)
 				label.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				label.draw(context)
+				label.draw()
 
 			case *TextWidget:
 				text := frame.widgets[i].(*TextWidget)
 				text.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				text.draw(context)
+				text.draw()
 
 			case *ImageWidget:
 				image := frame.widgets[i].(*ImageWidget)
 				image.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				image.draw(context)
+				image.draw()
 
 			case *ContextWidget:
 				ctx := frame.widgets[i].(*ContextWidget)
 				ctx.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				ctx.draw(context)
+				ctx.draw()
 
 			case *ButtonWidget:
 				button := frame.widgets[i].(*ButtonWidget)
 				button.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				button.draw(context)
+				button.draw()
 
 			case *InputWidget:
 				input := frame.widgets[i].(*InputWidget)
 				input.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				input.draw(window)
+				input.draw()
 			}
 		}
 	}

@@ -125,3 +125,13 @@ func calculateFlexibleHeight(avaiableHeight int, elements []*widget) int {
 
 	return avaiableHeight
 }
+
+func (widget *widget) RequestReflow() {
+	if widget.window != nil {
+		widget.window.needsReflow = true
+	}
+}
+
+func (widget *widget) RequestRepaint() {
+	widget.needsRepaint = true
+}

@@ -57,3 +57,71 @@ func setWidgetWindow(widget *widget, window *Window) {
 		}
 	}
 }
+
+func redrawWidgets(widget interface{}) {
+	switch widget.(type) {
+	case *Frame:
+		widget := widget.(*Frame)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *LabelWidget:
+		widget := widget.(*LabelWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *TextWidget:
+		widget := widget.(*TextWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *ImageWidget:
+		widget := widget.(*ImageWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *ContextWidget:
+		widget := widget.(*ContextWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *ButtonWidget:
+		widget := widget.(*ButtonWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	case *InputWidget:
+		widget := widget.(*InputWidget)
+		if widget.needsRepaint {
+			widget.draw()
+		} else {
+			for i := 0; i < len(widget.widgets); i++ {
+				redrawWidgets(widget.widgets[i])
+			}
+		}
+	}
+}

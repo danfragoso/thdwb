@@ -43,16 +43,18 @@ func (label *ImageWidget) AttachWidget(widget interface{}) {
 func (label *ImageWidget) SetWidth(width int) {
 	label.box.width = width
 	label.fixedWidth = true
+	label.RequestReflow()
 }
 
 //SetHeight - Sets the label height
 func (label *ImageWidget) SetHeight(height int) {
 	label.box.height = height
 	label.fixedHeight = true
+	label.RequestReflow()
 }
 
-func (image *ImageWidget) draw(context *gg.Context) {
+func (image *ImageWidget) draw() {
 	top, left, _, _ := image.computedBox.GetCoords()
-	context.DrawImage(image.img, left+15, top+3)
+	image.window.context.DrawImage(image.img, left+15, top+3)
 	image.needsRepaint = false
 }

@@ -88,9 +88,8 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	pv.SetHeight(1)
 
 	statusBar := mustard.CreateFrame(mustard.HorizontalFrame)
-	statusBar.SetBackgroundColor("#ddd")
-
 	statusLabel := mustard.CreateLabelWidget("Loading;")
+	statusLabel.SetBackgroundColor("#ddd")
 	statusLabel.SetFontColor("#333")
 	statusLabel.SetFontSize(15)
 	statusBar.AttachWidget(statusLabel)

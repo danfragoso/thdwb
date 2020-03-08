@@ -1,7 +1,6 @@
 package mustard
 
 import (
-	gg "../gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -37,12 +36,14 @@ func (label *LabelWidget) AttachWidget(widget interface{}) {
 func (label *LabelWidget) SetWidth(width int) {
 	label.box.width = width
 	label.fixedWidth = true
+	label.RequestReflow()
 }
 
 //SetHeight - Sets the label height
 func (label *LabelWidget) SetHeight(height int) {
 	label.box.height = height
 	label.fixedHeight = true
+	label.RequestReflow()
 }
 
 //SetFontSize - Sets the label font size
@@ -78,8 +79,13 @@ func (label *LabelWidget) SetBackgroundColor(backgroundColor string) {
 	}
 }
 
-func (label *LabelWidget) draw(context *gg.Context) {
-	top, left, _, _ := label.computedBox.GetCoords()
+func (label *LabelWidget) draw() {
+	context := label.window.context
+	top, left, width, height := label.computedBox.GetCoords()
+
+	context.SetHexColor(label.backgroundColor)
+	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
+	context.Fill()
 
 	context.SetHexColor(label.fontColor)
 	context.LoadFontFace("roboto.ttf", label.fontSize)

@@ -35,19 +35,22 @@ func (context *ContextWidget) AttachWidget(widget interface{}) {
 func (context *ContextWidget) SetWidth(width int) {
 	context.box.width = width
 	context.fixedWidth = true
+	context.RequestReflow()
 }
 
 //SetHeight - Sets the label height
 func (context *ContextWidget) SetHeight(height int) {
 	context.box.height = height
 	context.fixedHeight = true
+	context.RequestReflow()
 }
 
 func (context *ContextWidget) GetContext() *gg.Context {
 	return context.context
 }
 
-func (ctx *ContextWidget) draw(context *gg.Context) {
+func (ctx *ContextWidget) draw() {
+	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
 	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height {
 		ctx.context = gg.NewContext(width, height)
