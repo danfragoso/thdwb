@@ -155,5 +155,6 @@ type InputWidget struct {
 	padding        float64
 	fontSize       float64
 	fontColor      string
+	cursorPosition int
 	returnCallback func()
 }
