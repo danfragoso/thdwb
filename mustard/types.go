@@ -20,6 +20,11 @@ type Window struct {
 
 	needsReflow bool
 	visible     bool
+	// This flag is active when drawing is happening on a thread that is not the
+	// main one; When the asyncFlag is active the window frame processor function
+	// should pool the status of the drawing routine and when it ends reflow? the
+	// entire window surface?
+	asyncFlag bool
 
 	glw     *glfw.Window
 	context *gg.Context
