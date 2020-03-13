@@ -159,6 +159,7 @@ type InputWidget struct {
 	active         bool
 	padding        float64
 	fontSize       float64
+	context        *gg.Context
 	fontColor      string
 	cursorPosition int
 	returnCallback func()

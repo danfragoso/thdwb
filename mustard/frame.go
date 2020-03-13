@@ -51,6 +51,7 @@ func (frame *Frame) GetHeight() int {
 
 func drawRootFrame(window *Window) {
 	window.rootFrame.computedBox.SetCoords(0, 0, window.width, window.height)
+
 	window.rootFrame.draw()
 }
 
@@ -105,6 +106,7 @@ func (frame *Frame) draw() {
 				input.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
 				input.draw()
 			}
+
 		}
 	}
 }

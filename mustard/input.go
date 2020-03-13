@@ -1,6 +1,7 @@
 package mustard
 
 import (
+	gg "../gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -89,8 +90,15 @@ func (input *InputWidget) draw() {
 	// on the main context.
 
 	top, left, width, height := input.computedBox.GetCoords()
+	if input.context == nil || input.context.Width() != width || input.context.Height() != height {
+		input.context = gg.NewContext(width, height)
+
+		input.context.SetRGB(1, 0, 0)
+		input.context.Clear()
+	}
+
 	window := input.window
-	context := window.context
+	context := input.context
 
 	if input.selected {
 		context.SetHexColor("#e4e4e4")
@@ -103,10 +111,10 @@ func (input *InputWidget) draw() {
 	}
 
 	context.DrawRectangle(
-		float64(left)+input.padding,
-		float64(top)+input.padding,
-		float64(width)-(input.padding*2),
-		float64(height)-(input.padding*2),
+		0,
+		0,
+		float64(width),
+		float64(height),
 	)
 
 	context.Fill()
@@ -115,8 +123,8 @@ func (input *InputWidget) draw() {
 	context.SetLineWidth(.4)
 
 	context.DrawRectangle(
-		float64(left)+1+input.padding,
-		float64(top)+1+input.padding,
+		1+input.padding,
+		1+input.padding,
 		float64(width)-2-(input.padding*2),
 		float64(height)-2-(input.padding*2),
 	)
@@ -126,7 +134,7 @@ func (input *InputWidget) draw() {
 
 	context.SetHexColor("#2f2f2f")
 	context.LoadFontFace("roboto.ttf", input.fontSize)
-	context.DrawString(input.value, float64(left)+input.fontSize/4+4, float64(top)+float64(height)/2+2+input.fontSize/4)
+	context.DrawString(input.value, input.fontSize/4+4, float64(height)/2+2+input.fontSize/4)
 	context.Fill()
 
 	if input.active {
@@ -134,13 +142,14 @@ func (input *InputWidget) draw() {
 
 		context.SetHexColor("#000")
 		context.DrawRectangle(
-			float64(left)+input.fontSize/4+4+w,
-			float64(top)+float64(height)/2-input.fontSize/2+.5,
+			input.fontSize/4+4+w,
+			float64(height)/2-input.fontSize/2+.5,
 			1.3,
 			float64(input.fontSize),
 		)
 		context.Fill()
 	}
 
+	window.context.DrawImage(context.Image(), left, top)
 	input.needsRepaint = false
 }
