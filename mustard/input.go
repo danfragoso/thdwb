@@ -117,7 +117,7 @@ func (input *InputWidget) draw() {
 	context.LoadFontFace("roboto.ttf", input.fontSize)
 	w, _ := context.MeasureString(input.value)
 
-	if w > float64(width)-input.fontSize {
+	if w > float64(width)-input.fontSize && input.active {
 		context.DrawStringAnchored(input.value, float64(width)-input.fontSize+4, float64(height)/2+2+input.fontSize/4, 1, 0)
 		context.SetRGB(1, 1, 1)
 		context.DrawRectangle(-1, float64(height)/2-input.fontSize*1.2/2, 6, input.fontSize*1.2)
