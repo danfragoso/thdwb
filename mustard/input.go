@@ -93,7 +93,7 @@ func (input *InputWidget) draw() {
 	if input.context == nil || input.context.Width() != width || input.context.Height() != height {
 		input.context = gg.NewContext(width, height)
 
-		input.context.SetRGB(1, 0, 0)
+		input.context.SetRGB(1, 1, 1)
 		input.context.Clear()
 	}
 
@@ -110,36 +110,25 @@ func (input *InputWidget) draw() {
 		context.SetHexColor("#fff")
 	}
 
-	context.DrawRectangle(
-		0,
-		0,
-		float64(width),
-		float64(height),
-	)
-
+	context.DrawRectangle(0, 0, float64(width), float64(height))
 	context.Fill()
-
-	context.SetHexColor("#000")
-	context.SetLineWidth(.4)
-
-	context.DrawRectangle(
-		1+input.padding,
-		1+input.padding,
-		float64(width)-2-(input.padding*2),
-		float64(height)-2-(input.padding*2),
-	)
-
-	context.SetLineJoinRound()
-	context.Stroke()
 
 	context.SetHexColor("#2f2f2f")
 	context.LoadFontFace("roboto.ttf", input.fontSize)
-	context.DrawString(input.value, input.fontSize/4+4, float64(height)/2+2+input.fontSize/4)
+	w, _ := context.MeasureString(input.value)
+
+	if w > float64(width)-input.fontSize {
+		context.DrawStringAnchored(input.value, float64(width)-input.fontSize+4, float64(height)/2+2+input.fontSize/4, 1, 0)
+		context.SetRGB(1, 1, 1)
+		context.DrawRectangle(-1, float64(height)/2-input.fontSize*1.2/2, 6, input.fontSize*1.2)
+		context.Fill()
+	} else {
+		context.DrawString(input.value, input.fontSize/4+4, float64(height)/2+2+input.fontSize/4)
+	}
+
 	context.Fill()
 
 	if input.active {
-		w, _ := context.MeasureString(input.value)
-
 		context.SetHexColor("#000")
 		context.DrawRectangle(
 			input.fontSize/4+4+w,
@@ -151,5 +140,17 @@ func (input *InputWidget) draw() {
 	}
 
 	window.context.DrawImage(context.Image(), left, top)
+	window.context.SetHexColor("#000")
+	window.context.SetLineWidth(.4)
+
+	window.context.DrawRectangle(
+		float64(left)+1+input.padding,
+		float64(top)+1+input.padding,
+		float64(width)-2-(input.padding*2),
+		float64(height)-2-(input.padding*2),
+	)
+
+	window.context.SetLineJoinRound()
+	window.context.Stroke()
 	input.needsRepaint = false
 }
