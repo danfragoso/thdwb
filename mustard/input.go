@@ -88,66 +88,70 @@ func (input *InputWidget) draw() {
 	// A faster way to do this is to create a context the size of the input
 	// and draw the text on this context then draw the input context.Image()
 	// on the main context.
-
+	input.padding = 4
 	top, left, width, height := input.computedBox.GetCoords()
-	if input.context == nil || input.context.Width() != width || input.context.Height() != height {
-		input.context = gg.NewContext(width, height)
-
-		input.context.SetRGB(1, 1, 1)
-		input.context.Clear()
+	totalPadding := int(input.padding * 2)
+	if input.context == nil || input.context.Width() != width-totalPadding || input.context.Height() != height-totalPadding {
+		input.context = gg.NewContext(width-totalPadding, height-totalPadding)
 	}
 
 	window := input.window
 	context := input.context
 
 	if input.selected {
+		window.context.SetHexColor("#e4e4e4")
 		context.SetHexColor("#e4e4e4")
+		context.Clear()
 	} else {
+		window.context.SetHexColor("#efefef")
 		context.SetHexColor("#efefef")
+		context.Clear()
 	}
 
 	if input.active {
+		window.context.SetHexColor("#fff")
 		context.SetHexColor("#fff")
+		context.Clear()
 	}
 
-	context.DrawRectangle(0, 0, float64(width), float64(height))
-	context.Fill()
+	window.context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
+	window.context.Fill()
 
 	context.SetHexColor("#2f2f2f")
 	context.LoadFontFace("roboto.ttf", input.fontSize)
-	w, _ := context.MeasureString(input.value)
+	w, h := context.MeasureString(input.value)
 
-	if w > float64(width)-input.fontSize && input.active {
-		context.DrawStringAnchored(input.value, float64(width)-input.fontSize+4, float64(height)/2+2+input.fontSize/4, 1, 0)
-		context.SetRGB(1, 1, 1)
-		context.DrawRectangle(-1, float64(height)/2-input.fontSize*1.2/2, 6, input.fontSize*1.2)
-		context.Fill()
+	valueBigggerThanInput := w > float64(width)-input.fontSize
+	if valueBigggerThanInput && input.active {
+		context.DrawStringAnchored(input.value, float64(width)-input.fontSize, float64(height+totalPadding/2)/2, 1, 0)
 	} else {
-		context.DrawString(input.value, input.fontSize/4+4, float64(height)/2+2+input.fontSize/4)
+		context.DrawString(input.value, 0, float64(height+totalPadding/2)/2)
 	}
 
 	context.Fill()
 
+	//CURSOR
 	if input.active {
 		context.SetHexColor("#000")
-		context.DrawRectangle(
-			input.fontSize/4+4+w,
-			float64(height)/2-input.fontSize/2+.5,
-			1.3,
-			float64(input.fontSize),
-		)
+
+		if valueBigggerThanInput {
+			context.DrawRectangle(float64(width-totalPadding*2), h/4, 1.3, float64(input.fontSize))
+		} else {
+			context.DrawRectangle(w, h/4, 1.3, float64(input.fontSize))
+		}
+
 		context.Fill()
 	}
 
-	window.context.DrawImage(context.Image(), left, top)
+	window.context.DrawImage(context.Image(), left+totalPadding/2, top+totalPadding/2)
 	window.context.SetHexColor("#000")
 	window.context.SetLineWidth(.4)
 
 	window.context.DrawRectangle(
-		float64(left)+1+input.padding,
-		float64(top)+1+input.padding,
-		float64(width)-2-(input.padding*2),
-		float64(height)-2-(input.padding*2),
+		float64(left)+1,
+		float64(top)+1,
+		float64(width)-2,
+		float64(height)-2,
 	)
 
 	window.context.SetLineJoinRound()
