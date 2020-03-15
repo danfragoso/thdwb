@@ -84,10 +84,6 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 }
 
 func (input *InputWidget) draw() {
-	// For some reason the gg Clip function is reaaaaaally slow to clip text?
-	// A faster way to do this is to create a context the size of the input
-	// and draw the text on this context then draw the input context.Image()
-	// on the main context.
 	input.padding = 4
 	top, left, width, height := input.computedBox.GetCoords()
 	totalPadding := int(input.padding * 2)
@@ -130,7 +126,6 @@ func (input *InputWidget) draw() {
 
 	context.Fill()
 
-	//CURSOR
 	if input.active {
 		context.SetHexColor("#000")
 
