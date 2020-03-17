@@ -60,7 +60,7 @@ func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
 
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
 	ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
-	ctx.DrawStringWrapped(node.Content, node.Style.Left, node.Style.Top, 0, 0, node.Style.Width, 1, gg.AlignLeft)
+	ctx.DrawStringWrapped(node.Content, node.Style.Left, node.Style.Top+1, 0, 0, node.Style.Width, 1.5, gg.AlignLeft)
 	ctx.Fill()
 }
 
@@ -70,7 +70,8 @@ func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) 
 	}
 
 	if node.Style.Height == 0 && len(node.Content) > 0 {
-		node.Style.Height = ctx.MeasureStringWrapped(node.Content, node.Style.Width, 1) + 2
+		ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
+		node.Style.Height = ctx.MeasureStringWrapped(node.Content, node.Style.Width, 1.5) + 2 + ctx.FontHeight()*.5
 	}
 
 	if childIdx > 0 {
