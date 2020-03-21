@@ -34,5 +34,6 @@ var colorTable = map[string]*structs.ColorRGBA{
 var elementFontTable = map[string]float64{
 	"h1": float64(32),
 	"h2": float64(28),
+	"h3": float64(20),
 	"p":  float64(14),
 }

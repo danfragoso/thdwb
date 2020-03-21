@@ -13,8 +13,8 @@ func getDefaultElementDisplay(element string) string {
 	switch element {
 	case "script", "style", "meta", "link", "head", "title":
 		displayType = "none"
-	default:
-		displayType = "block"
+	case "a", "abbr", "acronym", "b", "bdo", "big", "br", "button", "cite", "code", "dfn", "em", "i", "img", "input", "kbd", "label", "map", "object", "output", "q", "samp", "select", "small", "span", "strong", "sub", "sup", "textarea", "time", "tt", "var":
+		displayType = "inline"
 	}
 
 	return displayType
@@ -91,7 +91,7 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
 	elementStylesheet := &structs.Stylesheet{
 		Color:           &structs.ColorRGBA{0, 0, 0, 1},
-		BackgroundColor: &structs.ColorRGBA{1, 1, 1, 1},
+		BackgroundColor: &structs.ColorRGBA{1, 1, 1, 0},
 		FontSize:        0,
 		Display:         "",
 		Position:        "Normal",
