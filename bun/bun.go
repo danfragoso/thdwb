@@ -95,9 +95,10 @@ func paintListItemElement(ctx *gg.Context, node *structs.NodeDOM) {
 	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
 	ctx.Fill()
 
+	ctx.DrawCircle(node.Style.Left+15, node.Style.Top+node.Style.FontSize/2, 3)
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
 	ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
-	ctx.DrawStringWrapped(node.Content, node.Style.Left, node.Style.Top+1, 0, 0, node.Style.Width, 1.5, gg.AlignLeft)
+	ctx.DrawStringWrapped(node.Content, node.Style.Left+30, node.Style.Top+1, 0, 0, node.Style.Width, 1.5, gg.AlignLeft)
 	ctx.Fill()
 }
 
