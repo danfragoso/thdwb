@@ -1,7 +1,7 @@
 package structs
 
 import (
-	profiler "../profiler"
+	profiler "thdwb/profiler"
 )
 
 type WebBrowser struct {

@@ -3,9 +3,9 @@ package bun
 import (
 	"fmt"
 
-	assets "../assets"
-	gg "../gg"
-	structs "../structs"
+	assets "thdwb/assets"
+	gg "thdwb/gg"
+	structs "thdwb/structs"
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {

@@ -3,7 +3,7 @@ package mayo
 import (
 	"testing"
 
-	structs "../structs"
+	structs "thdwb/structs"
 	"github.com/stretchr/testify/assert"
 )
 

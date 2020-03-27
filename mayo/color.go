@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	structs "../structs"
+	structs "thdwb/structs"
 )
 
 func hexToFloatInRange(hex string) float64 {

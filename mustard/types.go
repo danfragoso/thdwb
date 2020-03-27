@@ -3,7 +3,7 @@ package mustard
 import (
 	"image"
 
-	gg "../gg"
+	gg "thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -137,6 +137,9 @@ type ContextWidget struct {
 
 	context  *gg.Context
 	renderer func(*gg.Context)
+
+	scrollable bool
+	offset     float64
 }
 
 type ButtonWidget struct {

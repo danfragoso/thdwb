@@ -1,7 +1,7 @@
 package mayo
 
 import (
-	structs "../structs"
+	structs "thdwb/structs"
 )
 
 func ReflowNode(node *structs.NodeDOM, prev *structs.NodeDOM, siblingsOffset float64) float64 {

@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	structs "../structs"
+	structs "thdwb/structs"
 )
 
 func getDefaultElementDisplay(element string) string {

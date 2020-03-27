@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 
-	assets "./assets"
-	mustard "./mustard"
-	structs "./structs"
+	assets "thdwb/assets"
+	mustard "thdwb/mustard"
+	structs "thdwb/structs"
 )
 
 func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *mustard.Frame {

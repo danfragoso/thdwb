@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	structs "../structs"
+	structs "thdwb/structs"
 	"github.com/stretchr/testify/assert"
 )
 

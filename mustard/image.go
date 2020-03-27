@@ -3,7 +3,7 @@ package mustard
 import (
 	"log"
 
-	gg "../gg"
+	gg "thdwb/gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 

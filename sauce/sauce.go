@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	structs "../structs"
+	structs "thdwb/structs"
 )
 
 // GetResource - Makes an http request and returns a resource struct

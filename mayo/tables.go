@@ -3,7 +3,7 @@ package mayo
 import (
 	"regexp"
 
-	structs "../structs"
+	structs "thdwb/structs"
 )
 
 var rgba = regexp.MustCompile(`rgba?\([\.?\d?\.?\d?%?\s?,?]+\)`)

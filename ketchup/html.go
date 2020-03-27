@@ -4,8 +4,8 @@ import (
 	"regexp"
 	"strings"
 
-	mayo "../mayo"
-	structs "../structs"
+	mayo "thdwb/mayo"
+	structs "thdwb/structs"
 )
 
 var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)

@@ -1,9 +1,9 @@
 package main
 
 import (
-	ketchup "./ketchup"
-	sauce "./sauce"
-	structs "./structs"
+	ketchup "thdwb/ketchup"
+	sauce "thdwb/sauce"
+	structs "thdwb/structs"
 )
 
 func loadDocument(browser *structs.WebBrowser, url string, callback func()) {

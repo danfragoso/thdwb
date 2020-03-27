@@ -1,7 +1,7 @@
 package mustard
 
 import (
-	gg "../gg"
+	gg "thdwb/gg"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -45,6 +45,15 @@ func (context *ContextWidget) SetHeight(height int) {
 	context.RequestReflow()
 }
 
+func (context *ContextWidget) EnableScrolling() {
+	context.scrollable = true
+}
+
+func (context *ContextWidget) DisableScrolling() {
+	context.scrollable = false
+	context.offset = 0
+}
+
 func (context *ContextWidget) GetContext() *gg.Context {
 	return context.context
 }
@@ -53,6 +62,11 @@ func (ctx *ContextWidget) draw() {
 	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
 	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height {
+		if ctx.scrollable {
+			createCtxScrollBar(ctx)
+			width -= 12
+		}
+
 		ctx.context = gg.NewContext(width, height)
 
 		ctx.context.SetRGB(1, 1, 1)
@@ -63,4 +77,24 @@ func (ctx *ContextWidget) draw() {
 
 	context.DrawImage(ctx.context.Image(), left, top)
 	ctx.needsRepaint = false
+}
+
+func createCtxScrollBar(ctx *ContextWidget) {
+	top, _, width, height := ctx.computedBox.GetCoords()
+	context := ctx.window.context
+
+	//Scroll Track
+	context.SetHexColor("#c1c1c1")
+	context.DrawRectangle(float64(width-12), float64(top), 12, float64(height))
+	context.Fill()
+
+	//Scroll Arrow
+	context.SetHexColor("#ff0000")
+	context.DrawRectangle(float64(width-12), 30, 10, 10)
+	context.Fill()
+
+	//Scroll Thumb
+	context.SetHexColor("#565656")
+	context.DrawRectangle(float64(width-11), float64(top), 10, 10)
+	context.Fill()
 }
