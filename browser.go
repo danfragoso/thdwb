@@ -1,7 +1,9 @@
 package main
 
 import (
+	bun "thdwb/bun"
 	ketchup "thdwb/ketchup"
+	mustard "thdwb/mustard"
 	sauce "thdwb/sauce"
 	structs "thdwb/structs"
 )
@@ -21,4 +23,33 @@ func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
 	parsedDocument.URL = "thdwb://homepage/"
 
 	return parsedDocument
+}
+
+func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.ContextWidget) {
+	if urlInput.GetValue() != browser.Document.URL {
+		statusLabel.SetContent("Loading: " + urlInput.GetValue())
+
+		go loadDocument(browser, urlInput.GetValue(), func() {
+			ctx := viewPort.GetContext()
+			ctx.SetRGB(1, 1, 1)
+			ctx.Clear()
+
+			perf.Start("parse")
+			parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
+			perf.Stop("parse")
+
+			perf.Start("render")
+			bun.RenderDocument(ctx, parsedDoc)
+			perf.Stop("render")
+
+			statusLabel.SetContent(
+				"Loaded; " +
+					"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
+					"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ",
+			)
+
+			viewPort.RequestRepaint()
+			statusLabel.RequestRepaint()
+		})
+	}
 }

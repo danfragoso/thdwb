@@ -93,7 +93,7 @@ func (window *Window) processFrame() {
 		window.glw.SwapBuffers()
 	}
 
-	glfw.WaitEvents()
+	glfw.PollEvents()
 }
 
 func (window *Window) RequestReflow() {

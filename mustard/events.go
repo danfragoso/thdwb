@@ -14,7 +14,7 @@ func (window *Window) ProcessPointerClick() {
 func (window *Window) ProcessReturnKey() {
 	if window.activeInput != nil && window.activeInput.active == true {
 		window.activeInput.active = false
-		window.activeInput.selected = false
+
 		window.activeInput.needsRepaint = true
 		window.activeInput.returnCallback()
 		window.activeInput = nil

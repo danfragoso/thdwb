@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"runtime"
 
 	assets "thdwb/assets"
@@ -38,7 +37,6 @@ func main() {
 
 	appBar, statusLabel, menuButton, goButton, urlInput := createMainBar(window, browser)
 	urlInput.SetReturnCallback(func() {
-		fmt.Println("enter")
 		goButton.Click()
 	})
 
@@ -69,32 +67,7 @@ func main() {
 	})
 
 	window.RegisterButton(goButton, func() {
-		if urlInput.GetValue() != browser.Document.URL {
-			statusLabel.SetContent("Loading: " + urlInput.GetValue())
-			go func() {
-				loadDocument(browser, urlInput.GetValue(), func() {})
-				ctx := viewPort.GetContext()
-				ctx.SetRGB(1, 1, 1)
-				ctx.Clear()
-
-				perf.Start("parse")
-				parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
-				perf.Stop("parse")
-
-				perf.Start("render")
-				bun.RenderDocument(ctx, parsedDoc)
-				perf.Stop("render")
-
-				statusLabel.SetContent(
-					"Loaded; " +
-						"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
-						"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ",
-				)
-
-				viewPort.RequestRepaint()
-				statusLabel.RequestRepaint()
-			}()
-		}
+		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 	})
 
 	rootFrame.AttachWidget(viewPort)
