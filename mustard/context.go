@@ -2,6 +2,7 @@ package mustard
 
 import (
 	gg "thdwb/gg"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -95,6 +96,6 @@ func createCtxScrollBar(ctx *ContextWidget) {
 
 	//Scroll Thumb
 	context.SetHexColor("#565656")
-	context.DrawRectangle(float64(width-11), float64(top), 10, 10)
+	context.DrawRectangle(float64(width-12), float64(top), 12, 200)
 	context.Fill()
 }

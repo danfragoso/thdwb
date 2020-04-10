@@ -59,6 +59,7 @@ func main() {
 			"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ")
 	})
 
+	//viewPort.EnableScrolling()
 	window.RegisterButton(menuButton, func() {
 		if debugFrame.GetHeight() != 300 {
 			debugFrame.SetHeight(300)
