@@ -42,17 +42,31 @@ func walkDOM(TreeDOM *structs.NodeDOM, d string) {
 func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	nodeChildren := getNodeChildren(node)
 
-	switch node.Style.Display {
-	case "block":
-		calculateBlockLayout(ctx, node, childIdx)
-		paintBlockElement(ctx, node)
-	case "list-item":
-		calculateListItemLayout(ctx, node, childIdx)
-		paintListItemElement(ctx, node)
-	}
+	calculateNode(ctx, node, childIdx)
 
 	for i := 0; i < len(nodeChildren); i++ {
 		layoutDOM(ctx, nodeChildren[i], i)
+		node.Style.Height += nodeChildren[i].Style.Height
+	}
+
+	paintNode(ctx, node)
+}
+
+func paintNode(ctx *gg.Context, node *structs.NodeDOM) {
+	switch node.Style.Display {
+	case "block":
+		paintBlockElement(ctx, node)
+	case "list-item":
+		paintListItemElement(ctx, node)
+	}
+}
+
+func calculateNode(ctx *gg.Context, node *structs.NodeDOM, postion int) {
+	switch node.Style.Display {
+	case "block":
+		calculateBlockLayout(ctx, node, postion)
+	case "list-item":
+		calculateListItemLayout(ctx, node, postion)
 	}
 }
 
