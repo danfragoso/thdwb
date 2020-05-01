@@ -10,6 +10,27 @@ import (
 
 // GetResource - Makes an http request and returns a resource struct
 func GetResource(url string) *structs.Resource {
+	if len(url) > 7 && url[:8] == "thdwb://" {
+		return fetchInternalPage(url)
+	}
+
+	return fetchExternalPage(url)
+}
+
+func fetchInternalPage(url string) *structs.Resource {
+	resource := &structs.Resource{}
+	resource.Body = `
+		<html>
+			<head></head>
+			<body>
+				<div>thdwb</div>
+			</body>
+		</html>
+	`
+	return resource
+}
+
+func fetchExternalPage(url string) *structs.Resource {
 	client := &http.Client{}
 	resource := &structs.Resource{}
 

@@ -88,7 +88,7 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	pv.SetHeight(1)
 
 	statusBar := mustard.CreateFrame(mustard.HorizontalFrame)
-	statusLabel := mustard.CreateLabelWidget("Loading;")
+	statusLabel := mustard.CreateLabelWidget("The HotDog Web Browser")
 	statusLabel.SetBackgroundColor("#ddd")
 	statusLabel.SetFontColor("#333")
 	statusLabel.SetFontSize(15)

@@ -4,6 +4,7 @@ import (
 	bun "thdwb/bun"
 	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
+	profiler "thdwb/profiler"
 	sauce "thdwb/sauce"
 	structs "thdwb/structs"
 )
@@ -42,14 +43,15 @@ func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.Label
 			bun.RenderDocument(ctx, parsedDoc)
 			perf.Stop("render")
 
-			statusLabel.SetContent(
-				"Loaded; " +
-					"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
-					"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ",
-			)
-
+			statusLabel.SetContent(createStatusLabel(perf))
 			viewPort.RequestRepaint()
 			statusLabel.RequestRepaint()
 		})
 	}
+}
+
+func createStatusLabel(perf *profiler.Profiler) string {
+	return "Loaded; " +
+		"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
+		"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; "
 }

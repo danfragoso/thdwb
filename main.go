@@ -44,17 +44,8 @@ func main() {
 	rootFrame.AttachWidget(appBar)
 
 	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
-		perf.Start("parse")
 		parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
-		perf.Stop("parse")
-
-		perf.Start("render")
 		bun.RenderDocument(ctx, parsedDoc)
-		perf.Stop("render")
-
-		statusLabel.SetContent("Loaded; " +
-			"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
-			"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; ")
 	})
 
 	//viewPort.EnableScrolling()

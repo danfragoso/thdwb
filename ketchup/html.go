@@ -118,7 +118,7 @@ func ParseDocument(document string) *structs.HTMLDocument {
 				}
 			}
 
-			document = document[currentTagIndex[1]:len(document)]
+			document = document[currentTagIndex[1]:]
 		}
 
 		if !xmlTag.MatchString(document) {

@@ -1,14 +1,14 @@
 package mustard
 
 func (window *Window) ProcessPointerPosition() {
-	window.glw.SetCursor(window.defaultCursor)
-	window.ProcessButtons()
-	window.ProcessInputs()
+	go window.glw.SetCursor(window.defaultCursor)
+	go window.ProcessButtons()
+	go window.ProcessInputs()
 }
 
 func (window *Window) ProcessPointerClick() {
-	window.ProcessButtonClick()
-	window.ProcessInputActivation()
+	go window.ProcessButtonClick()
+	go window.ProcessInputActivation()
 }
 
 func (window *Window) ProcessReturnKey() {

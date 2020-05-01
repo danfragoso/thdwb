@@ -13,8 +13,12 @@ type HTMLDocument struct {
 	RootElement *NodeDOM
 	URL         string
 	RawDocument string
+	OffsetY     int
 	Styles      []*StyleElement
 	Profiler    *profiler.Profiler
+	PointerXPos float64
+	PointerYPos float64
+	DebugFlag   bool
 }
 
 //NodeDOM "DOM Node Struct definition"
