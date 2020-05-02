@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
 	assets "thdwb/assets"
@@ -59,6 +60,10 @@ func main() {
 
 	window.RegisterButton(goButton, func() {
 		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+	})
+
+	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
+		fmt.Println(pointerX, pointerY)
 	})
 
 	rootFrame.AttachWidget(viewPort)

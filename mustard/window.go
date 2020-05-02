@@ -200,3 +200,7 @@ func (window *Window) RegisterButton(button *ButtonWidget, callback func()) {
 func (window *Window) RegisterInput(input *InputWidget) {
 	window.registeredInputs = append(window.registeredInputs, input)
 }
+
+func (window *Window) AttachPointerPositionEventListener(callback func(pointerX, pointerY float64)) {
+	window.pointerPositionEventListeners = append(window.pointerPositionEventListeners, callback)
+}

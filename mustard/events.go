@@ -4,6 +4,7 @@ func (window *Window) ProcessPointerPosition() {
 	go window.glw.SetCursor(window.defaultCursor)
 	go window.ProcessButtons()
 	go window.ProcessInputs()
+	go window.firePointerPositionEvents()
 }
 
 func (window *Window) ProcessPointerClick() {
@@ -83,5 +84,11 @@ func (window *Window) ProcessButtonClick() {
 			button.needsRepaint = true
 			return
 		}
+	}
+}
+
+func (window *Window) firePointerPositionEvents() {
+	for _, eventCallback := range window.pointerPositionEventListeners {
+		eventCallback(window.cursorX, window.cursorY)
 	}
 }

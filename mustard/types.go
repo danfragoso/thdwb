@@ -38,6 +38,8 @@ type Window struct {
 
 	cursorX float64
 	cursorY float64
+
+	pointerPositionEventListeners []func(float64, float64)
 }
 
 type glBackend struct {
