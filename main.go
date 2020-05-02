@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"runtime"
 
 	assets "thdwb/assets"
@@ -63,7 +62,7 @@ func main() {
 	})
 
 	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
-		fmt.Println(pointerX, pointerY)
+		//fmt.Println(pointerX, pointerY)
 	})
 
 	rootFrame.AttachWidget(viewPort)

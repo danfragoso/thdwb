@@ -34,6 +34,7 @@ func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *must
 	debugContent.AttachWidget(source)
 
 	debugTitle := mustard.CreateLabelWidget("Source")
+	debugTitle.SetBackgroundColor("#eee")
 	debugTitle.SetFontSize(16)
 
 	debugBar.AttachWidget(debugTitle)
