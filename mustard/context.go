@@ -28,35 +28,35 @@ func CreateCanvasWidget(renderer func(*gg.Context)) *CanvasWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (context *CanvasWidget) AttachWidget(widget interface{}) {
-	context.widgets = append(context.widgets, widget)
+func (canvas *CanvasWidget) AttachWidget(widget interface{}) {
+	canvas.widgets = append(canvas.widgets, widget)
 }
 
 //SetWidth - Sets the label width
-func (context *CanvasWidget) SetWidth(width int) {
-	context.box.width = width
-	context.fixedWidth = true
-	context.RequestReflow()
+func (canvas *CanvasWidget) SetWidth(width int) {
+	canvas.box.width = width
+	canvas.fixedWidth = true
+	canvas.RequestReflow()
 }
 
 //SetHeight - Sets the label height
-func (context *CanvasWidget) SetHeight(height int) {
-	context.box.height = height
-	context.fixedHeight = true
-	context.RequestReflow()
+func (canvas *CanvasWidget) SetHeight(height int) {
+	canvas.box.height = height
+	canvas.fixedHeight = true
+	canvas.RequestReflow()
 }
 
-func (context *CanvasWidget) EnableScrolling() {
-	context.scrollable = true
+func (canvas *CanvasWidget) EnableScrolling() {
+	canvas.scrollable = true
 }
 
-func (context *CanvasWidget) DisableScrolling() {
-	context.scrollable = false
-	context.offset = 0
+func (canvas *CanvasWidget) DisableScrolling() {
+	canvas.scrollable = false
+	canvas.offset = 0
 }
 
-func (context *CanvasWidget) GetContext() *gg.Context {
-	return context.context
+func (canvas *CanvasWidget) GetContext() *gg.Context {
+	return canvas.context
 }
 
 func (ctx *CanvasWidget) draw() {
