@@ -1,7 +1,7 @@
 package mustard
 
 func (window *Window) ProcessPointerPosition() {
-	go window.glw.SetCursor(window.defaultCursor)
+	window.glw.SetCursor(window.defaultCursor)
 	go window.ProcessButtons()
 	go window.ProcessInputs()
 	go window.firePointerPositionEvents()
