@@ -134,7 +134,7 @@ type ImageWidget struct {
 	img  image.Image
 }
 
-type ContextWidget struct {
+type CanvasWidget struct {
 	widget
 
 	context  *gg.Context

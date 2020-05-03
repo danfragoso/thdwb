@@ -26,7 +26,7 @@ func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
 	return parsedDocument
 }
 
-func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.ContextWidget) {
+func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	if urlInput.GetValue() != browser.Document.URL {
 		statusLabel.SetContent("Loading: " + urlInput.GetValue())
 
@@ -52,6 +52,6 @@ func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.Label
 
 func createStatusLabel(perf *profiler.Profiler) string {
 	return "Loaded; " +
-		"Render: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
-		"Parsing: " + perf.GetProfile("parse").GetElapsedTime().String() + "; "
+		"Render took: " + perf.GetProfile("render").GetElapsedTime().String() + "; " +
+		"Parse took: " + perf.GetProfile("parse").GetElapsedTime().String() + "; "
 }

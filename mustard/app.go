@@ -45,8 +45,8 @@ func setWidgetWindow(widget *widget, window *Window) {
 		case *ImageWidget:
 			widget := widgets[i].(*ImageWidget)
 			setWidgetWindow(&widget.widget, window)
-		case *ContextWidget:
-			widget := widgets[i].(*ContextWidget)
+		case *CanvasWidget:
+			widget := widgets[i].(*CanvasWidget)
 			setWidgetWindow(&widget.widget, window)
 		case *ButtonWidget:
 			widget := widgets[i].(*ButtonWidget)
@@ -96,8 +96,8 @@ func redrawWidgets(widget interface{}) {
 				redrawWidgets(widget.widgets[i])
 			}
 		}
-	case *ContextWidget:
-		widget := widget.(*ContextWidget)
+	case *CanvasWidget:
+		widget := widget.(*CanvasWidget)
 		if widget.needsRepaint {
 			widget.draw()
 		} else {

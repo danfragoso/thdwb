@@ -91,8 +91,8 @@ func (frame *Frame) draw() {
 				image.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
 				image.draw()
 
-			case *ContextWidget:
-				ctx := frame.widgets[i].(*ContextWidget)
+			case *CanvasWidget:
+				ctx := frame.widgets[i].(*CanvasWidget)
 				ctx.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
 				ctx.draw()
 

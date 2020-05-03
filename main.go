@@ -43,7 +43,7 @@ func main() {
 	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
 
-	viewPort := mustard.CreateContextWidget(func(ctx *gg.Context) {
+	viewPort := mustard.CreateCanvasWidget(func(ctx *gg.Context) {
 		parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
 		bun.RenderDocument(ctx, parsedDoc)
 	})

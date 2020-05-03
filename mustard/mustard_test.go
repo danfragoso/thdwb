@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	gg "thdwb/gg"
+
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -37,7 +38,7 @@ func TestMustard(t *testing.T) {
 
 	rootFrame.AttachWidget(appBar)
 
-	viewPort := CreateContextWidget(func(ctx *gg.Context) {
+	viewPort := CreateCanvasWidget(func(ctx *gg.Context) {
 		img, err := gg.LoadImage("logo.png")
 		if err != nil {
 			log.Fatal(err)
