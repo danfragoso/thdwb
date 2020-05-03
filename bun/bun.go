@@ -56,6 +56,8 @@ func paintNode(ctx *gg.Context, node *structs.NodeDOM) {
 	switch node.Style.Display {
 	case "block":
 		paintBlockElement(ctx, node)
+	case "inline":
+		paintInlineElement(ctx, node)
 	case "list-item":
 		paintListItemElement(ctx, node)
 	}
@@ -65,6 +67,8 @@ func calculateNode(ctx *gg.Context, node *structs.NodeDOM, postion int) {
 	switch node.Style.Display {
 	case "block":
 		calculateBlockLayout(ctx, node, postion)
+	case "inline":
+		calculateInlineLayout(ctx, node, postion)
 	case "list-item":
 		calculateListItemLayout(ctx, node, postion)
 	}
@@ -132,6 +136,44 @@ func calculateListItemLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx in
 	} else {
 		node.Style.Top = node.Parent.Style.Top
 	}
+}
+
+func paintInlineElement(ctx *gg.Context, node *structs.NodeDOM) {
+	ctx.DrawRectangle(node.Style.Left, node.Style.Top, node.Style.Width, node.Style.Height)
+	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
+	ctx.Fill()
+
+	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
+	ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
+	ctx.DrawStringWrapped(node.Content, node.Style.Left, node.Style.Top, 0, 0, node.Style.Width, 1.5, gg.AlignLeft)
+	ctx.Fill()
+}
+
+func calculateInlineLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
+	ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
+
+	if childIdx > 0 && node.Parent.Children[childIdx-1] != nil {
+		prev := node.Parent.Children[childIdx-1]
+		if prev.Style.Display == "inline" {
+			node.Style.Top = prev.Style.Top
+		} else {
+			node.Style.Top = prev.Style.Top + prev.Style.Height
+		}
+	} else {
+		node.Style.Top = node.Parent.Style.Top
+	}
+
+	if childIdx > 0 && node.Parent.Children[childIdx-1] != nil {
+		prev := node.Parent.Children[childIdx-1]
+		if prev.Style.Display == "inline" {
+			node.Style.Left = prev.Style.Left + prev.Style.Width
+		}
+	} else {
+		node.Style.Left = node.Parent.Style.Left
+	}
+
+	node.Style.Width, node.Style.Height = ctx.MeasureMultilineString(node.Content, 1.5)
+	node.Style.Height++
 }
 
 func GetPageTitle(TreeDOM *structs.NodeDOM) string {
