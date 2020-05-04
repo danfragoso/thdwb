@@ -1,7 +1,6 @@
 package mustard
 
 import (
-	"log"
 	"runtime"
 	"strconv"
 	"testing"
@@ -17,10 +16,10 @@ func TestMustard(t *testing.T) {
 	glfw.Init()
 	gl.Init()
 
-	setGLFWHints()
+	SetGLFWHints()
 
-	app := createNewApp("THDWB")
-	window := createNewWindow("THDWB", 600, 600)
+	app := CreateNewApp("THDWB")
+	window := CreateNewWindow("THDWB", 600, 600)
 	rootFrame := CreateFrame(HorizontalFrame)
 
 	appBar := CreateFrame(VerticalFrame)
@@ -28,23 +27,13 @@ func TestMustard(t *testing.T) {
 	titleBar := CreateLabelWidget("THDWB - nil")
 	titleBar.SetFontColor("#fff")
 
-	logo := CreateImageWidget("logo.png")
-	logo.SetWidth(20)
-
 	appBar.SetHeight(28)
-	appBar.AttachWidget(logo)
 	appBar.AttachWidget(titleBar)
 	appBar.SetBackgroundColor("#5f6368")
 
 	rootFrame.AttachWidget(appBar)
 
-	viewPort := CreateCanvasWidget(func(ctx *gg.Context) {
-		img, err := gg.LoadImage("logo.png")
-		if err != nil {
-			log.Fatal(err)
-		}
-		ctx.DrawImage(img, 0, 0)
-	})
+	viewPort := CreateCanvasWidget(func(ctx *gg.Context) {})
 
 	rootFrame.AttachWidget(viewPort)
 
