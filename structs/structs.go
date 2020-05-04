@@ -32,7 +32,8 @@ type Document struct {
 }
 
 type RenderBox struct {
-	Node *NodeDOM
+	Node        *NodeDOM
+	NeedsReflow bool
 
 	Top  float64
 	Left float64
@@ -59,6 +60,7 @@ type NodeDOM struct {
 	Attributes []*Attribute `json:"attributes"`
 	Style      *Stylesheet  `json:"style"`
 	Parent     *NodeDOM     `json:"-"`
+	RenderBox  *RenderBox   `json:"-"`
 }
 
 //Resource "HTTP resource struct definition"
