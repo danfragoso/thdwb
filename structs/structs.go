@@ -5,7 +5,9 @@ import (
 )
 
 type WebBrowser struct {
-	Document *HTMLDocument
+	Document       *HTMLDocument
+	ActiveDocument *Document
+	Documents      []*Document
 }
 
 type HTMLDocument struct {
@@ -19,6 +21,34 @@ type HTMLDocument struct {
 	PointerXPos float64
 	PointerYPos float64
 	DebugFlag   bool
+}
+
+type Document struct {
+	Title       string
+	Path        string
+	ContentType string
+	RawDocument string
+	DOM         *NodeDOM
+}
+
+type RenderBox struct {
+	Node *NodeDOM
+
+	Top  float64
+	Left float64
+
+	Width  float64
+	Height float64
+
+	MarginTop    float64
+	MarginLeft   float64
+	MarginRight  float64
+	MarginBottom float64
+
+	PaddingTop    float64
+	PaddingLeft   float64
+	PaddingRight  float64
+	PaddingBottom float64
 }
 
 //NodeDOM "DOM Node Struct definition"
