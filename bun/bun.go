@@ -7,7 +7,7 @@ import (
 	structs "thdwb/structs"
 )
 
-func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
+func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument, browser *structs.WebBrowser) {
 	//tree.Children[0] is head
 	body := document.RootElement.Children[1]
 
@@ -15,6 +15,18 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	document.RootElement.RenderBox.Height = float64(ctx.Height())
 
 	layoutDOM(ctx, body, 0)
+
+	if browser.SelectedNode != nil {
+		node := browser.SelectedNode
+		ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
+		ctx.SetRGBA(.2, .8, .4, .2)
+		ctx.Fill()
+
+		ctx.SetRGB(0, 0, 0)
+		ctx.DrawString(node.Element, node.RenderBox.Left, node.RenderBox.Top)
+		ctx.Fill()
+		return
+	}
 }
 
 func getNodeContent(NodeDOM *structs.NodeDOM) string {

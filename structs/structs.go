@@ -8,6 +8,7 @@ type WebBrowser struct {
 	Document       *HTMLDocument
 	ActiveDocument *Document
 	Documents      []*Document
+	SelectedNode   *NodeDOM
 }
 
 type HTMLDocument struct {

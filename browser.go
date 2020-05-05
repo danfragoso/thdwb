@@ -40,7 +40,7 @@ func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.Label
 			perf.Stop("parse")
 
 			perf.Start("render")
-			bun.RenderDocument(ctx, parsedDoc)
+			bun.RenderDocument(ctx, parsedDoc, browser)
 			perf.Stop("render")
 
 			statusLabel.SetContent(createStatusLabel(perf))

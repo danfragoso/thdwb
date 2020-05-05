@@ -62,7 +62,7 @@ func (canvas *CanvasWidget) GetContext() *gg.Context {
 func (ctx *CanvasWidget) draw() {
 	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
-	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height {
+	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height || ctx.needsRepaint {
 		if ctx.scrollable {
 			createCtxScrollBar(ctx)
 			width -= 12

@@ -44,8 +44,8 @@ func main() {
 	rootFrame.AttachWidget(appBar)
 
 	viewPort := mustard.CreateCanvasWidget(func(ctx *gg.Context) {
-		parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
-		bun.RenderDocument(ctx, parsedDoc)
+		browser.Document = ketchup.ParseDocument(browser.Document.RawDocument)
+		bun.RenderDocument(ctx, browser.Document, browser)
 	})
 
 	//viewPort.EnableScrolling()
@@ -62,7 +62,8 @@ func main() {
 	})
 
 	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
-		//fmt.Println(pointerX, pointerY)
+		processPointerPosition(browser, pointerX, pointerY-62)
+		viewPort.RequestRepaint()
 	})
 
 	rootFrame.AttachWidget(viewPort)

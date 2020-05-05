@@ -1,6 +1,8 @@
 package mustard
 
 import (
+	"fmt"
+
 	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
@@ -99,6 +101,7 @@ func redrawWidgets(widget interface{}) {
 	case *CanvasWidget:
 		widget := widget.(*CanvasWidget)
 		if widget.needsRepaint {
+			fmt.Println("tem q pintar de novo")
 			widget.draw()
 		} else {
 			for i := 0; i < len(widget.widgets); i++ {
