@@ -62,19 +62,13 @@ func (canvas *CanvasWidget) GetContext() *gg.Context {
 func (ctx *CanvasWidget) draw() {
 	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
-	if ctx.context == nil || ctx.context.Width() != width || ctx.context.Height() != height {
-		if ctx.scrollable {
-			createCtxScrollBar(ctx)
-			width -= 12
-		}
-
-		ctx.context = gg.NewContext(width, height)
-
-		ctx.context.SetRGB(1, 1, 1)
-		ctx.context.Clear()
-
-		ctx.renderer(ctx.context)
+	if ctx.scrollable {
+		createCtxScrollBar(ctx)
+		width -= 12
 	}
+
+	ctx.context = gg.NewContext(width, height)
+	ctx.renderer(ctx.context)
 
 	context.DrawImage(ctx.context.Image(), left, top)
 	ctx.needsRepaint = false

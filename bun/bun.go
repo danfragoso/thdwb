@@ -8,13 +8,28 @@ import (
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
-	//tree.Children[0] is head
+	ctx.SetRGB(1, 1, 1)
+	ctx.Clear()
+
 	body := document.RootElement.Children[1]
 
 	document.RootElement.RenderBox.Width = float64(ctx.Width())
 	document.RootElement.RenderBox.Height = float64(ctx.Height())
 
 	layoutDOM(ctx, body, 0)
+	if document.SelectedElement != nil {
+		paintDebugRect(ctx, document.SelectedElement)
+	}
+}
+
+func paintDebugRect(ctx *gg.Context, node *structs.NodeDOM) {
+	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
+	ctx.SetRGBA(.2, .8, .4, .2)
+	ctx.Fill()
+
+	ctx.SetRGB(0, 0, 0)
+	ctx.DrawString(node.Element, node.RenderBox.Left, node.RenderBox.Top)
+	ctx.Fill()
 }
 
 func getNodeContent(NodeDOM *structs.NodeDOM) string {

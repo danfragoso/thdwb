@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"thdwb/mustard"
 	profiler "thdwb/profiler"
 )
 
@@ -8,6 +9,7 @@ type WebBrowser struct {
 	Document       *HTMLDocument
 	ActiveDocument *Document
 	Documents      []*Document
+	Viewport       *mustard.CanvasWidget
 }
 
 type HTMLDocument struct {
@@ -18,9 +20,9 @@ type HTMLDocument struct {
 	OffsetY     int
 	Styles      []*StyleElement
 	Profiler    *profiler.Profiler
-	PointerXPos float64
-	PointerYPos float64
-	DebugFlag   bool
+
+	SelectedElement *NodeDOM
+	DebugFlag       bool
 }
 
 type Document struct {
@@ -64,6 +66,41 @@ type NodeDOM struct {
 
 	NeedsReflow  bool `json:"-"`
 	NeedsRepaint bool `json:"-"`
+}
+
+func (node *NodeDOM) CalcPointIntersection(x, y float64) *NodeDOM {
+	var intersectedNode *NodeDOM
+	if x > float64(node.RenderBox.Left) &&
+		x < float64(node.RenderBox.Left+node.RenderBox.Width) &&
+		y > float64(node.RenderBox.Top) &&
+		y < float64(node.RenderBox.Top+node.RenderBox.Height) {
+		intersectedNode = node
+	}
+
+	for i := 0; i < len(node.Children); i++ {
+		tempNode := node.Children[i].CalcPointIntersection(x, y)
+		if tempNode != nil {
+			intersectedNode = tempNode
+		}
+	}
+
+	return intersectedNode
+}
+
+func (node NodeDOM) RequestRepaint() {
+	node.NeedsRepaint = true
+
+	for _, childNode := range node.Children {
+		childNode.RequestRepaint()
+	}
+}
+
+func (node NodeDOM) RequestReflow() {
+	node.NeedsReflow = true
+
+	for _, childNode := range node.Children {
+		childNode.RequestReflow()
+	}
 }
 
 //Resource "HTTP resource struct definition"

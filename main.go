@@ -48,6 +48,7 @@ func main() {
 		bun.RenderDocument(ctx, browser.Document)
 	})
 
+	browser.Viewport = viewPort
 	//viewPort.EnableScrolling()
 	window.RegisterButton(menuButton, func() {
 		if debugFrame.GetHeight() != 300 {
@@ -62,7 +63,8 @@ func main() {
 	})
 
 	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
-		//fmt.Println(pointerX, pointerY)
+		statusBarOffset := 62.
+		processPointerPositionEvent(browser, pointerX, pointerY-statusBarOffset)
 	})
 
 	rootFrame.AttachWidget(viewPort)
@@ -73,4 +75,9 @@ func main() {
 
 	app.AddWindow(window)
 	app.Run(func() {})
+}
+
+func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
+	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
+	browser.Viewport.RequestRepaint()
 }
