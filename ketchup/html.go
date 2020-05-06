@@ -104,7 +104,10 @@ func ParseDocument(document string) *structs.HTMLDocument {
 					Attributes: extractedAttributes,
 					Style:      elementStylesheet,
 					Parent:     lastNode,
-					RenderBox:  &structs.RenderBox{NeedsReflow: true},
+
+					NeedsReflow:  true,
+					NeedsRepaint: true,
+					RenderBox:    &structs.RenderBox{},
 				}
 
 				if currentTagName == "html" {

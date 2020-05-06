@@ -32,8 +32,7 @@ type Document struct {
 }
 
 type RenderBox struct {
-	Node        *NodeDOM
-	NeedsReflow bool
+	Node *NodeDOM
 
 	Top  float64
 	Left float64
@@ -54,13 +53,17 @@ type RenderBox struct {
 
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
-	Element    string       `json:"element"`
-	Content    string       `json:"content"`
+	Element string `json:"element"`
+	Content string `json:"content"`
+
 	Children   []*NodeDOM   `json:"children"`
 	Attributes []*Attribute `json:"attributes"`
 	Style      *Stylesheet  `json:"style"`
 	Parent     *NodeDOM     `json:"-"`
 	RenderBox  *RenderBox   `json:"-"`
+
+	NeedsReflow  bool `json:"-"`
+	NeedsRepaint bool `json:"-"`
 }
 
 //Resource "HTTP resource struct definition"

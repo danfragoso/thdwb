@@ -42,10 +42,10 @@ func main() {
 
 	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
+	browser.Document = ketchup.ParseDocument(browser.Document.RawDocument)
 
 	viewPort := mustard.CreateCanvasWidget(func(ctx *gg.Context) {
-		parsedDoc := ketchup.ParseDocument(browser.Document.RawDocument)
-		bun.RenderDocument(ctx, parsedDoc)
+		bun.RenderDocument(ctx, browser.Document)
 	})
 
 	//viewPort.EnableScrolling()

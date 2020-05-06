@@ -41,9 +41,8 @@ func walkDOM(TreeDOM *structs.NodeDOM, d string) {
 func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	nodeChildren := getNodeChildren(node)
 
-	if node.RenderBox.NeedsReflow {
-		calculateNode(ctx, node, childIdx)
-	}
+	node.RenderBox = &structs.RenderBox{}
+	calculateNode(ctx, node, childIdx)
 
 	for i := 0; i < len(nodeChildren); i++ {
 		layoutDOM(ctx, nodeChildren[i], i)
