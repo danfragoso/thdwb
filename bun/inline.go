@@ -31,6 +31,7 @@ func calculateInlineLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int)
 		}
 	} else {
 		node.RenderBox.Top = node.Parent.RenderBox.Top
+		node.RenderBox.Left = node.Parent.RenderBox.Left
 	}
 
 	node.RenderBox.Width, node.RenderBox.Height = ctx.MeasureMultilineString(node.Content, 1.5)
