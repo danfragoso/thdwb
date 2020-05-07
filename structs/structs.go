@@ -68,6 +68,16 @@ type NodeDOM struct {
 	NeedsRepaint bool `json:"-"`
 }
 
+func (node *NodeDOM) Attr(attrName string) string {
+	for _, attribute := range node.Attributes {
+		if attribute.Name == attrName {
+			return attribute.Value
+		}
+	}
+
+	return ""
+}
+
 func (node *NodeDOM) CalcPointIntersection(x, y float64) *NodeDOM {
 	var intersectedNode *NodeDOM
 	if x > float64(node.RenderBox.Left) &&
