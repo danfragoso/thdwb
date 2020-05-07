@@ -45,7 +45,7 @@ func HomePage() []byte {
        <p>
             You can find more info at
        </p>
-       <a style="color: blue;" href="https://github.com/danfragoso/thdwb">https://github.com/danfragoso/thdwb</a>
+       <a href="https://github.com/danfragoso/thdwb">https://github.com/danfragoso/thdwb</a>
     </body>
 
     </html> 
