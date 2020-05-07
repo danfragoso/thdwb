@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 
 	assets "thdwb/assets"
@@ -69,6 +70,14 @@ func main() {
 
 	window.AttachScrollEventListener(func(direction int) {
 		//
+	})
+
+	window.AttachClickEventListener(func() {
+		if browser.Document.SelectedElement != nil {
+			if browser.Document.SelectedElement.Element == "a" {
+				fmt.Println(browser.Document.SelectedElement.Element)
+			}
+		}
 	})
 
 	rootFrame.AttachWidget(viewPort)

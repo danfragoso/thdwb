@@ -10,6 +10,7 @@ func (window *Window) ProcessPointerPosition() {
 func (window *Window) ProcessPointerClick() {
 	go window.ProcessButtonClick()
 	go window.ProcessInputActivation()
+	go window.fireClickEvents()
 }
 
 func (window *Window) ProcessScroll(x, y float64) {
@@ -100,5 +101,11 @@ func (window *Window) firePointerPositionEvents() {
 func (window *Window) fireScrollEvents(x, y float64) {
 	for _, eventCallback := range window.scrollEventListeners {
 		eventCallback(int(y))
+	}
+}
+
+func (window *Window) fireClickEvents() {
+	for _, eventCallback := range window.clickEventListeners {
+		eventCallback()
 	}
 }

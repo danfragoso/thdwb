@@ -212,3 +212,7 @@ func (window *Window) AttachPointerPositionEventListener(callback func(pointerX,
 func (window *Window) AttachScrollEventListener(callback func(direction int)) {
 	window.scrollEventListeners = append(window.scrollEventListeners, callback)
 }
+
+func (window *Window) AttachClickEventListener(callback func()) {
+	window.clickEventListeners = append(window.clickEventListeners, callback)
+}

@@ -41,6 +41,7 @@ type Window struct {
 
 	pointerPositionEventListeners []func(float64, float64)
 	scrollEventListeners          []func(int)
+	clickEventListeners           []func()
 }
 
 type glBackend struct {
