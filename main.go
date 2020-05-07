@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"runtime"
 
 	assets "thdwb/assets"
@@ -75,7 +74,9 @@ func main() {
 	window.AttachClickEventListener(func() {
 		if browser.Document.SelectedElement != nil {
 			if browser.Document.SelectedElement.Element == "a" {
-				fmt.Println(browser.Document.SelectedElement.Element)
+				href := browser.Document.SelectedElement.Attr("href")
+				urlInput.SetValue(href)
+				loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 			}
 		}
 	})
