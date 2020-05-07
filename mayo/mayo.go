@@ -92,7 +92,6 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 
 func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
 	elementStylesheet := &structs.Stylesheet{
-		Color:           &structs.ColorRGBA{0, 0, 0, 1},
 		BackgroundColor: &structs.ColorRGBA{1, 1, 1, 0},
 		FontSize:        0,
 		Display:         "",
@@ -110,6 +109,15 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 			elementStylesheet.FontSize = fontSize
 		} else {
 			elementStylesheet.FontSize = float64(14)
+		}
+	}
+
+	if elementStylesheet.Color == nil {
+		color := elementColorTable[elementName]
+		if color != nil {
+			elementStylesheet.Color = color
+		} else {
+			elementStylesheet.Color = &structs.ColorRGBA{0, 0, 0, 1}
 		}
 	}
 
