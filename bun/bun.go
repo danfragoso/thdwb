@@ -8,6 +8,10 @@ import (
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
+	//This function runs every mouse movement, it should only run when
+	//a node needs to be repainted and only the node that need repaint should
+	//be repainted
+
 	ctx.SetRGB(1, 1, 1)
 	ctx.Clear()
 
@@ -23,12 +27,18 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 }
 
 func paintDebugRect(ctx *gg.Context, node *structs.NodeDOM) {
+	debugString := node.Element + " {" + fmt.Sprint(node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height) + "}"
 	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
-	ctx.SetRGBA(.2, .8, .4, .2)
+	ctx.SetRGBA(.2, .8, .4, .3)
+	ctx.Fill()
+
+	w, h := ctx.MeasureString(debugString)
+	ctx.DrawRectangle(node.RenderBox.Left+node.RenderBox.Width-w-4, node.RenderBox.Top+node.RenderBox.Height, w+4, h+4)
+	ctx.SetRGB(1, 1, 0)
 	ctx.Fill()
 
 	ctx.SetRGB(0, 0, 0)
-	ctx.DrawString(node.Element, node.RenderBox.Left, node.RenderBox.Top)
+	ctx.DrawString(debugString, node.RenderBox.Left+node.RenderBox.Width-w-2, node.RenderBox.Top+node.RenderBox.Height+h+2)
 	ctx.Fill()
 }
 
