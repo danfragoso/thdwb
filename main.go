@@ -67,6 +67,10 @@ func main() {
 		processPointerPositionEvent(browser, pointerX, pointerY-statusBarOffset)
 	})
 
+	window.AttachScrollEventListener(func(direction int) {
+		//
+	})
+
 	rootFrame.AttachWidget(viewPort)
 	rootFrame.AttachWidget(debugFrame)
 

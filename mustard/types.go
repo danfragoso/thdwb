@@ -40,6 +40,7 @@ type Window struct {
 	cursorY float64
 
 	pointerPositionEventListeners []func(float64, float64)
+	scrollEventListeners          []func(int)
 }
 
 type glBackend struct {

@@ -55,6 +55,14 @@ func (canvas *CanvasWidget) DisableScrolling() {
 	canvas.offset = 0
 }
 
+func (canvas *CanvasWidget) SetOffset(offset float64) {
+	canvas.offset = offset
+}
+
+func (canvas *CanvasWidget) GetOffset() float64 {
+	return canvas.offset
+}
+
 func (canvas *CanvasWidget) GetContext() *gg.Context {
 	return canvas.context
 }
@@ -70,7 +78,7 @@ func (ctx *CanvasWidget) draw() {
 	ctx.context = gg.NewContext(width, height)
 	ctx.renderer(ctx.context)
 
-	context.DrawImage(ctx.context.Image(), left, top)
+	context.DrawImage(ctx.context.Image(), left, top-int(ctx.offset))
 	ctx.needsRepaint = false
 }
 

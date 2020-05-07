@@ -12,6 +12,10 @@ func (window *Window) ProcessPointerClick() {
 	go window.ProcessInputActivation()
 }
 
+func (window *Window) ProcessScroll(x, y float64) {
+	go window.fireScrollEvents(x, y)
+}
+
 func (window *Window) ProcessReturnKey() {
 	if window.activeInput != nil && window.activeInput.active == true {
 		window.activeInput.active = false
@@ -90,5 +94,11 @@ func (window *Window) ProcessButtonClick() {
 func (window *Window) firePointerPositionEvents() {
 	for _, eventCallback := range window.pointerPositionEventListeners {
 		eventCallback(window.cursorX, window.cursorY)
+	}
+}
+
+func (window *Window) fireScrollEvents(x, y float64) {
+	for _, eventCallback := range window.scrollEventListeners {
+		eventCallback(int(y))
 	}
 }

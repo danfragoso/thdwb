@@ -168,6 +168,10 @@ func (window *Window) addEvents() {
 			window.ProcessPointerClick()
 		}
 	})
+
+	window.glw.SetScrollCallback(func(w *glfw.Window, x, y float64) {
+		window.ProcessScroll(x, y)
+	})
 }
 
 func (window *Window) generateTexture() {
@@ -203,4 +207,8 @@ func (window *Window) RegisterInput(input *InputWidget) {
 
 func (window *Window) AttachPointerPositionEventListener(callback func(pointerX, pointerY float64)) {
 	window.pointerPositionEventListeners = append(window.pointerPositionEventListeners, callback)
+}
+
+func (window *Window) AttachScrollEventListener(callback func(direction int)) {
+	window.scrollEventListeners = append(window.scrollEventListeners, callback)
 }
