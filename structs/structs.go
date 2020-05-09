@@ -10,6 +10,7 @@ type WebBrowser struct {
 	ActiveDocument *Document
 	Documents      []*Document
 	Viewport       *mustard.CanvasWidget
+	History        *History
 }
 
 type HTMLDocument struct {
@@ -23,6 +24,18 @@ type HTMLDocument struct {
 
 	SelectedElement *NodeDOM
 	DebugFlag       bool
+}
+
+type History struct {
+	pages []string
+}
+
+func (history *History) Push(url string) {
+	history.pages = append(history.pages, url)
+}
+
+func (history *History) Last() string {
+	return history.pages[len(history.pages)-1]
 }
 
 type Document struct {
