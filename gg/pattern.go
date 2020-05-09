@@ -4,7 +4,7 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/golang/freetype/raster"
+	"github.com/goki/freetype/raster"
 )
 
 type RepeatOp int
@@ -92,7 +92,7 @@ func (r *patternPainter) Paint(ss []raster.Span, done bool) {
 		const m = 1<<16 - 1
 		y := s.Y - r.im.Rect.Min.Y
 		x0 := s.X0 - r.im.Rect.Min.X
-		// RGBAPainter.Paint() in $GOPATH/src/github.com/golang/freetype/raster/paint.go
+		// RGBAPainter.Paint() in $GOPATH/src/github.com/goki/freetype/raster/paint.go
 		i0 := (s.Y-r.im.Rect.Min.Y)*r.im.Stride + (s.X0-r.im.Rect.Min.X)*4
 		i1 := i0 + (s.X1-s.X0)*4
 		for i, x := i0, x0; i < i1; i, x = i+4, x+1 {
