@@ -5,12 +5,19 @@ import (
 	"log"
 	"net/http"
 
+	"thdwb/assets"
 	structs "thdwb/structs"
 )
 
 // GetResource - Makes an http request and returns a resource struct
 func GetResource(url string) *structs.Resource {
 	if len(url) > 7 && url[:8] == "thdwb://" {
+		if url == "thdwb://homepage/" {
+			return &structs.Resource{
+				Body: string(assets.HomePage()),
+			}
+		}
+
 		return fetchInternalPage(url)
 	}
 
