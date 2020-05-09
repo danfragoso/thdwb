@@ -29,6 +29,7 @@ func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
 func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	if urlInput.GetValue() != browser.Document.URL {
 		statusLabel.SetContent("Loading: " + urlInput.GetValue())
+		browser.History.Push(urlInput.GetValue())
 
 		go loadDocument(browser, urlInput.GetValue(), func() {
 			ctx := viewPort.GetContext()

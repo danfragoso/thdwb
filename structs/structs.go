@@ -38,6 +38,12 @@ func (history *History) Last() string {
 	return history.pages[len(history.pages)-1]
 }
 
+func (history *History) Pop() {
+	if len(history.pages) > 0 {
+		history.pages = history.pages[:len(history.pages)-1]
+	}
+}
+
 type Document struct {
 	Title       string
 	Path        string

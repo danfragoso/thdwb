@@ -26,16 +26,15 @@ func main() {
 
 	perf = profiler.CreateProfiler()
 
-	browser := &structs.WebBrowser{
-		Document: loadDocumentFromAsset(assets.HomePage()),
-	}
+	browser := &structs.WebBrowser{Document: loadDocumentFromAsset(assets.HomePage()), History: &structs.History{}}
+	browser.History.Push("thdwb://homepage/")
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
 
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
-	appBar, statusLabel, menuButton, goButton, urlInput := createMainBar(window, browser)
+	appBar, statusLabel, menuButton, goButton, backButton, urlInput := createMainBar(window, browser)
 	urlInput.SetReturnCallback(func() {
 		goButton.Click()
 	})
@@ -59,6 +58,12 @@ func main() {
 	})
 
 	window.RegisterButton(goButton, func() {
+		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+	})
+
+	window.RegisterButton(backButton, func() {
+		browser.History.Pop()
+		urlInput.SetValue(browser.History.Last())
 		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 	})
 
