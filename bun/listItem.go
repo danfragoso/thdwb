@@ -1,7 +1,6 @@
 package bun
 
 import (
-	assets "thdwb/assets"
 	gg "thdwb/gg"
 	structs "thdwb/structs"
 )
@@ -13,7 +12,7 @@ func paintListItemElement(ctx *gg.Context, node *structs.NodeDOM) {
 
 	ctx.DrawCircle(node.RenderBox.Left-15, node.RenderBox.Top+node.Style.FontSize/2, 3)
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
-	ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
+	ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
 	ctx.DrawStringWrapped(node.Content, node.RenderBox.Left, node.RenderBox.Top+1, 0, 0, node.RenderBox.Width, 1.5, gg.AlignLeft)
 	ctx.Fill()
 }
@@ -24,7 +23,7 @@ func calculateListItemLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx in
 	}
 
 	if node.Style.Height == 0 && len(node.Content) > 0 {
-		ctx.LoadAssetFont(assets.SansSerif(), node.Style.FontSize)
+		ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
 		node.RenderBox.Height = ctx.MeasureStringWrapped(node.Content, node.RenderBox.Width, 1.5) + 2 + ctx.FontHeight()*.5
 	}
 

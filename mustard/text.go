@@ -1,13 +1,17 @@
 package mustard
 
 import (
+	assets "thdwb/assets"
 	gg "thdwb/gg"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/goki/freetype/truetype"
 )
 
 //CreateTextWidget - Creates and returns a new Text Widget
 func CreateTextWidget(content string) *TextWidget {
 	var widgets []interface{}
+	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &TextWidget{
 		widget: widget{
@@ -20,6 +24,8 @@ func CreateTextWidget(content string) *TextWidget {
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 
 			backgroundColor: "#fff",
+
+			font: font,
 		},
 		content: content,
 
@@ -85,7 +91,7 @@ func (text *TextWidget) draw() {
 	context := text.window.context
 	top, left, width, height := text.computedBox.GetCoords()
 
-	context.LoadFontFace("roboto.ttf", text.fontSize)
+	context.SetFont(text.font, text.fontSize)
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.SetHexColor(text.backgroundColor)
 	context.Fill()

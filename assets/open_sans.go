@@ -1,6 +1,6 @@
 package assets
 
-func openSans(weight int) []byte {
+func OpenSans(weight int) []byte {
 	switch weight {
 	case 300:
 		// Light

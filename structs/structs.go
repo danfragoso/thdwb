@@ -150,7 +150,9 @@ type Stylesheet struct {
 	Color           *ColorRGBA
 	BackgroundColor *ColorRGBA
 
-	FontSize float64
+	FontSize   float64
+	FontWeight int
+
 	Display  string
 	Position string
 

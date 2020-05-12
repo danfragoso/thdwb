@@ -1,14 +1,17 @@
 package mustard
 
 import (
+	assets "thdwb/assets"
 	gg "thdwb/gg"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/goki/freetype/truetype"
 )
 
 //CreateButtonWidget - Creates and returns a new Button Widget
 func CreateButtonWidget(asset []byte) *ButtonWidget {
 	var widgets []interface{}
-
+	font, _ := truetype.Parse(assets.OpenSans(400))
 	icon, _ := gg.LoadAsset(asset)
 	return &ButtonWidget{
 		widget: widget{
@@ -20,6 +23,8 @@ func CreateButtonWidget(asset []byte) *ButtonWidget {
 			cursor: glfw.CreateStandardCursor(glfw.HandCursor),
 
 			backgroundColor: "#fff",
+
+			font: font,
 		},
 
 		icon:      icon,
@@ -112,7 +117,7 @@ func (button *ButtonWidget) draw() {
 
 	context.Fill()
 	context.SetHexColor(button.fontColor)
-	context.LoadFontFace("roboto.ttf", button.fontSize)
+	context.SetFont(button.font, button.fontSize)
 	context.DrawImage(button.icon, left+4, top+2)
 
 	context.Fill()

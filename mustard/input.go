@@ -1,14 +1,17 @@
 package mustard
 
 import (
+	assets "thdwb/assets"
 	gg "thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/goki/freetype/truetype"
 )
 
 //CreateInputWidget - Creates and returns a new Input Widget
 func CreateInputWidget() *InputWidget {
 	var widgets []interface{}
+	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &InputWidget{
 		widget: widget{
@@ -21,6 +24,8 @@ func CreateInputWidget() *InputWidget {
 			cursor: glfw.CreateStandardCursor(glfw.IBeamCursor),
 
 			backgroundColor: "#fff",
+
+			font: font,
 		},
 
 		fontSize:  20,
@@ -115,7 +120,8 @@ func (input *InputWidget) draw() {
 	window.context.Fill()
 
 	context.SetHexColor("#2f2f2f")
-	context.LoadFontFace("roboto.ttf", input.fontSize)
+
+	context.SetFont(input.font, input.fontSize)
 	w, h := context.MeasureString(input.value)
 
 	valueBigggerThanInput := w > float64(width)-input.fontSize

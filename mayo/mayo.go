@@ -22,6 +22,15 @@ func getDefaultElementDisplay(element string) string {
 	return displayType
 }
 
+func getDefaultElementFontWeight(element string) int {
+	switch element {
+	case "h1", "h2", "h3", "h4", "h5", "h6":
+		return 600
+	}
+
+	return 400
+}
+
 func mapSizeValue(sizeValue string) float64 {
 	valueString := sizeValue[0 : len(sizeValue)-2]
 	value, err := strconv.ParseInt(valueString, 10, 0)
@@ -119,6 +128,10 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 		} else {
 			elementStylesheet.Color = &structs.ColorRGBA{0, 0, 0, 1}
 		}
+	}
+
+	if elementStylesheet.FontWeight == 0 {
+		elementStylesheet.FontWeight = getDefaultElementFontWeight(elementName)
 	}
 
 	if elementStylesheet.Display == "" {

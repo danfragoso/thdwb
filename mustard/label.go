@@ -1,12 +1,16 @@
 package mustard
 
 import (
+	assets "thdwb/assets"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/goki/freetype/truetype"
 )
 
 //CreateLabelWidget - Creates and returns a new Label Widget
 func CreateLabelWidget(content string) *LabelWidget {
 	var widgets []interface{}
+	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &LabelWidget{
 		widget: widget{
@@ -19,6 +23,8 @@ func CreateLabelWidget(content string) *LabelWidget {
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 
 			backgroundColor: "#fff",
+
+			font: font,
 		},
 		content: content,
 
@@ -88,7 +94,7 @@ func (label *LabelWidget) draw() {
 	context.Fill()
 
 	context.SetHexColor(label.fontColor)
-	context.LoadFontFace("roboto.ttf", label.fontSize)
+	context.SetFont(label.font, label.fontSize)
 	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
 

@@ -6,6 +6,7 @@ import (
 	gg "thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/goki/freetype/truetype"
 )
 
 type App struct {
@@ -75,6 +76,8 @@ func (box *box) GetCoords() (int, int, int, int) {
 type widget struct {
 	box         box
 	computedBox box
+
+	font *truetype.Font
 
 	needsRepaint bool
 	fixedWidth   bool
