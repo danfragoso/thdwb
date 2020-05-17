@@ -45,6 +45,7 @@ func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.Label
 			perf.Stop("render")
 
 			statusLabel.SetContent(createStatusLabel(perf))
+			viewPort.SetOffset(0)
 			viewPort.SetDrawingRepaint(true)
 			viewPort.RequestRepaint()
 			statusLabel.RequestRepaint()
