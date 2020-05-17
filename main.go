@@ -73,7 +73,16 @@ func main() {
 	})
 
 	window.AttachScrollEventListener(func(direction int) {
-		//
+		scrollStep := 10
+		if direction > 0 {
+			if viewPort.GetOffset() < 0 {
+				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
+			}
+		} else {
+			viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
+		}
+
+		viewPort.RequestRepaint()
 	})
 
 	window.AttachClickEventListener(func() {
@@ -97,6 +106,7 @@ func main() {
 }
 
 func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
+	y -= float64(browser.Viewport.GetOffset())
 	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
 	browser.Viewport.RequestRepaint()
 }

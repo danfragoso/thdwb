@@ -22,8 +22,9 @@ func CreateCanvasWidget(renderer func(*gg.Context)) *CanvasWidget {
 			backgroundColor: "#fff",
 		},
 
-		context:  nil,
-		renderer: renderer,
+		context:        gg.NewContext(0, 0),
+		drawingContext: gg.NewContext(0, 0),
+		renderer:       renderer,
 	}
 }
 
@@ -55,11 +56,11 @@ func (canvas *CanvasWidget) DisableScrolling() {
 	canvas.offset = 0
 }
 
-func (canvas *CanvasWidget) SetOffset(offset float64) {
+func (canvas *CanvasWidget) SetOffset(offset int) {
 	canvas.offset = offset
 }
 
-func (canvas *CanvasWidget) GetOffset() float64 {
+func (canvas *CanvasWidget) GetOffset() int {
 	return canvas.offset
 }
 
@@ -70,15 +71,16 @@ func (canvas *CanvasWidget) GetContext() *gg.Context {
 func (ctx *CanvasWidget) draw() {
 	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
-	if ctx.scrollable {
-		createCtxScrollBar(ctx)
-		width -= 12
+	currentContextSize := ctx.context.Image().Bounds().Size()
+
+	if currentContextSize.X != width && currentContextSize.Y != height {
+		ctx.context = gg.NewContext(width, height)
+		ctx.drawingContext = gg.NewContext(width, 10000)
 	}
 
-	ctx.context = gg.NewContext(width, height)
-	ctx.renderer(ctx.context)
-
-	context.DrawImage(ctx.context.Image(), left, top-int(ctx.offset))
+	ctx.renderer(ctx.drawingContext)
+	ctx.context.DrawImage(ctx.drawingContext.Image(), left, ctx.offset)
+	context.DrawImage(ctx.context.Image(), left, top)
 	ctx.needsRepaint = false
 }
 

@@ -142,11 +142,13 @@ type ImageWidget struct {
 type CanvasWidget struct {
 	widget
 
-	context  *gg.Context
+	context        *gg.Context
+	drawingContext *gg.Context
+
 	renderer func(*gg.Context)
 
 	scrollable bool
-	offset     float64
+	offset     int
 }
 
 type ButtonWidget struct {
