@@ -82,6 +82,7 @@ func main() {
 			viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
 		}
 
+		browser.Viewport.SetDrawingRepaint(false)
 		viewPort.RequestRepaint()
 	})
 
@@ -108,5 +109,6 @@ func main() {
 func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	y -= float64(browser.Viewport.GetOffset())
 	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
-	browser.Viewport.RequestRepaint()
+	//browser.Viewport.SetDrawingRepaint(true)
+	//browser.Viewport.RequestRepaint()
 }

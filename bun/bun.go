@@ -22,7 +22,7 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 
 	layoutDOM(ctx, body, 0)
 	if document.SelectedElement != nil {
-		paintDebugRect(ctx, document.SelectedElement)
+		//paintDebugRect(ctx, document.SelectedElement)
 	}
 }
 

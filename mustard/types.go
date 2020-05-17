@@ -149,6 +149,8 @@ type CanvasWidget struct {
 
 	scrollable bool
 	offset     int
+
+	drawingRepaint bool
 }
 
 type ButtonWidget struct {

@@ -25,6 +25,7 @@ func CreateCanvasWidget(renderer func(*gg.Context)) *CanvasWidget {
 		context:        gg.NewContext(0, 0),
 		drawingContext: gg.NewContext(0, 0),
 		renderer:       renderer,
+		drawingRepaint: true,
 	}
 }
 
@@ -68,17 +69,25 @@ func (canvas *CanvasWidget) GetContext() *gg.Context {
 	return canvas.context
 }
 
+func (cavas *CanvasWidget) SetDrawingRepaint(repaint bool) {
+	cavas.drawingRepaint = repaint
+}
+
 func (ctx *CanvasWidget) draw() {
 	context := ctx.window.context
 	top, left, width, height := ctx.computedBox.GetCoords()
 	currentContextSize := ctx.context.Image().Bounds().Size()
 
-	if currentContextSize.X != width && currentContextSize.Y != height {
+	if currentContextSize.X != width || currentContextSize.Y != height {
 		ctx.context = gg.NewContext(width, height)
 		ctx.drawingContext = gg.NewContext(width, 10000)
+		ctx.drawingRepaint = true
 	}
 
-	ctx.renderer(ctx.drawingContext)
+	if ctx.drawingRepaint {
+		ctx.renderer(ctx.drawingContext)
+	}
+
 	ctx.context.DrawImage(ctx.drawingContext.Image(), left, ctx.offset)
 	context.DrawImage(ctx.context.Image(), left, top)
 	ctx.needsRepaint = false
