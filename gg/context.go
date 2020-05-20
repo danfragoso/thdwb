@@ -663,8 +663,9 @@ func (dc *Context) DrawRegularPolygon(n int, x, y, r, rotation float64) {
 }
 
 // DrawImage draws the specified image at the specified point.
-func (dc *Context) DrawImage(im image.Image, x, y int) {
-	dc.DrawImageAnchored(im, x, y, 0, 0)
+func (dc *Context) DrawImage(src image.Image, x, y int) {
+	dest, _ := dc.Image().(draw.Image)
+	draw.Draw(dest, src.Bounds().Add(image.Pt(x, y)), src, image.ZP, draw.Over)
 }
 
 // DrawImageAnchored draws the specified image at the specified anchor point.
