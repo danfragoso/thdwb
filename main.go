@@ -48,7 +48,6 @@ func main() {
 	})
 
 	browser.Viewport = viewPort
-	//viewPort.EnableScrolling()
 	window.RegisterButton(menuButton, func() {
 		if debugFrame.GetHeight() != 300 {
 			debugFrame.SetHeight(300)
@@ -73,7 +72,7 @@ func main() {
 	})
 
 	window.AttachScrollEventListener(func(direction int) {
-		scrollStep := 10
+		scrollStep := 20
 		if direction > 0 {
 			if viewPort.GetOffset() < 0 {
 				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
