@@ -31,7 +31,9 @@ type Window struct {
 	context *gg.Context
 	backend *glBackend
 
-	defaultCursor     *glfw.Cursor
+	defaultCursor *glfw.Cursor
+	pointerCursor *glfw.Cursor
+
 	registeredButtons []*ButtonWidget
 	registeredInputs  []*InputWidget
 	activeInput       *InputWidget

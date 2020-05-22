@@ -31,6 +31,7 @@ func main() {
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
+	browser.Window = window
 
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
@@ -108,6 +109,12 @@ func main() {
 func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	y -= float64(browser.Viewport.GetOffset())
 	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
+
+	if browser.Document.SelectedElement != nil && browser.Document.SelectedElement.Element == "a" {
+		browser.Window.SetCursor("pointer")
+	} else {
+		browser.Window.SetCursor("default")
+	}
 	//browser.Viewport.SetDrawingRepaint(true)
 	//browser.Viewport.RequestRepaint()
 }

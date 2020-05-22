@@ -11,6 +11,7 @@ type WebBrowser struct {
 	Documents      []*Document
 	Viewport       *mustard.CanvasWidget
 	History        *History
+	Window         *mustard.Window
 }
 
 type HTMLDocument struct {

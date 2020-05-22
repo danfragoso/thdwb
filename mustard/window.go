@@ -32,6 +32,7 @@ func CreateNewWindow(title string, width int, height int) *Window {
 		glw:    glw,
 
 		defaultCursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
+		pointerCursor: glfw.CreateStandardCursor(glfw.HandCursor),
 	}
 
 	window.RecreateContext()
@@ -215,4 +216,15 @@ func (window *Window) AttachScrollEventListener(callback func(direction int)) {
 
 func (window *Window) AttachClickEventListener(callback func()) {
 	window.clickEventListeners = append(window.clickEventListeners, callback)
+}
+
+func (window *Window) SetCursor(cursorType string) {
+	switch cursorType {
+	case "pointer":
+		window.glw.SetCursor(window.pointerCursor)
+		break
+
+	default:
+		window.glw.SetCursor(window.defaultCursor)
+	}
 }
