@@ -68,8 +68,10 @@ func main() {
 	})
 
 	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
-		statusBarOffset := 62.
-		processPointerPositionEvent(browser, pointerX, pointerY-statusBarOffset)
+		if viewPort.IsPointInside(pointerX, pointerY) {
+			offset := float64(appBar.GetHeight())
+			processPointerPositionEvent(browser, pointerX, pointerY-offset)
+		}
 	})
 
 	window.AttachScrollEventListener(func(direction int) {

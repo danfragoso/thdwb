@@ -135,3 +135,28 @@ func (widget *widget) RequestReflow() {
 func (widget *widget) RequestRepaint() {
 	widget.needsRepaint = true
 }
+
+func (widget *widget) GetRect() (int, int, int, int) {
+	return widget.computedBox.top, widget.computedBox.left, widget.computedBox.width, widget.computedBox.height
+}
+
+func (widget *widget) GetTop() int {
+	return widget.computedBox.top
+}
+
+func (widget *widget) GetLeft() int {
+	return widget.computedBox.left
+}
+
+func (widget *widget) GetWidth() int {
+	return widget.computedBox.width
+}
+
+func (widget *widget) GetHeight() int {
+	return widget.computedBox.height
+}
+
+func (widget *widget) IsPointInside(x, y float64) bool {
+	top, left, width, height := widget.GetRect()
+	return x > float64(left) && x < float64(left+width) && y > float64(top) && y < float64(top+height)
+}
