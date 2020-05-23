@@ -119,6 +119,7 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	} else {
 		browser.Window.SetCursor("default")
 	}
+
 	//browser.Viewport.SetDrawingRepaint(true)
 	//browser.Viewport.RequestRepaint()
 }

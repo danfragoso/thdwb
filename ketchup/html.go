@@ -108,6 +108,8 @@ func ParseDocument(document string) *structs.HTMLDocument {
 					NeedsReflow:  true,
 					NeedsRepaint: true,
 					RenderBox:    &structs.RenderBox{},
+
+					Document: HTMLDocument,
 				}
 
 				if currentTagName == "html" {

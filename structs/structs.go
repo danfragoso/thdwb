@@ -87,6 +87,8 @@ type NodeDOM struct {
 
 	NeedsReflow  bool `json:"-"`
 	NeedsRepaint bool `json:"-"`
+
+	Document *HTMLDocument `json:"-"`
 }
 
 func (node *NodeDOM) Attr(attrName string) string {

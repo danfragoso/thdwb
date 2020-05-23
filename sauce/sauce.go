@@ -62,3 +62,29 @@ func fetchExternalPage(url string) *structs.Resource {
 	resource.Body = string(body)
 	return resource
 }
+
+func ParseURL(link string) *url.URL {
+	URL, err := url.Parse(link)
+	if err != nil {
+		panic("Err parsing URL: " + link)
+	}
+
+	return URL
+}
+
+func GetImage(URL *url.URL) (string, []byte) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", URL.String(), nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
+
+	resp, _ := client.Do(req)
+
+	defer resp.Body.Close()
+	img, err := ioutil.ReadAll(resp.Body)
+
+	return "a", img
+}
