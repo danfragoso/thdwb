@@ -50,7 +50,7 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 
 	inputFrame := mustard.CreateFrame(mustard.VerticalFrame)
 	urlInput := mustard.CreateInputWidget()
-	urlInput.SetValue(browser.Document.URL)
+	urlInput.SetValue(browser.Document.URL.String())
 	icon := mustard.CreateFrame(mustard.VerticalFrame)
 	img := mustard.CreateImageWidget(assets.Logo())
 

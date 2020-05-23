@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"net/url"
 	"thdwb/mustard"
 	profiler "thdwb/profiler"
 )
@@ -17,7 +18,7 @@ type WebBrowser struct {
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
-	URL         string
+	URL         *url.URL
 	RawDocument string
 	OffsetY     int
 	Styles      []*StyleElement

@@ -4,24 +4,25 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"thdwb/assets"
 	structs "thdwb/structs"
 )
 
 // GetResource - Makes an http request and returns a resource struct
-func GetResource(url string) *structs.Resource {
-	if len(url) > 7 && url[:8] == "thdwb://" {
-		if url == "thdwb://homepage/" {
+func GetResource(URL *url.URL) *structs.Resource {
+	if URL.Scheme == "thdwb" {
+		if URL.Host == "homepage" {
 			return &structs.Resource{
 				Body: string(assets.HomePage()),
 			}
 		}
 
-		return fetchInternalPage(url)
+		return fetchInternalPage(URL.String())
 	}
 
-	return fetchExternalPage(url)
+	return fetchExternalPage(URL.String())
 }
 
 func fetchInternalPage(url string) *structs.Resource {
