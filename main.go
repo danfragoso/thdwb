@@ -71,6 +71,8 @@ func main() {
 		if viewPort.IsPointInside(pointerX, pointerY) {
 			offset := float64(appBar.GetHeight())
 			processPointerPositionEvent(browser, pointerX, pointerY-offset)
+		} else {
+			browser.Document.SelectedElement = nil
 		}
 	})
 

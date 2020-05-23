@@ -12,6 +12,11 @@ import (
 
 func loadDocument(browser *structs.WebBrowser, link string, callback func()) {
 	URL := parseURL(link)
+
+	if URL.Scheme == "" && URL.Host == "" {
+		URL = parseURL(browser.Document.URL.Scheme + "://" + browser.Document.URL.Host + URL.Path)
+	}
+
 	resource := sauce.GetResource(URL)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
@@ -30,9 +35,10 @@ func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
 
 func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
-	browser.History.Push(urlInput.GetValue())
 
 	go loadDocument(browser, urlInput.GetValue(), func() {
+		browser.History.Push(browser.Document.URL.String())
+
 		ctx := viewPort.GetContext()
 		ctx.SetRGB(1, 1, 1)
 		ctx.Clear()
@@ -50,6 +56,8 @@ func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.Label
 		viewPort.SetDrawingRepaint(true)
 		viewPort.RequestRepaint()
 		statusLabel.RequestRepaint()
+
+		urlInput.SetValue(browser.Document.URL.String())
 	})
 }
 
