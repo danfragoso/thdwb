@@ -29,11 +29,7 @@ func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) 
 	if childIdx > 0 {
 		prev := node.Parent.Children[childIdx-1]
 
-		if prev.Style.Display != "inline" {
-			node.RenderBox.Top = prev.RenderBox.Top + prev.RenderBox.Height
-		} else {
-			node.RenderBox.Top = prev.RenderBox.Top
-		}
+		node.RenderBox.Top = prev.RenderBox.Top + prev.RenderBox.Height
 	} else {
 		node.RenderBox.Top = node.Parent.RenderBox.Top
 	}
