@@ -90,12 +90,17 @@ func main() {
 
 	window.AttachScrollEventListener(func(direction int) {
 		scrollStep := 20
+
 		if direction > 0 {
 			if viewPort.GetOffset() < 0 {
 				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
 			}
 		} else {
-			viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
+			documentOffset := viewPort.GetOffset() + int(browser.Document.RootElement.Children[1].RenderBox.Height)
+
+			if documentOffset >= viewPort.GetHeight() {
+				viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
+			}
 		}
 
 		browser.Viewport.SetDrawingRepaint(false)

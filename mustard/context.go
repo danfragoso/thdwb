@@ -84,7 +84,7 @@ func (ctx *CanvasWidget) draw() {
 
 	if currentContextSize.X != width || currentContextSize.Y != height {
 		ctx.context = gg.NewContext(width, height)
-		ctx.drawingContext = gg.NewContext(width, 10000)
+		ctx.drawingContext = gg.NewContext(width, 12000)
 		ctx.drawingRepaint = true
 	}
 
