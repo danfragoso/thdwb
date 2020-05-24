@@ -59,6 +59,7 @@ func fetchExternalPage(url string) *structs.Resource {
 	body, err := ioutil.ReadAll(resp.Body)
 
 	resource.ContentType = resp.Header.Get("Content-Type")
+	resource.URL = resp.Request.URL
 	resource.Body = string(body)
 	return resource
 }
@@ -66,7 +67,7 @@ func fetchExternalPage(url string) *structs.Resource {
 func ParseURL(link string) *url.URL {
 	URL, err := url.Parse(link)
 	if err != nil {
-		panic("Err parsing URL: " + link)
+		URL = ParseURL("thdwb://error?err=failedToParseURL")
 	}
 
 	return URL

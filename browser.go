@@ -19,7 +19,7 @@ func loadDocument(browser *structs.WebBrowser, link string, callback func()) {
 	resource := sauce.GetResource(URL)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
-	parsedDocument.URL = URL
+	parsedDocument.URL = resource.URL
 
 	browser.Document = parsedDocument
 	callback()

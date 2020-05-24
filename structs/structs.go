@@ -141,6 +141,7 @@ type Resource struct {
 	Body        string
 	ContentType string
 	Code        int
+	URL         *url.URL
 }
 
 //Attribute "Generic key:value attribute definition"
