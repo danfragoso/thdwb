@@ -16,6 +16,7 @@ func GetResource(URL *url.URL) *structs.Resource {
 		if URL.Host == "homepage" {
 			return &structs.Resource{
 				Body: string(assets.HomePage()),
+				URL:  URL,
 			}
 		}
 

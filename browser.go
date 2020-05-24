@@ -9,7 +9,7 @@ import (
 	structs "thdwb/structs"
 )
 
-func loadDocument(browser *structs.WebBrowser, link string, callback func()) {
+func loadDocument(browser *structs.WebBrowser, link string) {
 	URL := sauce.ParseURL(link)
 
 	if URL.Scheme == "" && URL.Host == "" {
@@ -22,38 +22,28 @@ func loadDocument(browser *structs.WebBrowser, link string, callback func()) {
 	parsedDocument.URL = resource.URL
 
 	browser.Document = parsedDocument
-	callback()
-}
 
-func loadDocumentFromAsset(document []byte) *structs.HTMLDocument {
-	parsedDocument := ketchup.ParseDocument(string(document))
-	parsedDocument.URL = sauce.ParseURL("thdwb://homepage/")
-
-	return parsedDocument
+	if browser.History.PageCount() == 0 || browser.History.Last().String() != resource.URL.String() {
+		browser.History.Push(resource.URL)
+	}
 }
 
 func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
 
-	go loadDocument(browser, urlInput.GetValue(), func() {
-		browser.History.Push(browser.Document.URL.String())
+	loadDocument(browser, urlInput.GetValue())
 
-		ctx := viewPort.GetContext()
-		ctx.SetRGB(1, 1, 1)
-		ctx.Clear()
+	perf.Start("render")
+	bun.RenderDocument(viewPort.GetContext(), browser.Document)
+	perf.Stop("render")
 
-		perf.Start("render")
-		bun.RenderDocument(ctx, browser.Document)
-		perf.Stop("render")
+	statusLabel.SetContent(createStatusLabel(perf))
+	viewPort.SetOffset(0)
+	viewPort.SetDrawingRepaint(true)
+	viewPort.RequestRepaint()
+	statusLabel.RequestRepaint()
 
-		statusLabel.SetContent(createStatusLabel(perf))
-		viewPort.SetOffset(0)
-		viewPort.SetDrawingRepaint(true)
-		viewPort.RequestRepaint()
-		statusLabel.RequestRepaint()
-
-		urlInput.SetValue(browser.Document.URL.String())
-	})
+	urlInput.SetValue(browser.Document.URL.String())
 }
 
 func createStatusLabel(perf *profiler.Profiler) string {

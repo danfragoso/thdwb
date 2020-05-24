@@ -29,14 +29,18 @@ type HTMLDocument struct {
 }
 
 type History struct {
-	pages []string
+	pages []*url.URL
 }
 
-func (history *History) Push(url string) {
-	history.pages = append(history.pages, url)
+func (history *History) PageCount() int {
+	return len(history.pages)
 }
 
-func (history *History) Last() string {
+func (history *History) Push(URL *url.URL) {
+	history.pages = append(history.pages, URL)
+}
+
+func (history *History) Last() *url.URL {
 	return history.pages[len(history.pages)-1]
 }
 

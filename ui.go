@@ -17,14 +17,14 @@ func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *must
 	debugBar.SetBackgroundColor("#eee")
 	debugFrame.SetHeight(400)
 
-	source := mustard.CreateTextWidget(browser.Document.RawDocument)
+	source := mustard.CreateTextWidget("")
 	source.SetFontSize(12)
 
 	dv := mustard.CreateFrame(mustard.HorizontalFrame)
 	dv.SetBackgroundColor("#999")
 	dv.SetWidth(1)
 
-	jsonByte, _ := json.MarshalIndent(browser.Document.RootElement, "", "  ")
+	jsonByte, _ := json.MarshalIndent("", "", "  ")
 	json := mustard.CreateTextWidget(string(jsonByte))
 	json.SetWidth(200)
 	json.SetFontSize(12)
@@ -50,7 +50,6 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 
 	inputFrame := mustard.CreateFrame(mustard.VerticalFrame)
 	urlInput := mustard.CreateInputWidget()
-	urlInput.SetValue(browser.Document.URL.String())
 	icon := mustard.CreateFrame(mustard.VerticalFrame)
 	img := mustard.CreateImageWidget(assets.Logo())
 

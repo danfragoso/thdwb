@@ -3,10 +3,8 @@ package main
 import (
 	"runtime"
 
-	assets "thdwb/assets"
 	bun "thdwb/bun"
 	gg "thdwb/gg"
-	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
 	structs "thdwb/structs"
@@ -26,8 +24,7 @@ func main() {
 
 	perf = profiler.CreateProfiler()
 
-	browser := &structs.WebBrowser{Document: loadDocumentFromAsset(assets.HomePage()), History: &structs.History{}}
-	browser.History.Push("thdwb://homepage/")
+	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
@@ -42,7 +39,9 @@ func main() {
 
 	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
-	browser.Document = ketchup.ParseDocument(browser.Document.RawDocument)
+
+	loadDocument(browser, "thdwb://homepage")
+	urlInput.SetValue(browser.Document.URL.String())
 
 	viewPort := mustard.CreateCanvasWidget(func(ctx *gg.Context) {
 		bun.RenderDocument(ctx, browser.Document)
@@ -58,13 +57,15 @@ func main() {
 	})
 
 	window.RegisterButton(goButton, func() {
-		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 	})
 
 	window.RegisterButton(backButton, func() {
-		browser.History.Pop()
-		urlInput.SetValue(browser.History.Last())
-		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		if browser.History.PageCount() > 1 {
+			browser.History.Pop()
+			urlInput.SetValue(browser.History.Last().String())
+			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		}
 	})
 
 	window.AttachPointerPositionEventListener(func(pointerX, pointerY float64) {
@@ -95,7 +96,7 @@ func main() {
 			if browser.Document.SelectedElement.Element == "a" {
 				href := browser.Document.SelectedElement.Attr("href")
 				urlInput.SetValue(href)
-				loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+				go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 			}
 		}
 	})
