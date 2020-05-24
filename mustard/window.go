@@ -113,9 +113,6 @@ func (window *Window) RecreateContext() {
 
 func (window *Window) addEvents() {
 	window.glw.SetFocusCallback(func(w *glfw.Window, focused bool) {
-		if focused {
-			window.RequestReflow()
-		}
 	})
 
 	window.glw.SetSizeCallback(func(w *glfw.Window, width, height int) {

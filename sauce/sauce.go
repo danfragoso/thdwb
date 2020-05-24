@@ -10,6 +10,8 @@ import (
 	structs "thdwb/structs"
 )
 
+var client = &http.Client{}
+
 // GetResource - Makes an http request and returns a resource struct
 func GetResource(URL *url.URL) *structs.Resource {
 	if URL.Scheme == "thdwb" {
@@ -40,7 +42,6 @@ func fetchInternalPage(url string) *structs.Resource {
 }
 
 func fetchExternalPage(url string) *structs.Resource {
-	client := &http.Client{}
 	resource := &structs.Resource{}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -75,7 +76,6 @@ func ParseURL(link string) *url.URL {
 }
 
 func GetImage(URL *url.URL) (string, []byte) {
-	client := &http.Client{}
 	req, err := http.NewRequest("GET", URL.String(), nil)
 	if err != nil {
 		log.Fatalln(err)

@@ -2,9 +2,8 @@ package main
 
 import (
 	"runtime"
-
 	bun "thdwb/bun"
-	gg "thdwb/gg"
+	"thdwb/gg"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
 	structs "thdwb/structs"
@@ -43,8 +42,20 @@ func main() {
 	loadDocument(browser, "thdwb://homepage")
 	urlInput.SetValue(browser.Document.URL.String())
 
-	viewPort := mustard.CreateCanvasWidget(func(ctx *gg.Context) {
-		bun.RenderDocument(ctx, browser.Document)
+	viewPort := mustard.CreateCanvasWidget(func(canvas *mustard.CanvasWidget) {
+		go func() {
+			perf.Start("render")
+			ctxBounds := canvas.GetContext().Image().Bounds()
+			drawingContext := gg.NewContext(ctxBounds.Max.X, ctxBounds.Max.Y)
+
+			bun.RenderDocument(drawingContext, browser.Document)
+			canvas.SetContext(drawingContext)
+			canvas.RequestRepaint()
+			perf.Stop("render")
+
+			statusLabel.SetContent(createStatusLabel(perf))
+			statusLabel.RequestRepaint()
+		}()
 	})
 
 	browser.Viewport = viewPort

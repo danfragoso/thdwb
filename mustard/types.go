@@ -147,7 +147,7 @@ type CanvasWidget struct {
 	context        *gg.Context
 	drawingContext *gg.Context
 
-	renderer func(*gg.Context)
+	renderer func(*CanvasWidget)
 
 	scrollable bool
 	offset     int

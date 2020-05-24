@@ -7,7 +7,7 @@ import (
 )
 
 //CreateImageWidget - Creates and returns a new Image Widget
-func CreateCanvasWidget(renderer func(*gg.Context)) *CanvasWidget {
+func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
 	var widgets []interface{}
 
 	return &CanvasWidget{
@@ -66,7 +66,11 @@ func (canvas *CanvasWidget) GetOffset() int {
 }
 
 func (canvas *CanvasWidget) GetContext() *gg.Context {
-	return canvas.context
+	return canvas.drawingContext
+}
+
+func (canvas *CanvasWidget) SetContext(ctx *gg.Context) {
+	canvas.drawingContext = ctx
 }
 
 func (cavas *CanvasWidget) SetDrawingRepaint(repaint bool) {
@@ -85,7 +89,8 @@ func (ctx *CanvasWidget) draw() {
 	}
 
 	if ctx.drawingRepaint {
-		ctx.renderer(ctx.drawingContext)
+		ctx.renderer(ctx)
+		ctx.drawingRepaint = false
 	}
 
 	ctx.context.DrawImage(ctx.drawingContext.Image(), left, ctx.offset)

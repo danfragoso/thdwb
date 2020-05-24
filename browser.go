@@ -1,7 +1,6 @@
 package main
 
 import (
-	bun "thdwb/bun"
 	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
@@ -30,19 +29,12 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 
 func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
+	statusLabel.RequestRepaint()
 
 	loadDocument(browser, urlInput.GetValue())
-
-	perf.Start("render")
-	bun.RenderDocument(viewPort.GetContext(), browser.Document)
-	perf.Stop("render")
-
-	statusLabel.SetContent(createStatusLabel(perf))
 	viewPort.SetOffset(0)
 	viewPort.SetDrawingRepaint(true)
 	viewPort.RequestRepaint()
-	statusLabel.RequestRepaint()
-
 	urlInput.SetValue(browser.Document.URL.String())
 }
 
