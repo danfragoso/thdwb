@@ -40,7 +40,7 @@ func fetchNodeImage(node *structs.NodeDOM) (image.Image, error) {
 			imgURL = sauce.ParseURL(node.Document.URL.String() + imgURL.Path)
 		}
 
-		_, data := sauce.GetImage(imgURL)
+		data := sauce.GetImage(imgURL)
 		im, _, err := image.Decode(bytes.NewReader(data))
 
 		if err == nil {

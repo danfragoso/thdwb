@@ -11,6 +11,8 @@ import (
 )
 
 var client = &http.Client{}
+var cache = &structs.ResourceCache{}
+var imageCache = &structs.ImgCache{}
 
 // GetResource - Makes an http request and returns a resource struct
 func GetResource(URL *url.URL) *structs.Resource {
@@ -42,28 +44,34 @@ func fetchInternalPage(url string) *structs.Resource {
 }
 
 func fetchExternalPage(url string) *structs.Resource {
-	resource := &structs.Resource{}
+	cachedResource := cache.GetResource(url)
+	if cachedResource != nil {
+		return cachedResource
+	} else {
+		resource := &structs.Resource{Key: url}
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			log.Fatalln(err)
+		}
 
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Fatalln(err)
-	}
+		req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
 
-	req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
+		resp, err := client.Do(req)
+		if err != nil {
+			resource.Body = loadErrorPage(err.Error())
+			return resource
+		}
 
-	resp, err := client.Do(req)
-	if err != nil {
-		resource.Body = loadErrorPage(err.Error())
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+
+		resource.ContentType = resp.Header.Get("Content-Type")
+		resource.URL = resp.Request.URL
+		resource.Body = string(body)
+
+		cache.AddResource(resource)
 		return resource
 	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-
-	resource.ContentType = resp.Header.Get("Content-Type")
-	resource.URL = resp.Request.URL
-	resource.Body = string(body)
-	return resource
 }
 
 func ParseURL(link string) *url.URL {
@@ -75,18 +83,26 @@ func ParseURL(link string) *url.URL {
 	return URL
 }
 
-func GetImage(URL *url.URL) (string, []byte) {
-	req, err := http.NewRequest("GET", URL.String(), nil)
-	if err != nil {
-		log.Fatalln(err)
+func GetImage(URL *url.URL) []byte {
+	imgUrl := URL.String()
+	cachedImage := imageCache.GetImage(imgUrl)
+
+	if cachedImage != nil {
+		return cachedImage.Image
+	} else {
+		req, err := http.NewRequest("GET", imgUrl, nil)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
+
+		resp, _ := client.Do(req)
+
+		defer resp.Body.Close()
+		img, err := ioutil.ReadAll(resp.Body)
+
+		imageCache.AddImage(imgUrl, img)
+		return img
 	}
-
-	req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
-
-	resp, _ := client.Do(req)
-
-	defer resp.Body.Close()
-	img, err := ioutil.ReadAll(resp.Body)
-
-	return "a", img
 }

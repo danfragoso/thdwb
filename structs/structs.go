@@ -146,6 +146,7 @@ type Resource struct {
 	ContentType string
 	Code        int
 	URL         *url.URL
+	Key         string
 }
 
 //Attribute "Generic key:value attribute definition"
@@ -183,4 +184,49 @@ type ColorRGBA struct {
 	G float64
 	B float64
 	A float64
+}
+
+type ResourceCache struct {
+	cachedResources []*Resource
+}
+
+func (cache *ResourceCache) AddResource(resource *Resource) {
+	cache.cachedResources = append(cache.cachedResources, resource)
+}
+
+func (cache *ResourceCache) GetResource(resourceKey string) *Resource {
+	for _, resource := range cache.cachedResources {
+		if resource.Key == resourceKey {
+			return resource
+		}
+	}
+
+	return nil
+}
+
+type CachedImage struct {
+	Key   string
+	Image []byte
+}
+type ImgCache struct {
+	cachedImages []*CachedImage
+}
+
+func (cache *ImgCache) AddImage(key string, value []byte) {
+	cache.cachedImages = append(cache.cachedImages,
+		&CachedImage{
+			Key:   key,
+			Image: value,
+		},
+	)
+}
+
+func (cache *ImgCache) GetImage(imageKey string) *CachedImage {
+	for _, image := range cache.cachedImages {
+		if image.Key == imageKey {
+			return image
+		}
+	}
+
+	return nil
 }
