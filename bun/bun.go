@@ -8,17 +8,13 @@ import (
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
-	//This function runs every mouse movement, it should only run when
-	//a node needs to be repainted and only the node that need repaint should
-	//be repainted
-
-	ctx.SetRGB(1, 1, 1)
-	ctx.Clear()
-
 	body := document.RootElement.Children[1]
 
 	document.RootElement.RenderBox.Width = float64(ctx.Width())
 	document.RootElement.RenderBox.Height = float64(ctx.Height())
+
+	ctx.SetRGB(1, 1, 1)
+	ctx.Clear()
 
 	layoutDOM(ctx, body, 0)
 	if document.SelectedElement != nil {
