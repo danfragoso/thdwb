@@ -2,7 +2,6 @@ package mustard
 
 import (
 	"image"
-	"image/draw"
 	"log"
 
 	gg "thdwb/gg"
@@ -162,8 +161,12 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
-		if button == glfw.MouseButtonLeft && action == glfw.Release {
-			window.ProcessPointerClick()
+		if action == glfw.Release {
+			if button == glfw.MouseButtonLeft {
+				window.ProcessPointerClick()
+			} else if button == glfw.MouseButtonRight {
+				window.CreateContextMenu()
+			}
 		}
 	})
 
@@ -174,9 +177,7 @@ func (window *Window) addEvents() {
 
 func (window *Window) generateTexture() {
 	gl.DeleteTextures(1, &window.backend.texture)
-
-	rgba := image.NewRGBA(window.context.Image().Bounds())
-	draw.Draw(rgba, window.context.Image().Bounds(), window.context.Image(), image.Point{0, 0}, draw.Src)
+	rgba := window.context.Image().(*image.RGBA)
 
 	gl.GenTextures(1, &window.backend.texture)
 	gl.ActiveTexture(gl.TEXTURE0)
@@ -224,4 +225,8 @@ func (window *Window) SetCursor(cursorType string) {
 	default:
 		window.glw.SetCursor(window.defaultCursor)
 	}
+}
+
+func (window *Window) CreateContextMenu() {
+
 }
