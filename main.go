@@ -55,6 +55,7 @@ func main() {
 
 			statusLabel.SetContent(createStatusLabel(perf))
 			statusLabel.RequestRepaint()
+			canvas.RequestRepaint()
 		}()
 	})
 

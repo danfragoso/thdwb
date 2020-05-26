@@ -29,7 +29,12 @@ type HTMLDocument struct {
 }
 
 type History struct {
-	pages []*url.URL
+	pages    []*url.URL
+	allPages []*url.URL
+}
+
+func (history *History) AllPages() []*url.URL {
+	return history.allPages
 }
 
 func (history *History) PageCount() int {
@@ -38,6 +43,7 @@ func (history *History) PageCount() int {
 
 func (history *History) Push(URL *url.URL) {
 	history.pages = append(history.pages, URL)
+	history.allPages = append(history.allPages, URL)
 }
 
 func (history *History) Last() *url.URL {

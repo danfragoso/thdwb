@@ -1,7 +1,7 @@
 package assets
 
 func HomePage() []byte {
-return []byte(`
+	return []byte(`
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,4 +71,22 @@ return []byte(`
 </body>
 
 </html>
-`)}
+`)
+}
+
+func DefaultPage() []byte {
+	return []byte(`
+    <html>
+      <head>
+        <title>THDWB</title>
+      </head>
+      <body>
+        <div>
+          <h3>Sorry, this internal page does not exist.</h3>
+          <div>THDWB; The Hotdog web browser.</div>
+          <a href="thdwb://homepage/">Go back to home</a>
+        </div>
+      </body>
+    </html>
+  `)
+}

@@ -15,32 +15,33 @@ var cache = &structs.ResourceCache{}
 var imageCache = &structs.ImgCache{}
 
 // GetResource - Makes an http request and returns a resource struct
-func GetResource(URL *url.URL) *structs.Resource {
+func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
 	if URL.Scheme == "thdwb" {
-		if URL.Host == "homepage" {
-			return &structs.Resource{
-				Body: string(assets.HomePage()),
-				URL:  URL,
-			}
-		}
-
-		return fetchInternalPage(URL.String())
+		return fetchInternalPage(URL, browser)
 	}
 
 	return fetchExternalPage(URL.String())
 }
 
-func fetchInternalPage(url string) *structs.Resource {
-	resource := &structs.Resource{}
-	resource.Body = `
-		<html>
-			<head></head>
-			<body>
-				<div>thdwb</div>
-			</body>
-		</html>
-	`
-	return resource
+func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
+	switch URL.Host {
+	case "homepage":
+		return &structs.Resource{
+			Body: string(assets.HomePage()),
+			URL:  URL,
+		}
+
+	case "history":
+		return &structs.Resource{
+			Body: buildHistoryPage(browser.History),
+			URL:  URL,
+		}
+	default:
+		return &structs.Resource{
+			Body: string(assets.DefaultPage()),
+			URL:  URL,
+		}
+	}
 }
 
 func fetchExternalPage(url string) *structs.Resource {
@@ -105,4 +106,26 @@ func GetImage(URL *url.URL) []byte {
 		imageCache.AddImage(imgUrl, img)
 		return img
 	}
+}
+
+func buildHistoryPage(history *structs.History) string {
+	d := `
+	<html>
+		<head>
+			<title>History</title>
+		</head>
+		<body>
+		<h1>History</h1>
+		<ul>
+	`
+	for _, page := range history.AllPages() {
+		d += `<li><a href="` + page.String() + `">` + page.String() + `</a></li>`
+	}
+
+	d += `
+		</ul>
+		</body>
+	</html>
+	`
+	return d
 }
