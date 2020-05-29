@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"fmt"
 	"net/url"
 	"thdwb/mustard"
 	profiler "thdwb/profiler"
@@ -235,4 +236,9 @@ func (cache *ImgCache) GetImage(imageKey string) *CachedImage {
 	}
 
 	return nil
+}
+
+func Log(component, msg string) {
+	str := "(" + "\033[95m" + component + "\033[0m" + ")"
+	fmt.Println(str, msg)
 }

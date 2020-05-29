@@ -45,6 +45,8 @@ func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resou
 }
 
 func fetchExternalPage(url string) *structs.Resource {
+	go structs.Log("sauce", "Downloading page "+url)
+
 	cachedResource := cache.GetResource(url)
 	if cachedResource != nil {
 		return cachedResource
