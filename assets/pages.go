@@ -84,6 +84,10 @@ func DefaultPage() []byte {
         <div>
           <h3>Sorry, this internal page does not exist.</h3>
           <div>THDWB; The Hotdog web browser.</div>
+          <ul>
+            <li><a href="thdwb://history/">History</a></li>
+          </ul>
+          <div> - - - - - - - - -</div>
           <a href="thdwb://homepage/">Go back to home</a>
         </div>
       </body>
