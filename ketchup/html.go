@@ -87,10 +87,14 @@ func ParseDocument(document string) *structs.HTMLDocument {
 				if clTag.MatchString(contentString) {
 					lastNode.Content = ""
 				} else {
-					lastNode.Content = strings.TrimSpace(contentString)
+					if lastNode != nil {
+						lastNode.Content = strings.TrimSpace(contentString)
+					}
 				}
 
-				lastNode = lastNode.Parent
+				if lastNode.Parent != nil {
+					lastNode = lastNode.Parent
+				}
 			} else {
 				currentTagName := strings.Trim(tagName.FindString(currentTag), "<")
 
