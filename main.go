@@ -42,6 +42,11 @@ func main() {
 	loadDocument(browser, "thdwb://homepage")
 	urlInput.SetValue(browser.Document.URL.String())
 
+	scrollBar := mustard.CreateScrollBarWidget(mustard.VerticalScrollBar)
+	scrollBar.SetTrackColor("#ccc")
+	scrollBar.SetThumbColor("#aaa")
+	scrollBar.SetWidth(12)
+
 	viewPort := mustard.CreateCanvasWidget(func(canvas *mustard.CanvasWidget) {
 		go func() {
 			perf.Start("render")
@@ -56,6 +61,10 @@ func main() {
 			statusLabel.SetContent(createStatusLabel(perf))
 			statusLabel.RequestRepaint()
 			canvas.RequestRepaint()
+
+			scrollBar.SetScrollerOffset(0)
+			scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+			scrollBar.RequestReflow()
 		}()
 	})
 
@@ -104,6 +113,10 @@ func main() {
 			}
 		}
 
+		scrollBar.SetScrollerOffset(float64(viewPort.GetOffset()))
+		scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+		scrollBar.RequestReflow()
+
 		browser.Viewport.SetDrawingRepaint(false)
 		viewPort.RequestRepaint()
 	})
@@ -118,7 +131,11 @@ func main() {
 		}
 	})
 
-	rootFrame.AttachWidget(viewPort)
+	viewArea := mustard.CreateFrame(mustard.VerticalFrame)
+	viewArea.AttachWidget(viewPort)
+	viewArea.AttachWidget(scrollBar)
+
+	rootFrame.AttachWidget(viewArea)
 	rootFrame.AttachWidget(debugFrame)
 
 	window.SetRootFrame(rootFrame)

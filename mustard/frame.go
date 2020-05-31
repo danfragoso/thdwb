@@ -105,6 +105,11 @@ func (frame *Frame) draw() {
 				input := frame.widgets[i].(*InputWidget)
 				input.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
 				input.draw()
+
+			case *ScrollBarWidget:
+				scrollBar := frame.widgets[i].(*ScrollBarWidget)
+				scrollBar.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
+				scrollBar.draw()
 			}
 
 		}

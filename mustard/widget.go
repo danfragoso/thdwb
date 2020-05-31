@@ -26,6 +26,9 @@ func getCoreWidgets(widgets []interface{}) []*widget {
 		case *InputWidget:
 			widget := widgets[i].(*InputWidget)
 			coreWidgets = append(coreWidgets, &widget.widget)
+		case *ScrollBarWidget:
+			widget := widgets[i].(*ScrollBarWidget)
+			coreWidgets = append(coreWidgets, &widget.widget)
 		}
 	}
 	return coreWidgets

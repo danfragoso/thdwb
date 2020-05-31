@@ -49,6 +49,9 @@ func setWidgetWindow(widget *widget, window *Window) {
 		case *InputWidget:
 			widget := widgets[i].(*InputWidget)
 			setWidgetWindow(&widget.widget, window)
+		case *ScrollBarWidget:
+			widget := widgets[i].(*ScrollBarWidget)
+			setWidgetWindow(&widget.widget, window)
 		}
 	}
 }

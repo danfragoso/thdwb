@@ -180,3 +180,22 @@ type InputWidget struct {
 	cursorPosition int
 	returnCallback func()
 }
+
+type ScrollBarWidget struct {
+	widget
+
+	orientation ScrollBarOrientation
+	selected    bool
+	thumbSize   float64
+	thumbColor  string
+
+	scrollerSize   float64
+	scrollerOffset float64
+}
+
+type ScrollBarOrientation int
+
+const (
+	VerticalScrollBar ScrollBarOrientation = iota
+	HorizontalScrollBar
+)
