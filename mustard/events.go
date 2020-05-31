@@ -27,6 +27,18 @@ func (window *Window) ProcessReturnKey() {
 	}
 }
 
+func (window *Window) ProcessArrowKeys(arrowKey string) {
+	if window.activeInput != nil && window.activeInput.active == true {
+		if arrowKey == "left" && (window.activeInput.cursorPosition+len(window.activeInput.value)) > 0 {
+			window.activeInput.cursorPosition--
+			window.activeInput.needsRepaint = true
+		} else if arrowKey == "right" && window.activeInput.cursorPosition < 0 {
+			window.activeInput.cursorPosition++
+			window.activeInput.needsRepaint = true
+		}
+	}
+}
+
 func (window *Window) ProcessButtons() {
 	x, y := window.cursorX, window.cursorY
 

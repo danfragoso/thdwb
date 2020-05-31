@@ -129,7 +129,9 @@ func (window *Window) addEvents() {
 
 	window.glw.SetCharCallback(func(w *glfw.Window, char rune) {
 		if window.activeInput != nil {
-			window.activeInput.value += string(char)
+			inputVal, cursorPos := window.activeInput.value, window.activeInput.cursorPosition
+
+			window.activeInput.value = inputVal[:len(inputVal)+cursorPos] + string(char) + inputVal[len(inputVal)+cursorPos:]
 			window.activeInput.needsRepaint = true
 		}
 	})
@@ -139,7 +141,15 @@ func (window *Window) addEvents() {
 		case glfw.KeyBackspace:
 			if action == glfw.Repeat || action == glfw.Release {
 				if window.activeInput != nil && len(window.activeInput.value) > 0 {
-					window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
+					if window.activeInput.cursorPosition == 0 {
+						window.activeInput.value = window.activeInput.value[:len(window.activeInput.value)-1]
+					} else {
+						inputVal, cursorPos := window.activeInput.value, window.activeInput.cursorPosition
+
+						if cursorPos+len(inputVal) > 0 {
+							window.activeInput.value = inputVal[:len(inputVal)+cursorPos-1] + inputVal[len(inputVal)+cursorPos:]
+						}
+					}
 					window.activeInput.needsRepaint = true
 				}
 			}
@@ -150,6 +160,26 @@ func (window *Window) addEvents() {
 				window.activeInput.selected = false
 				window.activeInput.needsRepaint = true
 				window.activeInput = nil
+			}
+			break
+		case glfw.KeyUp:
+			if action == glfw.Release || action == glfw.Repeat {
+				window.ProcessArrowKeys("up")
+			}
+			break
+		case glfw.KeyDown:
+			if action == glfw.Release || action == glfw.Repeat {
+				window.ProcessArrowKeys("down")
+			}
+			break
+		case glfw.KeyLeft:
+			if action == glfw.Release || action == glfw.Repeat {
+				window.ProcessArrowKeys("left")
+			}
+			break
+		case glfw.KeyRight:
+			if action == glfw.Release || action == glfw.Repeat {
+				window.ProcessArrowKeys("right")
 			}
 			break
 		case glfw.KeyEnter:

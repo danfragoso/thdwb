@@ -81,6 +81,10 @@ func (input *InputWidget) GetValue() string {
 	return input.value
 }
 
+func (input *InputWidget) GetCursorPos() int {
+	return input.cursorPosition
+}
+
 //SetBackgroundColor - Sets the input background color
 func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {
@@ -114,6 +118,8 @@ func (input *InputWidget) draw() {
 		window.context.SetHexColor("#fff")
 		context.SetHexColor("#fff")
 		context.Clear()
+	} else {
+		input.cursorPosition = 0
 	}
 
 	window.context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
@@ -139,7 +145,8 @@ func (input *InputWidget) draw() {
 		if valueBigggerThanInput {
 			context.DrawRectangle(float64(width-totalPadding*2), h/4, 1.3, float64(input.fontSize))
 		} else {
-			context.DrawRectangle(w, h/4, 1.3, float64(input.fontSize))
+			cursorP, _ := context.MeasureString(input.value[:len(input.value)+input.cursorPosition])
+			context.DrawRectangle(cursorP, h/4, 1.3, float64(input.fontSize))
 		}
 
 		context.Fill()
