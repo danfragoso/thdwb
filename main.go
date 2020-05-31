@@ -69,6 +69,8 @@ func main() {
 	})
 
 	browser.Viewport = viewPort
+	browser.StatusLabel = statusLabel
+
 	window.RegisterButton(menuButton, func() {
 		if debugFrame.GetHeight() != 300 {
 			debugFrame.SetHeight(300)
@@ -151,9 +153,13 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 
 	if browser.Document.SelectedElement != nil && browser.Document.SelectedElement.Element == "a" {
 		browser.Window.SetCursor("pointer")
+		browser.StatusLabel.SetContent(browser.Document.SelectedElement.Attr("href"))
 	} else {
 		browser.Window.SetCursor("default")
+		browser.StatusLabel.SetContent(createStatusLabel(perf))
 	}
+
+	browser.StatusLabel.RequestRepaint()
 
 	//browser.Viewport.SetDrawingRepaint(true)
 	//browser.Viewport.RequestRepaint()

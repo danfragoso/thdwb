@@ -12,6 +12,7 @@ type WebBrowser struct {
 	ActiveDocument *Document
 	Documents      []*Document
 	Viewport       *mustard.CanvasWidget
+	StatusLabel    *mustard.LabelWidget
 	History        *History
 	Window         *mustard.Window
 }
