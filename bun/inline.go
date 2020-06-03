@@ -26,7 +26,7 @@ func paintInlineElement(ctx *gg.Context, node *structs.NodeDOM) {
 
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
 	ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
-	ctx.DrawStringWrapped(node.Content, node.RenderBox.Left, node.RenderBox.Top, 0, 0, node.RenderBox.Width, 1.5, gg.AlignLeft)
+	ctx.DrawStringWrapped(node.Content, node.RenderBox.Left, node.RenderBox.Top, 0, 0, node.RenderBox.Width, 1, gg.AlignLeft)
 	ctx.Fill()
 }
 
@@ -79,7 +79,15 @@ func calculateInlineLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int)
 			node.RenderBox.Height = float64(imgSize.Y)
 		}
 	} else {
-		node.RenderBox.Width, node.RenderBox.Height = ctx.MeasureMultilineString(node.Content, 1.5)
+		if node.RenderBox.Width == 0 {
+			node.RenderBox.Width = node.Parent.RenderBox.Width
+		}
+
+		node.RenderBox.Height = ctx.MeasureStringWrapped(node.Content, node.RenderBox.Width, 1)
+		mW, _ := ctx.MeasureString(node.Content)
+		if mW < node.RenderBox.Width {
+			node.RenderBox.Width = mW
+		}
 	}
 
 	node.RenderBox.Height++
