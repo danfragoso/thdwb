@@ -1,6 +1,5 @@
-<p align="center">
-  <img src="thdwb.png?raw=true"></img>
-</p>
+![thdwb](https://raw.githubusercontent.com/danfragoso/thdwb/master/thdwb.png))
+___
 
 This is the hotdog web browser, it's a web browser written from scratch entirely in golang.
 
