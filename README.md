@@ -9,7 +9,15 @@ The main goal of this project is to learn how to does a web browser works under 
 🌭🌭🌭
 
 <p align="center">
-  <img src="screenshot.png?raw=true"></img>
+  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_1.png"></img>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
 </p>
 
 ### Components
