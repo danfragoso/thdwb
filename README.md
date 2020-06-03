@@ -10,10 +10,6 @@ The main goal of this project is to learn how to does a web browser works under 
 
 <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_1.png"></img>
 
-<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
-
-<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
-
 ### Components
 - ketchup (html parser and DOM Tree builder)
 - mayo (css parser and Render Tree builder)
@@ -43,3 +39,9 @@ The main goal of this project is to learn how to does a web browser works under 
   make build
   ```
   This command will build the binary version
+
+### Screenshots
+
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
+
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
