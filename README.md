@@ -8,17 +8,11 @@ The main goal of this project is to learn how to does a web browser works under 
 
 🌭🌭🌭
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_1.png"></img>
-</p>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_1.png"></img>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
-</p>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
-</p>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
 
 ### Components
 - ketchup (html parser and DOM Tree builder)
