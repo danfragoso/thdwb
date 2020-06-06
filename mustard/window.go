@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/draw"
 	"log"
+	"os"
 
 	assets "thdwb/assets"
 	gg "thdwb/gg"
@@ -157,6 +158,10 @@ func (window *Window) addEvents() {
 			window.activeInput.value = inputVal[:len(inputVal)+cursorPos] + string(char) + inputVal[len(inputVal)+cursorPos:]
 			window.activeInput.needsRepaint = true
 		}
+	})
+
+	window.glw.SetCloseCallback(func(w *glfw.Window) {
+		os.Exit(0)
 	})
 
 	window.glw.SetKeyCallback(func(w *glfw.Window, key glfw.Key, sc int, action glfw.Action, mods glfw.ModifierKey) {
