@@ -27,6 +27,7 @@ func main() {
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", 600, 600)
+	window.EnableContextMenus()
 	browser.Window = window
 
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
@@ -123,12 +124,14 @@ func main() {
 		viewPort.RequestRepaint()
 	})
 
-	window.AttachClickEventListener(func() {
-		if browser.Document.SelectedElement != nil {
-			if browser.Document.SelectedElement.Element == "a" {
-				href := browser.Document.SelectedElement.Attr("href")
-				urlInput.SetValue(href)
-				go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+	window.AttachClickEventListener(func(key mustard.MustardKey) {
+		if key == mustard.MouseLeft {
+			if browser.Document.SelectedElement != nil {
+				if browser.Document.SelectedElement.Element == "a" {
+					href := browser.Document.SelectedElement.Attr("href")
+					urlInput.SetValue(href)
+					go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+				}
 			}
 		}
 	})

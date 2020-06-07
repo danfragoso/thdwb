@@ -21,18 +21,16 @@ type Window struct {
 
 	needsReflow bool
 	visible     bool
-	hasOverlay  bool
 	// This flag is active when drawing is happening on a thread that is not the
 	// main one; When the asyncFlag is active the window frame processor function
 	// should pool the status of the drawing routine and when it ends reflow? the
 	// entire window surface?
 	asyncFlag bool
 
-	glw            *glfw.Window
-	context        *gg.Context
-	overlayContext *gg.Context
-	backend        *glBackend
-	frameBuffer    *image.RGBA
+	glw         *glfw.Window
+	context     *gg.Context
+	backend     *glBackend
+	frameBuffer *image.RGBA
 
 	defaultCursor *glfw.Cursor
 	pointerCursor *glfw.Cursor
@@ -47,14 +45,40 @@ type Window struct {
 
 	pointerPositionEventListeners []func(float64, float64)
 	scrollEventListeners          []func(int)
-	clickEventListeners           []func()
+	clickEventListeners           []func(MustardKey)
 
-	menuEntries []*menuEntry
+	overlays         []*Overlay
+	hasActiveOverlay bool
+
+	contextMenu *contextMenu
+}
+
+type Overlay struct {
+	ref string
+
+	active bool
+
+	top  float64
+	left float64
+
+	width  float64
+	height float64
+
+	position image.Point
+
+	backgroundBuffer *image.RGBA
+	buffer           *image.RGBA
+}
+
+type contextMenu struct {
+	overlay *Overlay
+	entries []*menuEntry
 }
 
 type menuEntry struct {
 	entryText string
 	action    func()
+	box       *box
 }
 
 type glBackend struct {
@@ -119,6 +143,13 @@ const (
 
 	//HorizontalFrame - Horizontal frame orientation
 	HorizontalFrame
+)
+
+type MustardKey int
+
+const (
+	MouseLeft MustardKey = iota
+	MouseRight
 )
 
 //Frame - Layout frame type

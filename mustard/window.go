@@ -6,12 +6,10 @@ import (
 	"log"
 	"os"
 
-	assets "thdwb/assets"
 	gg "thdwb/gg"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/goki/freetype/truetype"
 )
 
 func SetGLFWHints() {
@@ -39,7 +37,6 @@ func CreateNewWindow(title string, width int, height int) *Window {
 	}
 
 	window.RecreateContext()
-	window.RecreateOverlayContext()
 	glw.MakeContextCurrent()
 
 	window.backend = createGLBackend()
@@ -115,24 +112,6 @@ func (window *Window) RecreateContext() {
 	window.context.SetRGB(1, 1, 1)
 }
 
-func (window *Window) RecreateOverlayContext() {
-	window.overlayContext = gg.NewContext(window.width, window.height)
-	window.hasOverlay = true
-}
-
-func (window *Window) ClearOverlayContext() {
-	window.hasOverlay = false
-	window.overlayContext = nil
-}
-
-func (window *Window) ClearMenuEntries() {
-	window.menuEntries = nil
-}
-
-func (window *Window) AddMenuEntry(entryText string, callback func()) {
-	window.menuEntries = append(window.menuEntries, &menuEntry{entryText, callback})
-}
-
 func (window *Window) addEvents() {
 	window.glw.SetFocusCallback(func(w *glfw.Window, focused bool) {
 	})
@@ -140,7 +119,7 @@ func (window *Window) addEvents() {
 	window.glw.SetSizeCallback(func(w *glfw.Window, width, height int) {
 		window.width, window.height = width, height
 		window.RecreateContext()
-		window.RecreateOverlayContext()
+		//window.RecreateOverlayContext()
 
 		gl.Viewport(0, 0, int32(width), int32(height))
 		window.needsReflow = true
@@ -220,12 +199,7 @@ func (window *Window) addEvents() {
 
 	window.glw.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
 		if action == glfw.Release {
-			if button == glfw.MouseButtonLeft {
-				window.ProcessPointerClick()
-				window.DestroyContextMenu()
-			} else if button == glfw.MouseButtonRight {
-				window.CreateContextMenu()
-			}
+			window.ProcessPointerClick(button)
 		}
 	})
 
@@ -236,16 +210,12 @@ func (window *Window) addEvents() {
 
 func (window *Window) generateTexture() {
 	gl.DeleteTextures(1, &window.backend.texture)
-	if window.hasOverlay {
-		ctx, _ := window.context.Image().(draw.Image)
-		overlay, _ := window.overlayContext.Image().(draw.Image)
+	window.frameBuffer = window.context.Image().(*image.RGBA)
 
-		window.frameBuffer = image.NewRGBA(ctx.Bounds())
-
-		draw.Draw(window.frameBuffer, ctx.Bounds(), ctx, image.ZP, draw.Over)
-		draw.Draw(window.frameBuffer, overlay.Bounds(), overlay, image.ZP, draw.Over)
-	} else {
-		window.frameBuffer = window.context.Image().(*image.RGBA)
+	if window.hasActiveOverlay {
+		for _, overlay := range window.overlays {
+			draw.Draw(window.frameBuffer, overlay.buffer.Bounds(), overlay.buffer, overlay.position, draw.Over)
+		}
 	}
 
 	gl.GenTextures(1, &window.backend.texture)
@@ -281,7 +251,7 @@ func (window *Window) AttachScrollEventListener(callback func(direction int)) {
 	window.scrollEventListeners = append(window.scrollEventListeners, callback)
 }
 
-func (window *Window) AttachClickEventListener(callback func()) {
+func (window *Window) AttachClickEventListener(callback func(MustardKey)) {
 	window.clickEventListeners = append(window.clickEventListeners, callback)
 }
 
@@ -294,61 +264,4 @@ func (window *Window) SetCursor(cursorType string) {
 	default:
 		window.glw.SetCursor(window.defaultCursor)
 	}
-}
-
-func (window *Window) CreateContextMenu() {
-	window.RecreateOverlayContext()
-	ctx := window.overlayContext
-
-	menuTop := window.cursorY
-	menuLeft := window.cursorX
-	menuWidth := 200.
-	menuHeight := float64(len(window.menuEntries) * 20)
-
-	if menuLeft+menuWidth > float64(window.width) {
-		menuLeft = float64(window.width) - menuWidth
-	}
-
-	if menuTop+menuHeight > float64(window.height) {
-		menuTop = float64(window.height) - menuHeight
-	}
-
-	ctx.SetHexColor("#eee")
-	ctx.DrawRectangle(menuLeft, menuTop, menuWidth, menuHeight)
-	ctx.Fill()
-
-	font, _ := truetype.Parse(assets.OpenSans(400))
-	ctx.SetHexColor("#222")
-	ctx.SetFont(font, 16)
-
-	for idx, entry := range window.menuEntries {
-		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth), menuLeft, menuTop+16+float64(idx*20))
-		ctx.Fill()
-	}
-
-	ctx.DrawRectangle(menuLeft, menuTop, menuWidth, menuHeight)
-	ctx.SetHexColor("#ddd")
-	ctx.Stroke()
-}
-
-func prepEntry(ctx *gg.Context, entry string, width float64) string {
-	w, _ := ctx.MeasureString(entry)
-
-	if w < width {
-		return entry
-	}
-
-	for i := 0; i < len(entry); i++ {
-		nW, _ := ctx.MeasureString(entry[:len(entry)-i] + "...")
-
-		if nW <= width {
-			return entry[:len(entry)-i] + "..."
-		}
-	}
-
-	return entry
-}
-
-func (window *Window) DestroyContextMenu() {
-	window.ClearOverlayContext()
 }

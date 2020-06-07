@@ -1,5 +1,7 @@
 package mustard
 
+import "github.com/go-gl/glfw/v3.3/glfw"
+
 func (window *Window) ProcessPointerPosition() {
 	window.glw.SetCursor(window.defaultCursor)
 	go window.ProcessButtons()
@@ -7,10 +9,14 @@ func (window *Window) ProcessPointerPosition() {
 	go window.firePointerPositionEvents()
 }
 
-func (window *Window) ProcessPointerClick() {
-	go window.ProcessButtonClick()
-	go window.ProcessInputActivation()
-	go window.fireClickEvents()
+func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
+	if button == glfw.MouseButtonLeft {
+		go window.ProcessButtonClick()
+		go window.ProcessInputActivation()
+		go window.fireClickEvents(MouseLeft)
+	} else if button == glfw.MouseButtonRight {
+		go window.fireClickEvents(MouseRight)
+	}
 }
 
 func (window *Window) ProcessScroll(x, y float64) {
@@ -116,8 +122,8 @@ func (window *Window) fireScrollEvents(x, y float64) {
 	}
 }
 
-func (window *Window) fireClickEvents() {
+func (window *Window) fireClickEvents(key MustardKey) {
 	for _, eventCallback := range window.clickEventListeners {
-		eventCallback()
+		eventCallback(key)
 	}
 }
