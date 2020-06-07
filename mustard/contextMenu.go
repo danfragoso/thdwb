@@ -1,7 +1,7 @@
 package mustard
 
 import (
-	"fmt"
+	"image"
 	assets "thdwb/assets"
 	gg "thdwb/gg"
 
@@ -26,7 +26,8 @@ func (window *Window) AddContextMenuEntry(entryText string, action func()) {
 	)
 }
 
-func (window *Window) RemoveContextMenuEntries() {
+func (window *Window) DestroyContextMenu() {
+	window.RemoveOverlay(window.contextMenu.overlay)
 	window.contextMenu.entries = nil
 }
 
@@ -49,8 +50,6 @@ func prepEntry(ctx *gg.Context, entry string, width float64) string {
 }
 
 func (window *Window) DrawContextMenu() {
-	ctx := window.context
-
 	menuWidth := float64(200)
 	menuHeight := float64(len(window.contextMenu.entries) * 20)
 
@@ -65,7 +64,8 @@ func (window *Window) DrawContextMenu() {
 		menuTop = float64(window.height) - menuHeight
 	}
 
-	ctx.DrawRectangle(menuLeft, menuTop, menuWidth, menuHeight)
+	ctx := gg.NewContext(int(menuWidth), int(menuHeight))
+	ctx.DrawRectangle(0, 0, menuWidth, menuHeight)
 	ctx.SetHexColor("#eee")
 	ctx.Fill()
 
@@ -74,14 +74,38 @@ func (window *Window) DrawContextMenu() {
 	ctx.SetFont(font, 16)
 
 	for idx, entry := range window.contextMenu.entries {
-		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth), menuLeft, menuTop+16+float64(idx*20))
+		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth), 0, 16+float64(idx*20))
 		ctx.Fill()
 	}
 
-	ctx.DrawRectangle(menuLeft, menuTop, menuWidth, menuHeight)
+	ctx.DrawRectangle(0, 0, menuWidth, menuHeight)
 	ctx.SetHexColor("#ddd")
 	ctx.Stroke()
 
-	fmt.Println(ctx.Image().Bounds())
-	ctx.SavePNG("cu.png")
+	overlay := extractOverlay(
+		ctx.Image().(*image.RGBA),
+		image.Point{
+			int(menuLeft),
+			int(menuTop),
+		})
+
+	window.SetContextMenuOverlay(overlay)
+}
+
+func (window *Window) SetContextMenuOverlay(overlay *Overlay) {
+	window.contextMenu.overlay = overlay
+	window.AddOverlay(overlay)
+}
+
+func extractOverlay(buffer *image.RGBA, postion image.Point) *Overlay {
+	return &Overlay{
+		ref:    "contextMenu",
+		active: true,
+
+		top:  float64(postion.Y),
+		left: float64(postion.X),
+
+		position: postion,
+		buffer:   buffer,
+	}
 }

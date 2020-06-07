@@ -37,7 +37,6 @@ func main() {
 		goButton.Click()
 	})
 
-	debugFrame := createDebugFrame(window, browser)
 	rootFrame.AttachWidget(appBar)
 
 	loadDocument(browser, "thdwb://homepage")
@@ -73,11 +72,10 @@ func main() {
 	browser.StatusLabel = statusLabel
 
 	window.RegisterButton(menuButton, func() {
-		if debugFrame.GetHeight() != 300 {
-			debugFrame.SetHeight(300)
-		} else {
-			debugFrame.SetHeight(0)
-		}
+		window.DestroyContextMenu()
+		window.AddContextMenuEntry("Show Source", func() {})
+		window.AddContextMenuEntry("Enable mouse inspector", func() {})
+		window.DrawContextMenu()
 	})
 
 	window.RegisterButton(goButton, func() {
@@ -125,12 +123,22 @@ func main() {
 	})
 
 	window.AttachClickEventListener(func(key mustard.MustardKey) {
-		if key == mustard.MouseLeft {
-			if browser.Document.SelectedElement != nil {
-				if browser.Document.SelectedElement.Element == "a" {
-					href := browser.Document.SelectedElement.Attr("href")
-					urlInput.SetValue(href)
-					go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		if viewPort.IsPointInside(window.GetCursorPosition()) {
+			window.DestroyContextMenu()
+
+			if key == mustard.MouseLeft {
+				if browser.Document.SelectedElement != nil {
+					if browser.Document.SelectedElement.Element == "a" {
+						href := browser.Document.SelectedElement.Attr("href")
+						urlInput.SetValue(href)
+						go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+					}
+				}
+			} else {
+				if browser.Document.SelectedElement != nil {
+					window.AddContextMenuEntry(browser.Document.SelectedElement.Element, func() {})
+					window.AddContextMenuEntry(browser.Document.SelectedElement.Content, func() {})
+					window.DrawContextMenu()
 				}
 			}
 		}
@@ -141,7 +149,6 @@ func main() {
 	viewArea.AttachWidget(scrollBar)
 
 	rootFrame.AttachWidget(viewArea)
-	rootFrame.AttachWidget(debugFrame)
 
 	window.SetRootFrame(rootFrame)
 	window.Show()

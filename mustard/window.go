@@ -213,8 +213,12 @@ func (window *Window) generateTexture() {
 	window.frameBuffer = window.context.Image().(*image.RGBA)
 
 	if window.hasActiveOverlay {
+		nBuffer := image.NewRGBA(window.frameBuffer.Bounds())
+		draw.Draw(nBuffer, window.frameBuffer.Bounds(), window.frameBuffer, image.ZP, draw.Over)
+		window.frameBuffer = nBuffer
+
 		for _, overlay := range window.overlays {
-			draw.Draw(window.frameBuffer, overlay.buffer.Bounds(), overlay.buffer, overlay.position, draw.Over)
+			draw.Draw(window.frameBuffer, overlay.buffer.Bounds().Add(overlay.position), overlay.buffer, image.ZP, draw.Over)
 		}
 	}
 
@@ -232,6 +236,10 @@ func (window *Window) generateTexture() {
 		0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(window.frameBuffer.Pix),
 	)
 
+}
+
+func (window *Window) GetCursorPosition() (float64, float64) {
+	return window.cursorX, window.cursorY
 }
 
 func (window *Window) RegisterButton(button *ButtonWidget, callback func()) {
@@ -263,5 +271,27 @@ func (window *Window) SetCursor(cursorType string) {
 
 	default:
 		window.glw.SetCursor(window.defaultCursor)
+	}
+}
+
+func (window *Window) AddOverlay(overlay *Overlay) {
+	window.overlays = append(
+		window.overlays,
+		overlay,
+	)
+
+	window.hasActiveOverlay = true
+}
+
+func (window *Window) RemoveOverlay(overlay *Overlay) {
+	for idx, cOverlay := range window.overlays {
+		if cOverlay == overlay {
+			window.overlays = append(window.overlays[:idx], window.overlays[idx+1:]...)
+			break
+		}
+	}
+
+	if len(window.overlays) < 1 {
+		window.hasActiveOverlay = false
 	}
 }
