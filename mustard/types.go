@@ -71,14 +71,20 @@ type Overlay struct {
 }
 
 type contextMenu struct {
-	overlay *Overlay
-	entries []*menuEntry
+	overlay       *Overlay
+	entries       []*menuEntry
+	selectedEntry *menuEntry
 }
 
 type menuEntry struct {
 	entryText string
 	action    func()
-	box       *box
+
+	top  float64
+	left float64
+
+	width  float64
+	height float64
 }
 
 type glBackend struct {

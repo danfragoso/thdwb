@@ -160,6 +160,10 @@ func (widget *widget) GetHeight() int {
 }
 
 func (widget *widget) IsPointInside(x, y float64) bool {
+	if widget.window.hasActiveOverlay {
+		return false
+	}
+
 	top, left, width, height := widget.GetRect()
 	return x > float64(left) && x < float64(left+width) && y > float64(top) && y < float64(top+height)
 }

@@ -1,12 +1,14 @@
 package mustard
 
-import "github.com/go-gl/glfw/v3.3/glfw"
+import (
+	"github.com/go-gl/glfw/v3.3/glfw"
+)
 
 func (window *Window) ProcessPointerPosition() {
-	window.glw.SetCursor(window.defaultCursor)
 	go window.ProcessButtons()
 	go window.ProcessInputs()
 	go window.firePointerPositionEvents()
+	go window.ProcessContextMenu()
 }
 
 func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
@@ -125,5 +127,30 @@ func (window *Window) fireScrollEvents(x, y float64) {
 func (window *Window) fireClickEvents(key MustardKey) {
 	for _, eventCallback := range window.clickEventListeners {
 		eventCallback(key)
+	}
+}
+
+func (window *Window) ProcessContextMenu() {
+	if len(window.contextMenu.entries) > 0 {
+		x, y := window.GetCursorPosition()
+
+		if x > window.contextMenu.overlay.left &&
+			x < window.contextMenu.overlay.left+window.contextMenu.overlay.width &&
+			y > window.contextMenu.overlay.top &&
+			y < window.contextMenu.overlay.top+window.contextMenu.overlay.height {
+
+			for _, entry := range window.contextMenu.entries {
+				if entry.PointIntersects(x, y) {
+					if entry != window.contextMenu.selectedEntry {
+						window.SelectEntry(entry)
+					}
+
+					break
+				}
+			}
+
+		} else {
+			window.DeselectEntries()
+		}
 	}
 }
