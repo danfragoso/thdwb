@@ -75,11 +75,13 @@ func (window *Window) DrawContextMenu() {
 	ctx.SetHexColor("#222")
 	ctx.SetFont(font, 16)
 
+	textLeft := 4.
+
 	for idx, entry := range window.contextMenu.entries {
 		top, left := 16+float64(idx*20), 0.
 
 		entry.setCoords(menuTop+top-16, menuLeft+left, menuWidth, 20)
-		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth), left, top)
+		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth-textLeft), textLeft, top)
 		ctx.Fill()
 	}
 
@@ -105,7 +107,7 @@ func (window *Window) SetContextMenuOverlay(overlay *Overlay) {
 func (window *Window) refreshContextMenu() {
 	ctx := gg.NewContextForRGBA(window.contextMenu.overlay.buffer)
 	menuWidth := float64(window.contextMenu.overlay.buffer.Rect.Max.X)
-
+	textLeft := 4.
 	ctx.SetHexColor("#eee")
 	ctx.Clear()
 
@@ -121,7 +123,7 @@ func (window *Window) refreshContextMenu() {
 		}
 
 		ctx.SetHexColor("#222")
-		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth), 0, 16+float64(idx*20))
+		ctx.DrawString(prepEntry(ctx, entry.entryText, menuWidth-textLeft), textLeft, 16+float64(idx*20))
 		ctx.Fill()
 	}
 }
