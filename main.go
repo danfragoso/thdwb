@@ -72,9 +72,16 @@ func main() {
 	browser.StatusLabel = statusLabel
 
 	window.RegisterButton(menuButton, func() {
-		window.DestroyContextMenu()
-		window.AddContextMenuEntry("Show Source", func() {})
-		window.AddContextMenuEntry("Enable mouse inspector", func() {})
+		if browser.Document.DebugFlag {
+			window.AddContextMenuEntry("Disable element inspector", func() {
+				browser.Document.DebugFlag = false
+			})
+		} else {
+			window.AddContextMenuEntry("Enable element inspector", func() {
+				//browser.Document.DebugFlag = true
+			})
+		}
+
 		window.DrawContextMenu()
 	})
 
@@ -137,9 +144,16 @@ func main() {
 					window.AddContextMenuEntry("Back", func() {
 						backButton.Click()
 					})
-					window.AddContextMenuEntry("Forward", func() {})
 					window.AddContextMenuEntry("Reload", func() {
 						goButton.Click()
+					})
+					window.AddContextMenuEntry("History", func() {
+						urlInput.SetValue("thdwb://history")
+						go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+					})
+					window.AddContextMenuEntry("Home", func() {
+						urlInput.SetValue("thdwb://homepage")
+						go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 					})
 					window.DrawContextMenu()
 				}
@@ -172,8 +186,8 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 		browser.StatusLabel.SetContent(createStatusLabel(perf))
 	}
 
-	browser.StatusLabel.RequestRepaint()
+	if browser.Document.DebugFlag {
+	}
 
-	//browser.Viewport.SetDrawingRepaint(true)
-	//browser.Viewport.RequestRepaint()
+	browser.StatusLabel.RequestRepaint()
 }

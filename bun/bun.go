@@ -17,8 +17,8 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	ctx.Clear()
 
 	layoutDOM(ctx, body, 0)
-	if document.SelectedElement != nil {
-		//paintDebugRect(ctx, document.SelectedElement)
+	if document.SelectedElement != nil && document.DebugFlag {
+		paintDebugRect(ctx, document.SelectedElement)
 	}
 }
 
