@@ -8,4 +8,5 @@ require (
 	github.com/goki/freetype v0.0.0-20181231101311-fa8a33aabaff
 	github.com/stretchr/testify v1.5.1
 	golang.org/x/image v0.0.0-20200119044424-58c23975cae1
+	golang.org/x/net v0.0.0-20200602114024-627f9648deb9
 )
