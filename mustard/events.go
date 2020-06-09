@@ -165,6 +165,7 @@ func (window *Window) ProcessContextMenu() {
 func (window *Window) ProcessContextMenuClick() {
 	if window.contextMenu.selectedEntry != nil {
 		window.contextMenu.selectedEntry.action()
-		window.DestroyContextMenu()
 	}
+
+	window.DestroyContextMenu()
 }
