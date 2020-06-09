@@ -5,19 +5,26 @@ import (
 )
 
 func (window *Window) ProcessPointerPosition() {
-	go window.ProcessButtons()
-	go window.ProcessInputs()
-	go window.firePointerPositionEvents()
-	go window.ProcessContextMenu()
+	if window.hasActiveOverlay {
+		go window.ProcessContextMenu()
+	} else {
+		go window.ProcessButtons()
+		go window.ProcessInputs()
+		go window.firePointerPositionEvents()
+	}
 }
 
 func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
-	if button == glfw.MouseButtonLeft {
-		go window.ProcessButtonClick()
-		go window.ProcessInputActivation()
-		go window.fireClickEvents(MouseLeft)
-	} else if button == glfw.MouseButtonRight {
-		go window.fireClickEvents(MouseRight)
+	if window.hasActiveOverlay {
+		go window.ProcessContextMenuClick()
+	} else {
+		if button == glfw.MouseButtonLeft {
+			go window.ProcessButtonClick()
+			go window.ProcessInputActivation()
+			go window.fireClickEvents(MouseLeft)
+		} else if button == glfw.MouseButtonRight {
+			go window.fireClickEvents(MouseRight)
+		}
 	}
 }
 
@@ -152,5 +159,12 @@ func (window *Window) ProcessContextMenu() {
 		} else {
 			window.DeselectEntries()
 		}
+	}
+}
+
+func (window *Window) ProcessContextMenuClick() {
+	if window.contextMenu.selectedEntry != nil {
+		window.contextMenu.selectedEntry.action()
+		window.DestroyContextMenu()
 	}
 }

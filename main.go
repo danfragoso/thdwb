@@ -123,8 +123,6 @@ func main() {
 	})
 
 	window.AttachClickEventListener(func(key mustard.MustardKey) {
-		window.DestroyContextMenu()
-
 		if viewPort.IsPointInside(window.GetCursorPosition()) {
 			if key == mustard.MouseLeft {
 				if browser.Document.SelectedElement != nil {
@@ -136,9 +134,13 @@ func main() {
 				}
 			} else {
 				if browser.Document.SelectedElement != nil {
-					window.AddContextMenuEntry("Back", func() {})
+					window.AddContextMenuEntry("Back", func() {
+						backButton.Click()
+					})
 					window.AddContextMenuEntry("Forward", func() {})
-					window.AddContextMenuEntry("Reload", func() {})
+					window.AddContextMenuEntry("Reload", func() {
+						goButton.Click()
+					})
 					window.DrawContextMenu()
 				}
 			}

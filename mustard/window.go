@@ -162,12 +162,17 @@ func (window *Window) addEvents() {
 			}
 			break
 		case glfw.KeyEscape:
-			if window.activeInput != nil && action == glfw.Release {
-				window.activeInput.active = false
-				window.activeInput.selected = false
-				window.activeInput.needsRepaint = true
-				window.activeInput = nil
+			if action == glfw.Release {
+				window.DestroyContextMenu()
+
+				if window.activeInput != nil {
+					window.activeInput.active = false
+					window.activeInput.selected = false
+					window.activeInput.needsRepaint = true
+					window.activeInput = nil
+				}
 			}
+
 			break
 		case glfw.KeyUp:
 			if action == glfw.Release || action == glfw.Repeat {

@@ -30,6 +30,7 @@ func (window *Window) DestroyContextMenu() {
 	window.RemoveOverlay(window.contextMenu.overlay)
 	window.contextMenu.entries = nil
 	window.contextMenu.selectedEntry = nil
+	window.SetCursor("default")
 }
 
 func prepEntry(ctx *gg.Context, entry string, width float64) string {
