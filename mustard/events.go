@@ -46,9 +46,11 @@ func (window *Window) ProcessArrowKeys(arrowKey string) {
 	if window.activeInput != nil && window.activeInput.active == true {
 		if arrowKey == "left" && (window.activeInput.cursorPosition+len(window.activeInput.value)) > 0 {
 			window.activeInput.cursorPosition--
+			window.activeInput.cursorDirection = true
 			window.activeInput.needsRepaint = true
 		} else if arrowKey == "right" && window.activeInput.cursorPosition < 0 {
 			window.activeInput.cursorPosition++
+			window.activeInput.cursorDirection = false
 			window.activeInput.needsRepaint = true
 		}
 	}

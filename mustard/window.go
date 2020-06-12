@@ -194,6 +194,19 @@ func (window *Window) addEvents() {
 				window.ProcessArrowKeys("right")
 			}
 			break
+		case glfw.KeyV:
+			if action == glfw.Release && mods == glfw.ModControl {
+				if window.activeInput != nil {
+					if window.activeInput.cursorPosition == 0 {
+						window.activeInput.value = window.activeInput.value + glfw.GetClipboardString()
+					} else {
+						inputVal, cursorPos := window.activeInput.value, window.activeInput.cursorPosition
+						window.activeInput.value = inputVal[:len(inputVal)+cursorPos] + glfw.GetClipboardString() + inputVal[len(inputVal)+cursorPos:]
+					}
+					window.activeInput.needsRepaint = true
+				}
+			}
+			break
 		case glfw.KeyEnter:
 			if action == glfw.Release {
 				window.ProcessReturnKey()

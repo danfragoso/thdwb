@@ -130,9 +130,23 @@ func (input *InputWidget) draw() {
 	context.SetFont(input.font, input.fontSize)
 	w, h := context.MeasureString(input.value)
 
+	cursorP := float64(width - totalPadding*2)
+	cP, _ := context.MeasureString(input.value[len(input.value)+input.cursorPosition:])
+	cursorP = cursorP - cP
+
+	if cursorP > 0 {
+		input.cursorFloat = true
+	} else {
+		input.cursorFloat = false
+	}
+
 	valueBigggerThanInput := w > float64(width)-input.fontSize
 	if valueBigggerThanInput && input.active {
-		context.DrawStringAnchored(input.value, float64(width)-input.fontSize, float64(height+totalPadding/2)/2, 1, 0)
+		if cursorP > 0 {
+			context.DrawStringAnchored(input.value, float64(width)-input.fontSize, float64(height+totalPadding/2)/2, 1, 0)
+		} else {
+			context.DrawStringAnchored(input.value, cP, float64(height+totalPadding/2)/2, 1, 0)
+		}
 	} else {
 		context.DrawString(input.value, 0, float64(height+totalPadding/2)/2)
 	}
@@ -143,10 +157,15 @@ func (input *InputWidget) draw() {
 		context.SetHexColor("#000")
 
 		if valueBigggerThanInput {
-			context.DrawRectangle(float64(width-totalPadding*2), h/4, 1.3, float64(input.fontSize))
+			if cursorP > 0 {
+				context.DrawRectangle(cursorP, h/4, 1.3, float64(input.fontSize))
+			} else {
+				context.DrawRectangle(0, h/4, 1.3, float64(input.fontSize))
+			}
+
 		} else {
-			cursorP, _ := context.MeasureString(input.value[:len(input.value)+input.cursorPosition])
-			context.DrawRectangle(cursorP, h/4, 1.3, float64(input.fontSize))
+			cursorDefaultPosition, _ := context.MeasureString(input.value[:len(input.value)+input.cursorPosition])
+			context.DrawRectangle(cursorDefaultPosition, h/4, 1.3, float64(input.fontSize))
 		}
 
 		context.Fill()

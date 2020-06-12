@@ -217,15 +217,17 @@ type ButtonWidget struct {
 type InputWidget struct {
 	widget
 
-	value          string
-	selected       bool
-	active         bool
-	padding        float64
-	fontSize       float64
-	context        *gg.Context
-	fontColor      string
-	cursorPosition int
-	returnCallback func()
+	value           string
+	selected        bool
+	active          bool
+	padding         float64
+	fontSize        float64
+	context         *gg.Context
+	fontColor       string
+	cursorFloat     bool
+	cursorPosition  int
+	cursorDirection bool
+	returnCallback  func()
 }
 
 type ScrollBarWidget struct {
