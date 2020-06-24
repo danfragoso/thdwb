@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strings"
+
 	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
@@ -12,6 +14,10 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 	URL := sauce.ParseURL(link)
 
 	if URL.Scheme == "" && URL.Host == "" {
+		if !strings.HasPrefix(URL.Path, "/") {
+			URL.Path = "/" + URL.Path
+		}
+
 		URL = sauce.ParseURL(browser.Document.URL.Scheme + "://" + browser.Document.URL.Host + URL.Path)
 	}
 
