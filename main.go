@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 	bun "thdwb/bun"
 	"thdwb/gg"
@@ -22,11 +23,12 @@ func main() {
 	mustard.SetGLFWHints()
 
 	perf = profiler.CreateProfiler()
-
+	settings := LoadSettings("./settings.json")
+	fmt.Println(settings)
 	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
 
 	app := mustard.CreateNewApp("THDWB")
-	window := mustard.CreateNewWindow("THDWB", 600, 600)
+	window := mustard.CreateNewWindow("THDWB", settings.WindowWidth, settings.WindowHeight)
 	window.EnableContextMenus()
 	browser.Window = window
 
@@ -39,7 +41,7 @@ func main() {
 
 	rootFrame.AttachWidget(appBar)
 
-	loadDocument(browser, "thdwb://homepage")
+	loadDocument(browser, settings.Homepage)
 	urlInput.SetValue(browser.Document.URL.String())
 
 	scrollBar := mustard.CreateScrollBarWidget(mustard.VerticalScrollBar)

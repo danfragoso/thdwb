@@ -1,35 +1,35 @@
 package main
 
+import (
+	"encoding/json"
+	"io/ioutil"
+)
+
 type Settings struct {
-	homepage     string
-	windowWidth  int
-	windowHeight int
+	Homepage     string `json:"homepage"`
+	WindowWidth  int    `json:"windowWidth"`
+	WindowHeight int    `json:"windowHeight"`
 }
 
 func LoadSettings(path string) *Settings {
-	return &Settings{}
-}
+	var settings Settings
+	settingsData, err := ioutil.ReadFile(path)
 
-func (settings *Settings) Homepage() string {
-	if settings.homepage == "" {
-		return "thdwb://homepage/"
+	if err == nil {
+		json.Unmarshal(settingsData, &settings)
 	}
 
-	return settings.homepage
-}
-
-func (settings *Settings) WindowWidth() int {
-	if settings.windowWidth == 0 {
-		return 600
+	if settings.Homepage == "" {
+		settings.Homepage = "thdwb://homepage"
 	}
 
-	return settings.windowWidth
-}
-
-func (settings *Settings) WindowHeight() int {
-	if settings.windowHeight == 0 {
-		return 600
+	if settings.WindowWidth == 0 {
+		settings.WindowWidth = 600
 	}
 
-	return settings.windowHeight
+	if settings.WindowHeight == 0 {
+		settings.WindowHeight = 600
+	}
+
+	return &settings
 }
