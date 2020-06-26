@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"runtime"
 	bun "thdwb/bun"
 	"thdwb/gg"
@@ -24,7 +23,7 @@ func main() {
 
 	perf = profiler.CreateProfiler()
 	settings := LoadSettings("./settings.json")
-	fmt.Println(settings)
+
 	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
 
 	app := mustard.CreateNewApp("THDWB")
