@@ -24,6 +24,7 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 	resource := sauce.GetResource(URL, browser)
 	htmlString := string(resource.Body)
 	parsedDocument := ketchup.ParseDocument(htmlString)
+	browser.Window.RemoveStaticOverlay("debugOverlay")
 	parsedDocument.URL = resource.URL
 
 	browser.Document = parsedDocument
