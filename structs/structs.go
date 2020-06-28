@@ -86,6 +86,10 @@ type RenderBox struct {
 	PaddingBottom float64
 }
 
+func (box *RenderBox) GetRect() (float64, float64, float64, float64) {
+	return box.Top, box.Left, box.Width, box.Height
+}
+
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
 	Element string `json:"element"`

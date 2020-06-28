@@ -230,6 +230,16 @@ func (window *Window) generateTexture() {
 	gl.DeleteTextures(1, &window.backend.texture)
 	window.frameBuffer = window.context.Image().(*image.RGBA)
 
+	if window.hasStaticOverlay {
+		nBuffer := image.NewRGBA(window.frameBuffer.Bounds())
+		draw.Draw(nBuffer, window.frameBuffer.Bounds(), window.frameBuffer, image.ZP, draw.Over)
+		window.frameBuffer = nBuffer
+
+		for _, overlay := range window.staticOverlays {
+			draw.Draw(window.frameBuffer, overlay.buffer.Bounds().Add(overlay.position), overlay.buffer, image.ZP, draw.Over)
+		}
+	}
+
 	if window.hasActiveOverlay {
 		nBuffer := image.NewRGBA(window.frameBuffer.Bounds())
 		draw.Draw(nBuffer, window.frameBuffer.Bounds(), window.frameBuffer, image.ZP, draw.Over)
@@ -311,5 +321,44 @@ func (window *Window) RemoveOverlay(overlay *Overlay) {
 
 	if len(window.overlays) < 1 {
 		window.hasActiveOverlay = false
+	}
+}
+
+func (window *Window) AddStaticOverlay(overlay *Overlay) {
+	window.staticOverlays = append(
+		window.staticOverlays,
+		overlay,
+	)
+
+	window.hasStaticOverlay = true
+}
+
+func (window *Window) RemoveStaticOverlay(ref string) {
+	for idx, cOverlay := range window.staticOverlays {
+		if cOverlay.ref == ref {
+			window.staticOverlays = append(window.staticOverlays[:idx], window.staticOverlays[idx+1:]...)
+		}
+	}
+
+	if len(window.staticOverlays) < 1 {
+		window.hasStaticOverlay = false
+	}
+}
+
+func CreateStaticOverlay(ref string, ctx *gg.Context, position image.Point) *Overlay {
+	buffer := ctx.Image().(*image.RGBA)
+
+	return &Overlay{
+		ref:    ref,
+		active: true,
+
+		top:  float64(position.Y),
+		left: float64(position.X),
+
+		width:  float64(buffer.Rect.Max.X),
+		height: float64(buffer.Rect.Max.Y),
+
+		position: position,
+		buffer:   buffer,
 	}
 }

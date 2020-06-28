@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"image"
 	"runtime"
 	bun "thdwb/bun"
 	"thdwb/gg"
@@ -75,11 +77,12 @@ func main() {
 	window.RegisterButton(menuButton, func() {
 		if browser.Document.DebugFlag {
 			window.AddContextMenuEntry("Disable element inspector", func() {
+				browser.Window.RemoveStaticOverlay("debugOverlay")
 				browser.Document.DebugFlag = false
 			})
 		} else {
 			window.AddContextMenuEntry("Enable element inspector", func() {
-				//browser.Document.DebugFlag = true
+				browser.Document.DebugFlag = true
 			})
 		}
 
@@ -187,8 +190,53 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 		browser.StatusLabel.SetContent(createStatusLabel(perf))
 	}
 
-	if browser.Document.DebugFlag {
+	if browser.Document.DebugFlag &&
+		browser.Document.SelectedElement != nil &&
+		browser.Document.SelectedElement.Element != "html" {
+		showDebugOverlay(browser)
 	}
 
 	browser.StatusLabel.RequestRepaint()
+}
+
+func showDebugOverlay(browser *structs.WebBrowser) {
+	browser.Window.RemoveStaticOverlay("debugOverlay")
+
+	debugEl := browser.Document.SelectedElement
+	top, left, _, height := debugEl.RenderBox.GetRect()
+	ctx := gg.NewContext(int(browser.Document.RootElement.RenderBox.Width), int(height+20))
+	paintDebugRect(ctx, debugEl)
+
+	overlay := mustard.CreateStaticOverlay("debugOverlay", ctx, image.Point{
+		int(left), int(top) + browser.Viewport.GetTop(),
+	})
+
+	browser.Window.AddStaticOverlay(overlay)
+}
+
+func paintDebugRect(ctx *gg.Context, node *structs.NodeDOM) {
+	debugString := node.Element + " {" + fmt.Sprint(node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height) + "}"
+	ctx.DrawRectangle(0, 0, node.RenderBox.Width, node.RenderBox.Height)
+	ctx.SetRGBA(.2, .8, .4, .3)
+	ctx.Fill()
+
+	w, h := ctx.MeasureString(debugString)
+
+	if node.RenderBox.Width < w {
+		ctx.DrawRectangle(0, node.RenderBox.Height, w+4, h+4)
+		ctx.SetRGB(1, 1, 0)
+		ctx.Fill()
+
+		ctx.SetRGB(0, 0, 0)
+		ctx.DrawString(debugString, 2, node.RenderBox.Height+h)
+		ctx.Fill()
+	} else {
+		ctx.DrawRectangle(node.RenderBox.Width-w-2, node.RenderBox.Height, w+4, h+4)
+		ctx.SetRGB(1, 1, 0)
+		ctx.Fill()
+
+		ctx.SetRGB(0, 0, 0)
+		ctx.DrawString(debugString, node.RenderBox.Width-w, node.RenderBox.Height+h)
+		ctx.Fill()
+	}
 }

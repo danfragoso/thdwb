@@ -17,25 +17,6 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	ctx.Clear()
 
 	layoutDOM(ctx, body, 0)
-	if document.SelectedElement != nil && document.DebugFlag {
-		paintDebugRect(ctx, document.SelectedElement)
-	}
-}
-
-func paintDebugRect(ctx *gg.Context, node *structs.NodeDOM) {
-	debugString := node.Element + " {" + fmt.Sprint(node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height) + "}"
-	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
-	ctx.SetRGBA(.2, .8, .4, .3)
-	ctx.Fill()
-
-	w, h := ctx.MeasureString(debugString)
-	ctx.DrawRectangle(node.RenderBox.Left+node.RenderBox.Width-w-4, node.RenderBox.Top+node.RenderBox.Height, w+4, h+4)
-	ctx.SetRGB(1, 1, 0)
-	ctx.Fill()
-
-	ctx.SetRGB(0, 0, 0)
-	ctx.DrawString(debugString, node.RenderBox.Left+node.RenderBox.Width-w-2, node.RenderBox.Top+node.RenderBox.Height+h+2)
-	ctx.Fill()
 }
 
 func getNodeContent(NodeDOM *structs.NodeDOM) string {

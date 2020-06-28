@@ -10,7 +10,7 @@ func (window *Window) ProcessPointerPosition() {
 	} else {
 		go window.ProcessButtons()
 		go window.ProcessInputs()
-		go window.firePointerPositionEvents()
+		window.firePointerPositionEvents()
 	}
 }
 

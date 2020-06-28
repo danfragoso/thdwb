@@ -50,6 +50,9 @@ type Window struct {
 	overlays         []*Overlay
 	hasActiveOverlay bool
 
+	staticOverlays   []*Overlay
+	hasStaticOverlay bool
+
 	contextMenu *contextMenu
 }
 
