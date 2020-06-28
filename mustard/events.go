@@ -29,7 +29,7 @@ func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
 }
 
 func (window *Window) ProcessScroll(x, y float64) {
-	go window.fireScrollEvents(x, y)
+	window.fireScrollEvents(x, y)
 }
 
 func (window *Window) ProcessReturnKey() {

@@ -131,6 +131,8 @@ func main() {
 
 		browser.Viewport.SetDrawingRepaint(false)
 		viewPort.RequestRepaint()
+
+		browser.Window.RemoveStaticOverlay("debugOverlay")
 	})
 
 	window.AttachClickEventListener(func(key mustard.MustardKey) {
@@ -208,7 +210,7 @@ func showDebugOverlay(browser *structs.WebBrowser) {
 	paintDebugRect(ctx, debugEl)
 
 	overlay := mustard.CreateStaticOverlay("debugOverlay", ctx, image.Point{
-		int(left), int(top) + browser.Viewport.GetTop(),
+		int(left), int(top) + browser.Viewport.GetTop() + browser.Viewport.GetOffset(),
 	})
 
 	browser.Window.AddStaticOverlay(overlay)
