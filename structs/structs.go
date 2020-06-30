@@ -107,6 +107,22 @@ type NodeDOM struct {
 	Document *HTMLDocument `json:"-"`
 }
 
+func (node *NodeDOM) FindChildByName(childName string) *NodeDOM {
+	if node.Element == childName {
+		return node
+	}
+
+	for _, child := range node.Children {
+		foundChild := child.FindChildByName(childName)
+
+		if foundChild != nil {
+			return foundChild
+		}
+	}
+
+	return nil
+}
+
 func (node *NodeDOM) Attr(attrName string) string {
 	for _, attribute := range node.Attributes {
 		if attribute.Name == attrName {

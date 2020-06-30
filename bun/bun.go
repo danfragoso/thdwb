@@ -8,7 +8,7 @@ import (
 )
 
 func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
-	body := document.RootElement.Children[1]
+	body := document.RootElement.FindChildByName("body")
 
 	document.RootElement.RenderBox.Width = float64(ctx.Width())
 	document.RootElement.RenderBox.Height = float64(ctx.Height())
