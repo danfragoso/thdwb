@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"thdwb/assets"
+	pages "thdwb/pages"
 	structs "thdwb/structs"
 )
 
@@ -21,6 +22,11 @@ var imageCache = &structs.ImgCache{}
 func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
 	if URL.Scheme == "thdwb" {
 		return fetchInternalPage(URL, browser)
+	} else if URL.Scheme == "file" {
+		return &structs.Resource{
+			Body: pages.RenderFileBrowser(URL.Path),
+			URL:  URL,
+		}
 	}
 
 	return fetchExternalPage(URL.String())
