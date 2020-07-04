@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"thdwb/assets"
 	gg "thdwb/gg"
 	"thdwb/sauce"
 	structs "thdwb/structs"
@@ -46,6 +47,9 @@ func fetchNodeImage(node *structs.NodeDOM) (image.Image, error) {
 		if err == nil {
 			return im, nil
 		}
+
+		im, _, _ = image.Decode(bytes.NewReader(assets.ErrorImage()))
+		return im, nil
 	}
 
 	return nil, errors.New("Failed to fetch " + imgPath)

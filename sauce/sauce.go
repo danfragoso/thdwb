@@ -1,10 +1,13 @@
 package sauce
 
 import (
+	"encoding/base64"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"thdwb/assets"
 	structs "thdwb/structs"
@@ -88,10 +91,24 @@ func ParseURL(link string) *url.URL {
 
 func GetImage(URL *url.URL) []byte {
 	imgUrl := URL.String()
+
 	cachedImage := imageCache.GetImage(imgUrl)
 
 	if cachedImage != nil {
 		return cachedImage.Image
+	}
+
+	var img []byte
+	if imgUrl[:21] == "data:image/png;base64" {
+		imgData := imgUrl[strings.IndexByte(imgUrl, ',')+1:]
+
+		decodedData, err := base64.RawStdEncoding.DecodeString(imgData)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("Failed to decode base64 data")
+		}
+
+		img = decodedData
 	} else {
 		req, err := http.NewRequest("GET", imgUrl, nil)
 		if err != nil {
@@ -103,11 +120,11 @@ func GetImage(URL *url.URL) []byte {
 		resp, _ := client.Do(req)
 
 		defer resp.Body.Close()
-		img, err := ioutil.ReadAll(resp.Body)
-
-		imageCache.AddImage(imgUrl, img)
-		return img
+		img, err = ioutil.ReadAll(resp.Body)
 	}
+
+	imageCache.AddImage(imgUrl, img)
+	return img
 }
 
 func buildHistoryPage(history *structs.History) string {
