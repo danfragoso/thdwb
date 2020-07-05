@@ -123,9 +123,13 @@ func GetImage(URL *url.URL) []byte {
 
 		req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
 
-		resp, _ := client.Do(req)
-
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("Failed to fetch image")
+		}
 		defer resp.Body.Close()
+
 		img, err = ioutil.ReadAll(resp.Body)
 	}
 
