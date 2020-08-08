@@ -75,6 +75,21 @@ func main() {
 	browser.StatusLabel = statusLabel
 
 	window.RegisterButton(menuButton, func() {
+		window.AddContextMenuEntry("Home", func() {
+			urlInput.SetValue("thdwb://homepage/")
+			goButton.Click()
+		})
+
+		window.AddContextMenuEntry("History", func() {
+			urlInput.SetValue("thdwb://history/")
+			goButton.Click()
+		})
+
+		window.AddContextMenuEntry("About", func() {
+			urlInput.SetValue("thdwb://about/")
+			goButton.Click()
+		})
+
 		if browser.Document.DebugFlag {
 			window.AddContextMenuEntry("Disable element inspector", func() {
 				browser.Window.RemoveStaticOverlay("debugOverlay")
