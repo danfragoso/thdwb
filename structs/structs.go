@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"thdwb/mustard"
@@ -20,6 +21,7 @@ type WebBrowser struct {
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
+	RenderTree  *NodeDOM
 	URL         *url.URL
 	RawDocument string
 	OffsetY     int
@@ -86,6 +88,10 @@ type RenderBox struct {
 	PaddingBottom float64
 }
 
+func (box *RenderBox) String() string {
+	return fmt.Sprintf("[top: %f, left: %f, width: %f, height: %f]", box.Top, box.Left, box.Width, box.Height)
+}
+
 func (box *RenderBox) GetRect() (float64, float64, float64, float64) {
 	return box.Top, box.Left, box.Width, box.Height
 }
@@ -131,6 +137,15 @@ func (node *NodeDOM) Attr(attrName string) string {
 	}
 
 	return ""
+}
+
+func (node *NodeDOM) JSON() string {
+	res, err := json.MarshalIndent(node, "", "  ")
+	if err != nil {
+		return "{}"
+	}
+
+	return string(res)
 }
 
 func (node *NodeDOM) CalcPointIntersection(x, y float64) *NodeDOM {
