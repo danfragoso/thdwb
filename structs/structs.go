@@ -113,6 +113,55 @@ type NodeDOM struct {
 	Document *HTMLDocument `json:"-"`
 }
 
+func (node *NodeDOM) PreviousRealSibling() *NodeDOM {
+	var nodeIdx int
+	for idx, child := range node.Parent.Children {
+		if child == node {
+			nodeIdx = idx
+			break
+		}
+	}
+
+	for i := nodeIdx; i > 0; i-- {
+		if node.Parent.Children[i-1] != nil && node.Parent.Children[i-1].Element != "html:text" {
+			return node.Parent.Children[i-1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) NextRealSibling() *NodeDOM {
+	for i, child := range node.Parent.Children {
+		if child == node && i < len(node.Parent.Children) &&
+			node.Parent.Children[i+1].Element != "html:text" {
+			return node.Parent.Children[i+1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) PreviousSibling() *NodeDOM {
+	for i, child := range node.Parent.Children {
+		if child == node && i > 0 {
+			return node.Parent.Children[i-1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) NextSibling() *NodeDOM {
+	for i, child := range node.Parent.Children {
+		if child == node && i < len(node.Parent.Children) {
+			return node.Parent.Children[i+1]
+		}
+	}
+
+	return nil
+}
+
 func (node *NodeDOM) FindChildByName(childName string) *NodeDOM {
 	if node.Element == childName {
 		return node

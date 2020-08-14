@@ -74,9 +74,13 @@ func pRender(TreeDOM *structs.NodeDOM, d string) {
 func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 	switch node.Style.Display {
 	case "block":
-		calcBlockNode(ctx, node)
+		calcBlockDimension(ctx, node)
+		calcBlockPosition(ctx, node)
+
 	case "inline":
-		calcInlineNode(ctx, node)
+		calcInlineDimension(ctx, node)
+		calcInlinePosition(ctx, node)
+
 	}
 
 	for _, child := range node.Children {
@@ -86,27 +90,42 @@ func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 	}
 }
 
-func calcInlineNode(ctx *gg.Context, node *structs.NodeDOM) {
+func calcInlineDimension(ctx *gg.Context, node *structs.NodeDOM) {
 	content := strings.TrimSpace(node.Content)
 
 	if len(content) > 0 {
-		ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
+		ctx.SetFont(sansSerif[node.Parent.Style.FontWeight], node.Parent.Style.FontSize)
 		node.RenderBox.Width, node.RenderBox.Height = ctx.MeasureString(node.Content)
 	}
+}
+
+func calcInlinePosition(ctx *gg.Context, node *structs.NodeDOM) {
+	node.RenderBox.Top = node.Parent.RenderBox.Top
 }
 
 func paintInlineNode(ctx *gg.Context, node *structs.NodeDOM) {
 	content := strings.TrimSpace(node.Content)
 
 	if len(content) > 0 {
-		ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
+		ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
+		ctx.SetRGBA(node.Parent.Style.BackgroundColor.R, node.Parent.Style.BackgroundColor.G, node.Parent.Style.BackgroundColor.B, node.Parent.Style.BackgroundColor.A)
+		ctx.Fill()
+
+		ctx.SetFont(sansSerif[node.Parent.Style.FontWeight], node.Parent.Style.FontSize)
 		ctx.SetRGBA(node.Parent.Style.Color.R, node.Parent.Style.Color.G, node.Parent.Style.Color.B, node.Parent.Style.Color.A)
 		ctx.DrawString(node.Content, node.RenderBox.Left, node.RenderBox.Height+node.RenderBox.Top)
 	}
 }
 
-func calcBlockNode(ctx *gg.Context, node *structs.NodeDOM) {
+func calcBlockDimension(ctx *gg.Context, node *structs.NodeDOM) {
 	node.RenderBox.Width = node.Parent.RenderBox.Width
+}
+
+func calcBlockPosition(ctx *gg.Context, node *structs.NodeDOM) {
+	prevSibling := node.PreviousRealSibling()
+	if prevSibling != nil {
+		node.RenderBox.Top = prevSibling.RenderBox.Top + prevSibling.RenderBox.Height
+	}
 }
 
 func paintBlockNode(ctx *gg.Context, node *structs.NodeDOM) {
