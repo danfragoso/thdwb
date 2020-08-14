@@ -12,6 +12,8 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	html := document.RootElement.FindChildByName("html")
 
 	renderTree := createRenderTree(html)
+	document.RenderTree = renderTree
+
 	renderTree.RenderBox.Width = float64(ctx.Width())
 	renderTree.RenderBox.Height = float64(ctx.Height())
 	body := renderTree.FindChildByName("body")

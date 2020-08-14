@@ -66,7 +66,7 @@ func main() {
 			canvas.RequestRepaint()
 
 			scrollBar.SetScrollerOffset(0)
-			scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+			scrollBar.SetScrollerSize(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 			scrollBar.RequestReflow()
 		}()
 	})
@@ -133,7 +133,7 @@ func main() {
 				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
 			}
 		} else {
-			documentOffset := viewPort.GetOffset() + int(browser.Document.RootElement.Children[1].RenderBox.Height)
+			documentOffset := viewPort.GetOffset() + int(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 
 			if documentOffset >= viewPort.GetHeight() {
 				viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
@@ -141,7 +141,7 @@ func main() {
 		}
 
 		scrollBar.SetScrollerOffset(float64(viewPort.GetOffset()))
-		scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+		scrollBar.SetScrollerSize(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 		scrollBar.RequestReflow()
 
 		browser.Viewport.SetDrawingRepaint(false)
