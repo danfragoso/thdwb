@@ -143,8 +143,16 @@ func (node *NodeDOM) NextRealSibling() *NodeDOM {
 }
 
 func (node *NodeDOM) PreviousSibling() *NodeDOM {
-	for i, child := range node.Parent.Children {
-		if child == node && i > 0 {
+	var nodeIdx int
+	for idx, child := range node.Parent.Children {
+		if child == node {
+			nodeIdx = idx
+			break
+		}
+	}
+
+	for i := nodeIdx; i > 0; i-- {
+		if node.Parent.Children[i-1] != nil {
 			return node.Parent.Children[i-1]
 		}
 	}

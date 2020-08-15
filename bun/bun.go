@@ -88,7 +88,12 @@ func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 	for _, child := range node.Children {
 		layoutNode(ctx, child)
 
-		node.RenderBox.Height += child.RenderBox.Height
+		switch node.Style.Display {
+		case "block":
+			node.RenderBox.Height += child.RenderBox.Height
+		case "inline":
+			node.RenderBox.Width += child.RenderBox.Width
+		}
 	}
 }
 
@@ -103,6 +108,13 @@ func calcInlineDimension(ctx *gg.Context, node *structs.NodeDOM) {
 
 func calcInlinePosition(ctx *gg.Context, node *structs.NodeDOM) {
 	node.RenderBox.Top = node.Parent.RenderBox.Top
+
+	prevSibling := node.PreviousSibling()
+	if prevSibling != nil {
+		node.RenderBox.Left = prevSibling.RenderBox.Left + prevSibling.RenderBox.Width
+	} else {
+		node.RenderBox.Left = node.Parent.RenderBox.Left
+	}
 }
 
 func paintInlineNode(ctx *gg.Context, node *structs.NodeDOM) {
