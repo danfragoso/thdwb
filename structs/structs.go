@@ -207,6 +207,10 @@ func (node *NodeDOM) JSON() string {
 
 func (node *NodeDOM) CalcPointIntersection(x, y float64) *NodeDOM {
 	var intersectedNode *NodeDOM
+	if node == nil {
+		return intersectedNode
+	}
+
 	if x > float64(node.RenderBox.Left) &&
 		x < float64(node.RenderBox.Left+node.RenderBox.Width) &&
 		y > float64(node.RenderBox.Top) &&

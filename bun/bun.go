@@ -93,6 +93,9 @@ func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 			node.RenderBox.Height += child.RenderBox.Height
 		case "inline":
 			node.RenderBox.Width += child.RenderBox.Width
+			if child.RenderBox.Height > node.RenderBox.Height {
+				node.RenderBox.Height = child.RenderBox.Height
+			}
 		}
 	}
 }
