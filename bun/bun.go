@@ -23,6 +23,7 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 
 	layoutNode(ctx, body)
 	paintNode(ctx, body)
+	paintText(ctx, body)
 
 	pRender(body, "-")
 	fmt.Print("\n")
@@ -76,13 +77,12 @@ func pRender(TreeDOM *structs.NodeDOM, d string) {
 func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 	switch node.Style.Display {
 	case "block":
-		calcBlockDimension(ctx, node)
 		calcBlockPosition(ctx, node)
+		calcBlockDimension(ctx, node)
 
 	case "inline":
-		calcInlineDimension(ctx, node)
 		calcInlinePosition(ctx, node)
-
+		calcInlineDimension(ctx, node)
 	}
 
 	for _, child := range node.Children {
@@ -100,12 +100,33 @@ func layoutNode(ctx *gg.Context, node *structs.NodeDOM) {
 	}
 }
 
+func findAncestorMaxWidth(node *structs.NodeDOM) float64 {
+	p := node.Parent
+
+	if p == nil {
+		return 0
+	}
+
+	if p.Style.Display == "block" && p.RenderBox.Width > 0 {
+		return p.RenderBox.Width
+	}
+
+	return findAncestorMaxWidth(p)
+}
+
 func calcInlineDimension(ctx *gg.Context, node *structs.NodeDOM) {
 	content := strings.TrimSpace(node.Content)
+	maxWidth := findAncestorMaxWidth(node)
+	//prev := node.PreviousSibling()
 
 	if len(content) > 0 {
 		ctx.SetFont(sansSerif[node.Parent.Style.FontWeight], node.Parent.Style.FontSize)
 		node.RenderBox.Width, node.RenderBox.Height = ctx.MeasureString(node.Content)
+
+		if node.RenderBox.Width > maxWidth {
+			node.RenderBox.Height = ctx.MeasureStringWrapped(node.Content, node.RenderBox.Width, 1)
+			node.RenderBox.Width = maxWidth
+		}
 	}
 }
 
@@ -121,17 +142,9 @@ func calcInlinePosition(ctx *gg.Context, node *structs.NodeDOM) {
 }
 
 func paintInlineNode(ctx *gg.Context, node *structs.NodeDOM) {
-	content := strings.TrimSpace(node.Content)
-
-	if len(content) > 0 {
-		ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
-		ctx.SetRGBA(node.Parent.Style.BackgroundColor.R, node.Parent.Style.BackgroundColor.G, node.Parent.Style.BackgroundColor.B, node.Parent.Style.BackgroundColor.A)
-		ctx.Fill()
-
-		ctx.SetFont(sansSerif[node.Parent.Style.FontWeight], node.Parent.Style.FontSize)
-		ctx.SetRGBA(node.Parent.Style.Color.R, node.Parent.Style.Color.G, node.Parent.Style.Color.B, node.Parent.Style.Color.A)
-		ctx.DrawString(node.Content, node.RenderBox.Left, node.RenderBox.Height+node.RenderBox.Top)
-	}
+	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
+	ctx.SetRGBA(node.Parent.Style.BackgroundColor.R, node.Parent.Style.BackgroundColor.G, node.Parent.Style.BackgroundColor.B, node.Parent.Style.BackgroundColor.A)
+	ctx.Fill()
 }
 
 func calcBlockDimension(ctx *gg.Context, node *structs.NodeDOM) {
@@ -149,6 +162,27 @@ func paintBlockNode(ctx *gg.Context, node *structs.NodeDOM) {
 	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
 	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
 	ctx.Fill()
+}
+
+func rasterText(ctx *gg.Context, node *structs.NodeDOM) {
+	content := strings.TrimSpace(node.Content)
+
+	if len(content) > 0 {
+		ctx.SetFont(sansSerif[node.Parent.Style.FontWeight], node.Parent.Style.FontSize)
+		ctx.SetRGBA(node.Parent.Style.Color.R, node.Parent.Style.Color.G, node.Parent.Style.Color.B, node.Parent.Style.Color.A)
+		ctx.DrawStringWrapped(node.Content, node.RenderBox.Left, node.RenderBox.Top, 0, 0, node.RenderBox.Width-node.Parent.Style.FontSize, 1, gg.AlignLeft)
+	}
+}
+
+func paintText(ctx *gg.Context, node *structs.NodeDOM) {
+	fmt.Println(node.Element)
+	if node.Element == "html:text" {
+		rasterText(ctx, node)
+	}
+
+	for _, child := range node.Children {
+		paintText(ctx, child)
+	}
 }
 
 func paintNode(ctx *gg.Context, node *structs.NodeDOM) {
