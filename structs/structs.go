@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"thdwb/mustard"
@@ -20,6 +21,7 @@ type WebBrowser struct {
 type HTMLDocument struct {
 	Title       string
 	RootElement *NodeDOM
+	RenderTree  *NodeDOM
 	URL         *url.URL
 	RawDocument string
 	OffsetY     int
@@ -86,6 +88,10 @@ type RenderBox struct {
 	PaddingBottom float64
 }
 
+func (box *RenderBox) String() string {
+	return fmt.Sprintf("[top: %f, left: %f, width: %f, height: %f]", box.Top, box.Left, box.Width, box.Height)
+}
+
 func (box *RenderBox) GetRect() (float64, float64, float64, float64) {
 	return box.Top, box.Left, box.Width, box.Height
 }
@@ -105,6 +111,63 @@ type NodeDOM struct {
 	NeedsRepaint bool `json:"-"`
 
 	Document *HTMLDocument `json:"-"`
+}
+
+func (node *NodeDOM) PreviousRealSibling() *NodeDOM {
+	var nodeIdx int
+	for idx, child := range node.Parent.Children {
+		if child == node {
+			nodeIdx = idx
+			break
+		}
+	}
+
+	for i := nodeIdx; i > 0; i-- {
+		if node.Parent.Children[i-1] != nil && node.Parent.Children[i-1].Element != "html:text" {
+			return node.Parent.Children[i-1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) NextRealSibling() *NodeDOM {
+	for i, child := range node.Parent.Children {
+		if child == node && i < len(node.Parent.Children) &&
+			node.Parent.Children[i+1].Element != "html:text" {
+			return node.Parent.Children[i+1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) PreviousSibling() *NodeDOM {
+	var nodeIdx int
+	for idx, child := range node.Parent.Children {
+		if child == node {
+			nodeIdx = idx
+			break
+		}
+	}
+
+	for i := nodeIdx; i > 0; i-- {
+		if node.Parent.Children[i-1] != nil {
+			return node.Parent.Children[i-1]
+		}
+	}
+
+	return nil
+}
+
+func (node *NodeDOM) NextSibling() *NodeDOM {
+	for i, child := range node.Parent.Children {
+		if child == node && i < len(node.Parent.Children) {
+			return node.Parent.Children[i+1]
+		}
+	}
+
+	return nil
 }
 
 func (node *NodeDOM) FindChildByName(childName string) *NodeDOM {
@@ -133,8 +196,21 @@ func (node *NodeDOM) Attr(attrName string) string {
 	return ""
 }
 
+func (node *NodeDOM) JSON() string {
+	res, err := json.MarshalIndent(node, "", "  ")
+	if err != nil {
+		return "{}"
+	}
+
+	return string(res)
+}
+
 func (node *NodeDOM) CalcPointIntersection(x, y float64) *NodeDOM {
 	var intersectedNode *NodeDOM
+	if node == nil {
+		return intersectedNode
+	}
+
 	if x > float64(node.RenderBox.Left) &&
 		x < float64(node.RenderBox.Left+node.RenderBox.Width) &&
 		y > float64(node.RenderBox.Top) &&

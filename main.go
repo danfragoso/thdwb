@@ -66,7 +66,7 @@ func main() {
 			canvas.RequestRepaint()
 
 			scrollBar.SetScrollerOffset(0)
-			scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+			scrollBar.SetScrollerSize(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 			scrollBar.RequestReflow()
 		}()
 	})
@@ -133,7 +133,7 @@ func main() {
 				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
 			}
 		} else {
-			documentOffset := viewPort.GetOffset() + int(browser.Document.RootElement.Children[1].RenderBox.Height)
+			documentOffset := viewPort.GetOffset() + int(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 
 			if documentOffset >= viewPort.GetHeight() {
 				viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
@@ -141,7 +141,7 @@ func main() {
 		}
 
 		scrollBar.SetScrollerOffset(float64(viewPort.GetOffset()))
-		scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+		scrollBar.SetScrollerSize(browser.Document.RenderTree.FindChildByName("body").RenderBox.Height)
 		scrollBar.RequestReflow()
 
 		browser.Viewport.SetDrawingRepaint(false)
@@ -197,7 +197,13 @@ func main() {
 
 func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	y -= float64(browser.Viewport.GetOffset())
-	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
+	browser.Document.SelectedElement = browser.Document.RenderTree.CalcPointIntersection(x, y)
+
+	if browser.Document.SelectedElement != nil &&
+		browser.Document.SelectedElement.Element == "html:text" &&
+		browser.Document.SelectedElement.Parent != nil {
+		browser.Document.SelectedElement = browser.Document.SelectedElement.Parent
+	}
 
 	if browser.Document.SelectedElement != nil && browser.Document.SelectedElement.Element == "a" {
 		browser.Window.SetCursor("pointer")
@@ -221,7 +227,7 @@ func showDebugOverlay(browser *structs.WebBrowser) {
 
 	debugEl := browser.Document.SelectedElement
 	top, left, _, height := debugEl.RenderBox.GetRect()
-	ctx := gg.NewContext(int(browser.Document.RootElement.RenderBox.Width), int(height+20))
+	ctx := gg.NewContext(int(browser.Document.RenderTree.RenderBox.Width), int(height+20))
 	paintDebugRect(ctx, debugEl)
 
 	overlay := mustard.CreateStaticOverlay("debugOverlay", ctx, image.Point{
