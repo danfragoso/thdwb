@@ -3,9 +3,11 @@ package sauce
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	structs "thdwb/structs"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +18,12 @@ func TestGetResource(t *testing.T) {
 
 	defer server.Close()
 
-	resource := GetResource(server.URL)
+	url, err := url.Parse(server.URL)
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err)
+	}
+
+	resource := GetResource(url, nil)
 	var testResorce *structs.Resource
 
 	assert.IsType(t, testResorce, resource, "Expecting: Resource Struct")
