@@ -1,6 +1,7 @@
 package sauce
 
 import (
+	"encoding/base64"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -32,15 +33,27 @@ func TestGetResource(t *testing.T) {
 }
 
 func TestGetImage(t *testing.T) {
+	// This is a base64-encoded 1x1 PNG containing a single opaque black pixel
+	blackPixel := "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		decoded, err := base64.RawStdEncoding.DecodeString(blackPixel)
+		require.NoError(t, err)
+
+		w.Write(decoded)
+	}))
+	defer srv.Close()
+
 	testCases := []struct {
-		name           string
-		url            string
-		expectResponse string
+		name      string
+		url       string
+		expectLen int
 	}{
-		{"base64 encoded", "", ""},
-		{"regular URL", "", ""},
-		{"broken URL", "", ""},
-		{"empty URL", "", ""},
+		{"base64 encoded", "data:image/png;base64," + blackPixel, 66},
+		{"short URL", "http://foo", 0},
+		{"regular URL", srv.URL + "/this-is-a-relatively-long-url", 0},
+		{"not an HTTP URL", "//foo-bar-fnord-asdf-bla-bla", 0},
+		{"empty URL", "", 0},
 	}
 
 	for _, tc := range testCases {
@@ -54,7 +67,7 @@ func TestGetImage(t *testing.T) {
 				data = GetImage(u)
 			})
 
-			assert.NotEqual(t, 0, len(data))
+			assert.Len(t, data, tc.expectLen)
 		})
 	}
 }
