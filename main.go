@@ -58,7 +58,7 @@ func main() {
 
 			err := bun.RenderDocument(drawingContext, browser.Document)
 			if err != nil {
-				structs.Log("render", "Can't render page: " + err.Error())
+				structs.Log("render", "Can't render page: "+err.Error())
 			}
 
 			canvas.SetContext(drawingContext)
