@@ -1,0 +1,33 @@
+package bun
+
+import (
+	"io/ioutil"
+	"runtime/debug"
+	"testing"
+
+	gg "thdwb/gg"
+	"thdwb/ketchup"
+)
+
+func TestRenderDocument(t *testing.T) {
+	html, err := ioutil.ReadFile("test-data/test1.html")
+	if err != nil {
+		t.Fatalf("got unexpected error: %s", err)
+	}
+
+	doc := ketchup.ParseDocument(string(html))
+	if doc == nil {
+		t.Fatal("got nil document")
+	}
+
+	dctx := gg.NewContext(1024, 1024)
+
+	defer func() {
+		if err := recover(); err != nil {
+			stack := debug.Stack()
+			t.Fatalf("got unexpected panic: %s. Stack: %s", err, stack)
+		}
+	}()
+
+	RenderDocument(dctx, doc)
+}
