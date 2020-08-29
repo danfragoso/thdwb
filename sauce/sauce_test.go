@@ -50,7 +50,8 @@ func TestGetImage(t *testing.T) {
 		expectLen int
 	}{
 		{"base64 encoded", "data:image/png;base64," + blackPixel, 66},
-		{"malformed base64 encoded", "data:image/png;base64:" + blackPixel, 0},
+		{"malformed base64 encoded 1", "data:image/png;base64:" + blackPixel, 0},
+		{"malformed base64 encoded 2", "data:image/png;base64", 0},
 		{"short URL", "http://foo", 0},
 		{"regular URL", srv.URL + "/this-is-a-relatively-long-url", 0},
 		{"not an HTTP URL", "//foo-bar-fnord-asdf-bla-bla", 0},
