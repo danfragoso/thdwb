@@ -1,6 +1,7 @@
 package structs
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"thdwb/mustard"
@@ -90,6 +91,12 @@ func (box *RenderBox) GetRect() (float64, float64, float64, float64) {
 	return box.Top, box.Left, box.Width, box.Height
 }
 
+type NoSuchElementError string
+
+func (e NoSuchElementError) Error() string {
+	return fmt.Sprintf("no such element: %q", string(e))
+}
+
 //NodeDOM "DOM Node Struct definition"
 type NodeDOM struct {
 	Element string `json:"element"`
@@ -107,20 +114,33 @@ type NodeDOM struct {
 	Document *HTMLDocument `json:"-"`
 }
 
-func (node *NodeDOM) FindChildByName(childName string) *NodeDOM {
+// FindChildByName returns the first child of node with a tag name of childName, or ErrNoSuchElement, if
+// no child element of node has a tag name of childName.
+//
+// FindChildByName performs the search recursively and returns the first matching child encountered in a
+// depth-first search.
+func (node *NodeDOM) FindChildByName(childName string) (*NodeDOM, error) {
 	if node.Element == childName {
-		return node
+		return node, nil
 	}
 
 	for _, child := range node.Children {
-		foundChild := child.FindChildByName(childName)
+		foundChild, err := child.FindChildByName(childName)
+		if err != nil {
+			var noChild NoSuchElementError
+			if errors.As(err, &noChild) {
+				// No child with that element name, continue in other branches of the element tree
+				continue
+			}
 
-		if foundChild != nil {
-			return foundChild
+			// Some other error
+			return nil, err
 		}
+
+		return foundChild, nil
 	}
 
-	return nil
+	return nil, NoSuchElementError(childName)
 }
 
 func (node *NodeDOM) Attr(attrName string) string {
