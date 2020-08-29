@@ -127,6 +127,7 @@ func GetImage(URL *url.URL) []byte {
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("Failed to fetch image")
+			return nil
 		}
 		defer resp.Body.Close()
 
