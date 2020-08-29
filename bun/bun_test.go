@@ -9,8 +9,8 @@ import (
 	"thdwb/ketchup"
 )
 
-func TestRenderDocument(t *testing.T) {
-	html, err := ioutil.ReadFile("test-data/test1.html")
+func TestRenderDocument_noBody(t *testing.T) {
+	html, err := ioutil.ReadFile("test-data/no-body.html")
 	if err != nil {
 		t.Fatalf("got unexpected error: %s", err)
 	}
