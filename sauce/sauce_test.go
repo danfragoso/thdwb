@@ -33,11 +33,11 @@ func TestGetResource(t *testing.T) {
 }
 
 func TestGetImage(t *testing.T) {
-	// This is a base64-encoded 1x1 PNG containing a single opaque black pixel
-	blackPixel := "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+	// This is a base64-encoded empty PNG, from https://stackoverflow.com/a/31035384
+	emptyImage := "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYA"
 
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		decoded, err := base64.RawStdEncoding.DecodeString(blackPixel)
+		decoded, err := base64.RawStdEncoding.DecodeString(emptyImage)
 		require.NoError(t, err)
 
 		w.Write(decoded)
@@ -49,11 +49,11 @@ func TestGetImage(t *testing.T) {
 		url       string
 		expectLen int
 	}{
-		{"base64 encoded", "data:image/png;base64," + blackPixel, 66},
-		{"malformed base64 encoded 1", "data:image/png;base64:" + blackPixel, 0},
+		{"base64 encoded", "data:image/png;base64," + emptyImage, 27},
+		{"malformed base64 encoded 1", "data:image/png;base64:" + emptyImage, 0},
 		{"malformed base64 encoded 2", "data:image/png;base64", 0},
 		{"short URL", "http://foo", 0},
-		{"regular URL", srv.URL + "/this-is-a-relatively-long-url", 0},
+		{"regular URL", srv.URL + "/this-is-a-relatively-long-url", 27},
 		{"not an HTTP URL", "//foo-bar-fnord-asdf-bla-bla", 0},
 		{"empty URL", "", 0},
 	}
