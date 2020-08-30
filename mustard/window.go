@@ -26,10 +26,12 @@ func CreateNewWindow(title string, width int, height int) *Window {
 		log.Fatal(err)
 	}
 
+	xscale, yscale := glw.GetContentScale()
+
 	window := &Window{
 		title:  title,
-		width:  width,
-		height: height,
+		width:  int(float32(width) / xscale),
+		height: int(float32(height) / yscale),
 		glw:    glw,
 
 		defaultCursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
@@ -117,7 +119,11 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetSizeCallback(func(w *glfw.Window, width, height int) {
-		window.width, window.height = width, height
+		xscale, yscale := w.GetContentScale()
+		swidth := int(float32(width) / xscale)
+		sheight := int(float32(height) / yscale)
+
+		window.width, window.height = swidth, sheight
 		window.RecreateContext()
 		//window.RecreateOverlayContext()
 
@@ -126,7 +132,9 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {
-		window.cursorX, window.cursorY = x, y
+		xscale, yscale := w.GetContentScale()
+
+		window.cursorX, window.cursorY = x/float64(xscale), y/float64(yscale)
 		window.ProcessPointerPosition()
 	})
 
