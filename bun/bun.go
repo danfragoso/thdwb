@@ -7,8 +7,12 @@ import (
 	structs "thdwb/structs"
 )
 
-func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
-	body := document.RootElement.FindChildByName("body")
+func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) error {
+	body, err := document.RootElement.FindChildByName("body")
+	if err != nil {
+		// TODO: Handle documents without body elements by synthesizing one.
+		return err
+	}
 
 	document.RootElement.RenderBox.Width = float64(ctx.Width())
 	document.RootElement.RenderBox.Height = float64(ctx.Height())
@@ -17,6 +21,8 @@ func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) {
 	ctx.Clear()
 
 	layoutDOM(ctx, body, 0)
+
+	return nil
 }
 
 func getNodeContent(NodeDOM *structs.NodeDOM) string {

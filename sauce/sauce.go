@@ -105,7 +105,7 @@ func GetImage(URL *url.URL) []byte {
 	}
 
 	var img []byte
-	if imgUrl[:21] == "data:image/png;base64" {
+	if len(imgUrl) >= 22 && imgUrl[:22] == "data:image/png;base64," {
 		imgData := imgUrl[strings.IndexByte(imgUrl, ',')+1:]
 
 		decodedData, err := base64.RawStdEncoding.DecodeString(imgData)
@@ -127,6 +127,7 @@ func GetImage(URL *url.URL) []byte {
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("Failed to fetch image")
+			return nil
 		}
 		defer resp.Body.Close()
 

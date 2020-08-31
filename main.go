@@ -56,7 +56,11 @@ func main() {
 			ctxBounds := canvas.GetContext().Image().Bounds()
 			drawingContext := gg.NewContext(ctxBounds.Max.X, ctxBounds.Max.Y)
 
-			bun.RenderDocument(drawingContext, browser.Document)
+			err := bun.RenderDocument(drawingContext, browser.Document)
+			if err != nil {
+				structs.Log("render", "Can't render page: "+err.Error())
+			}
+
 			canvas.SetContext(drawingContext)
 			canvas.RequestRepaint()
 			perf.Stop("render")
@@ -66,7 +70,14 @@ func main() {
 			canvas.RequestRepaint()
 
 			scrollBar.SetScrollerOffset(0)
-			scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+
+			body, err := browser.Document.RootElement.FindChildByName("body")
+			if err != nil {
+				structs.Log("render", "can't find body element: "+err.Error())
+				return
+			}
+
+			scrollBar.SetScrollerSize(body.RenderBox.Height)
 			scrollBar.RequestReflow()
 		}()
 	})
@@ -128,12 +139,18 @@ func main() {
 	window.AttachScrollEventListener(func(direction int) {
 		scrollStep := 20
 
+		body, err := browser.Document.RootElement.FindChildByName("body")
+		if err != nil {
+			structs.Log("render", "Can't find body element: "+err.Error())
+			return
+		}
+
 		if direction > 0 {
 			if viewPort.GetOffset() < 0 {
 				viewPort.SetOffset(viewPort.GetOffset() + scrollStep)
 			}
 		} else {
-			documentOffset := viewPort.GetOffset() + int(browser.Document.RootElement.Children[1].RenderBox.Height)
+			documentOffset := viewPort.GetOffset() + int(body.RenderBox.Height)
 
 			if documentOffset >= viewPort.GetHeight() {
 				viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
@@ -141,7 +158,7 @@ func main() {
 		}
 
 		scrollBar.SetScrollerOffset(float64(viewPort.GetOffset()))
-		scrollBar.SetScrollerSize(browser.Document.RootElement.Children[1].RenderBox.Height)
+		scrollBar.SetScrollerSize(body.RenderBox.Height)
 		scrollBar.RequestReflow()
 
 		browser.Viewport.SetDrawingRepaint(false)
