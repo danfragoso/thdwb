@@ -1,11 +1,26 @@
 package mayo
 
 import (
+	"io/ioutil"
 	"testing"
 
 	structs "thdwb/structs"
+
 	"github.com/stretchr/testify/assert"
 )
+
+func TestParseStylesheet(t *testing.T) {
+	tests := [...]string{}
+	for _, testName := range tests {
+		testData, err := ioutil.ReadFile("test_assets/" + testName + ".css")
+
+		if err != nil {
+			t.Fatalf("got unexpected error: %s", err)
+		}
+
+		t.Log(string(testData))
+	}
+}
 
 func TestHexStringToColor(t *testing.T) {
 	validColors := []string{"#0000FF", "#00f", "#00ff", "#0000ffff"}
