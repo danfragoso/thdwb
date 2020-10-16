@@ -19,6 +19,8 @@ type Window struct {
 	width  int
 	height int
 
+	hiDPI bool
+
 	needsReflow bool
 	visible     bool
 	// This flag is active when drawing is happening on a thread that is not the

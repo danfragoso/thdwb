@@ -20,18 +20,22 @@ func SetGLFWHints() {
 	glfw.WindowHint(glfw.Visible, glfw.False)
 }
 
-func CreateNewWindow(title string, width int, height int) *Window {
+func CreateNewWindow(title string, width int, height int, hiDPI bool) *Window {
 	glw, err := glfw.CreateWindow(width, height, title, nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	xscale, yscale := glw.GetContentScale()
+	xscale, yscale := float32(1), float32(1)
+	if hiDPI {
+		xscale, yscale = glw.GetContentScale()
+	}
 
 	window := &Window{
 		title:  title,
 		width:  int(float32(width) / xscale),
 		height: int(float32(height) / yscale),
+		hiDPI:  hiDPI,
 		glw:    glw,
 
 		defaultCursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
@@ -119,7 +123,11 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetSizeCallback(func(w *glfw.Window, width, height int) {
-		xscale, yscale := w.GetContentScale()
+		xscale, yscale := float32(1), float32(1)
+		if window.hiDPI {
+			xscale, yscale = w.GetContentScale()
+		}
+
 		swidth := int(float32(width) / xscale)
 		sheight := int(float32(height) / yscale)
 
@@ -132,7 +140,10 @@ func (window *Window) addEvents() {
 	})
 
 	window.glw.SetCursorPosCallback(func(w *glfw.Window, x, y float64) {
-		xscale, yscale := w.GetContentScale()
+		xscale, yscale := float32(1), float32(1)
+		if window.hiDPI {
+			xscale, yscale = w.GetContentScale()
+		}
 
 		window.cursorX, window.cursorY = x/float64(xscale), y/float64(yscale)
 		window.ProcessPointerPosition()

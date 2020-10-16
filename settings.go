@@ -9,6 +9,8 @@ type Settings struct {
 	Homepage     string `json:"homepage"`
 	WindowWidth  int    `json:"windowWidth"`
 	WindowHeight int    `json:"windowHeight"`
+
+	HiDPI bool `json:"hiDPI"`
 }
 
 func LoadSettings(path string) *Settings {
@@ -30,6 +32,8 @@ func LoadSettings(path string) *Settings {
 	if settings.WindowHeight == 0 {
 		settings.WindowHeight = 600
 	}
+
+	// Default to `false` for HiDPI, nothing to do here.
 
 	return &settings
 }
