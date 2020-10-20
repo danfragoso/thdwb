@@ -29,7 +29,7 @@ func main() {
 	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
 
 	app := mustard.CreateNewApp("THDWB")
-	window := mustard.CreateNewWindow("THDWB", settings.WindowWidth, settings.WindowHeight)
+	window := mustard.CreateNewWindow("THDWB", settings.WindowWidth, settings.WindowHeight, settings.HiDPI)
 	window.EnableContextMenus()
 	browser.Window = window
 
