@@ -9,10 +9,11 @@ import (
 )
 
 //CreateButtonWidget - Creates and returns a new Button Widget
-func CreateButtonWidget(asset []byte) *ButtonWidget {
+func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 	var widgets []interface{}
 	font, _ := truetype.Parse(assets.OpenSans(400))
 	icon, _ := gg.LoadAsset(asset)
+
 	return &ButtonWidget{
 		widget: widget{
 			needsRepaint: true,
@@ -28,6 +29,7 @@ func CreateButtonWidget(asset []byte) *ButtonWidget {
 		},
 
 		icon:      icon,
+		content:   label,
 		fontSize:  20,
 		padding:   0,
 		fontColor: "#000",
@@ -114,12 +116,17 @@ func (button *ButtonWidget) draw() {
 		float64(width)-(button.padding*2),
 		float64(height)-(button.padding*2),
 	)
-
 	context.Fill()
-	context.SetHexColor(button.fontColor)
-	context.SetFont(button.font, button.fontSize)
-	context.DrawImage(button.icon, left+4, top+2)
 
-	context.Fill()
+	if button.content != "" {
+		context.SetHexColor(button.fontColor)
+		context.SetFont(button.font, button.fontSize)
+		context.DrawString(button.content, float64(left)+button.padding, float64(top)+button.padding+button.fontSize)
+	}
+
+	if button.icon != nil {
+		context.DrawImage(button.icon, left+4, top+2)
+	}
+
 	button.needsRepaint = false
 }

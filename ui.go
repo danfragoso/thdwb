@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-
 	assets "thdwb/assets"
 	mustard "thdwb/mustard"
 	structs "thdwb/structs"
@@ -17,7 +15,7 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	icon := mustard.CreateFrame(mustard.VerticalFrame)
 	img := mustard.CreateImageWidget(assets.Logo())
 
-	backButton := mustard.CreateButtonWidget(assets.ArrowLeft())
+	backButton := mustard.CreateButtonWidget("", assets.ArrowLeft())
 	backButton.SetWidth(30)
 
 	rv := mustard.CreateFrame(mustard.HorizontalFrame)
@@ -37,11 +35,11 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 
 	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
 
-	goButton := mustard.CreateButtonWidget(assets.ArrowRight())
+	goButton := mustard.CreateButtonWidget("", assets.ArrowRight())
 	goButton.SetWidth(30)
 	goButton.SetPadding(1)
 
-	toolsButton := mustard.CreateButtonWidget(assets.Menu())
+	toolsButton := mustard.CreateButtonWidget("", assets.Menu())
 	toolsButton.SetWidth(34)
 	toolsButton.SetPadding(1)
 
