@@ -8,42 +8,6 @@ import (
 	structs "thdwb/structs"
 )
 
-func createDebugFrame(window *mustard.Window, browser *structs.WebBrowser) *mustard.Frame {
-	debugFrame := mustard.CreateFrame(mustard.HorizontalFrame)
-	debugBar := mustard.CreateFrame(mustard.VerticalFrame)
-	debugContent := mustard.CreateFrame(mustard.VerticalFrame)
-
-	debugBar.SetHeight(22)
-	debugBar.SetBackgroundColor("#eee")
-	debugFrame.SetHeight(400)
-
-	source := mustard.CreateTextWidget("")
-	source.SetFontSize(12)
-
-	dv := mustard.CreateFrame(mustard.HorizontalFrame)
-	dv.SetBackgroundColor("#999")
-	dv.SetWidth(1)
-
-	jsonByte, _ := json.MarshalIndent("", "", "  ")
-	json := mustard.CreateTextWidget(string(jsonByte))
-	json.SetWidth(200)
-	json.SetFontSize(12)
-
-	debugContent.AttachWidget(json)
-	debugContent.AttachWidget(dv)
-	debugContent.AttachWidget(source)
-
-	debugTitle := mustard.CreateLabelWidget("Source")
-	debugTitle.SetBackgroundColor("#eee")
-	debugTitle.SetFontSize(16)
-
-	debugBar.AttachWidget(debugTitle)
-	debugFrame.AttachWidget(debugBar)
-	debugFrame.AttachWidget(debugContent)
-	debugFrame.SetHeight(0)
-	return debugFrame
-}
-
 func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
 	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	appBar.SetHeight(62)
