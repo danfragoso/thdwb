@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -18,7 +19,13 @@ func LoadSettings(path string) *Settings {
 	settingsData, err := ioutil.ReadFile(path)
 
 	if err == nil {
-		json.Unmarshal(settingsData, &settings)
+		err = json.Unmarshal(settingsData, &settings)
+		if err != nil {
+			fmt.Println("Error loading settings from file;", err)
+		}
+	} else {
+		fmt.Println("Unable to read settings file", path)
+		fmt.Println("Loading default settings.")
 	}
 
 	if settings.Homepage == "" {

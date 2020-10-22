@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"runtime"
@@ -24,7 +25,12 @@ func main() {
 	mustard.SetGLFWHints()
 
 	perf = profiler.CreateProfiler()
-	settings := LoadSettings("./settings.json")
+
+	defaultPath := "./settings.json"
+	settingsPath := flag.String("settings", defaultPath, "This flag sets the location for the browser settings file.")
+	flag.Parse()
+
+	settings := LoadSettings(*settingsPath)
 
 	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
 
