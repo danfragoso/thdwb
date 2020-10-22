@@ -1,4 +1,4 @@
-![thdwb](https://raw.githubusercontent.com/danfragoso/thdwb/master/thdwb.png)
+![thdwb](https://raw.githubusercontent.com/danfragoso/thdwb/master/assets/thdwb.png)
 
 This is the hotdog web browser project. It's a web browser with its own layout and rendering engine, parsers, and UI toolkit!
 
@@ -8,7 +8,7 @@ The main goal of this project is to learn how to does a web browser works under 
 
 🌭🌭🌭
 
-<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_1.png"></img>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/assets/scr_1.png"></img>
 
 ### Components
 - ketchup (html parser and DOM Tree builder)
@@ -19,20 +19,20 @@ The main goal of this project is to learn how to does a web browser works under 
 - [gg](https://github.com/fogleman/gg) (drawing routines and text rendering)
 
 ### Getting started
-- Running 
+- Running
 
   ```sh
   make
   ```
   This command will start the browser and load an example page
-  
+
 - Testing
 
   ```sh
   make test
   ```
   This command will run all the configurated unit tests
-  
+
 - Building
 
   ```sh
@@ -42,6 +42,6 @@ The main goal of this project is to learn how to does a web browser works under 
 
 ### Screenshots
 
-<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_2.png"></img>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/assets/scr_2.png"></img>
 
-<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/scr_3.png"></img>
+<img src="https://raw.githubusercontent.com/danfragoso/thdwb/master/assets/scr_3.png"></img>

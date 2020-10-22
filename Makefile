@@ -1,19 +1,21 @@
-all:
-	@go run *.go
+.ONESHELL:
+
+all: run
 
 run:
-	@go run *.go $(url)
-
-serve:
-	@http-server tests &
-
-debug:
-	@go run *.go $(url) debug
+	@cd src
+	@go run *.go
 
 build:
 	@echo -e "Building THDWB - 🌭"
+	@cd src
 	@go build -o thdwb -ldflags "-s -w" *.go
 	@chmod 755 thdwb
+	@mkdir bin; mv thdwb bin/
+
+clean:
+	@cd src
+	@rm -rf bin
 
 test:
 	@echo -e "Testing Sauce...\n"
