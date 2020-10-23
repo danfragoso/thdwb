@@ -4,7 +4,7 @@ all: run
 
 run:
 	@cd src
-	@go run *.go
+	@go run *.go --settings="../settings.json"
 
 build:
 	@echo -e "Building THDWB - 🌭"
