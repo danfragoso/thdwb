@@ -19,10 +19,10 @@ func (app *App) Run(callback func()) {
 func (app *App) AddWindow(window *Window) {
 	app.windows = append(app.windows, window)
 
-	setWidgetWindow(&window.rootFrame.widget, window)
+	setWidgetWindow(&window.rootFrame.baseWidget, window)
 }
 
-func setWidgetWindow(widget *widget, window *Window) {
+func setWidgetWindow(widget *baseWidget, window *Window) {
 	widget.window = window
 	widgets := widget.widgets
 
@@ -30,28 +30,28 @@ func setWidgetWindow(widget *widget, window *Window) {
 		switch widgets[i].(type) {
 		case *Frame:
 			widget := widgets[i].(*Frame)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *LabelWidget:
 			widget := widgets[i].(*LabelWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *TextWidget:
 			widget := widgets[i].(*TextWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *ImageWidget:
 			widget := widgets[i].(*ImageWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *CanvasWidget:
 			widget := widgets[i].(*CanvasWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *ButtonWidget:
 			widget := widgets[i].(*ButtonWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *InputWidget:
 			widget := widgets[i].(*InputWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		case *ScrollBarWidget:
 			widget := widgets[i].(*ScrollBarWidget)
-			setWidgetWindow(&widget.widget, window)
+			setWidgetWindow(&widget.baseWidget, window)
 		}
 	}
 }

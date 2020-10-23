@@ -120,7 +120,7 @@ func (box *box) GetCoords() (int, int, int, int) {
 	return box.top, box.left, box.width, box.height
 }
 
-type widget struct {
+type baseWidget struct {
 	box         box
 	computedBox box
 
@@ -165,13 +165,13 @@ const (
 
 //Frame - Layout frame type
 type Frame struct {
-	widget
+	baseWidget
 
 	orientation FrameOrientation
 }
 
 type LabelWidget struct {
-	widget
+	baseWidget
 	content string
 
 	fontSize  float64
@@ -179,7 +179,7 @@ type LabelWidget struct {
 }
 
 type TextWidget struct {
-	widget
+	baseWidget
 	content string
 
 	fontSize  float64
@@ -187,14 +187,14 @@ type TextWidget struct {
 }
 
 type ImageWidget struct {
-	widget
+	baseWidget
 
 	path string
 	img  image.Image
 }
 
 type CanvasWidget struct {
-	widget
+	baseWidget
 
 	context        *gg.Context
 	drawingContext *gg.Context
@@ -208,7 +208,7 @@ type CanvasWidget struct {
 }
 
 type ButtonWidget struct {
-	widget
+	baseWidget
 	content string
 
 	icon      image.Image
@@ -220,7 +220,7 @@ type ButtonWidget struct {
 }
 
 type InputWidget struct {
-	widget
+	baseWidget
 
 	value           string
 	selected        bool
@@ -236,7 +236,7 @@ type InputWidget struct {
 }
 
 type ScrollBarWidget struct {
-	widget
+	baseWidget
 
 	orientation ScrollBarOrientation
 	selected    bool

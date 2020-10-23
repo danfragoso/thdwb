@@ -1,45 +1,45 @@
 package mustard
 
-func getCoreWidgets(widgets []interface{}) []*widget {
-	var coreWidgets []*widget
+func getCoreWidgets(widgets []interface{}) []*baseWidget {
+	var coreWidgets []*baseWidget
 
 	for i := 0; i < len(widgets); i++ {
 		switch widgets[i].(type) {
 		case *Frame:
 			widget := widgets[i].(*Frame)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *LabelWidget:
 			widget := widgets[i].(*LabelWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *TextWidget:
 			widget := widgets[i].(*TextWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *ImageWidget:
 			widget := widgets[i].(*ImageWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *CanvasWidget:
 			widget := widgets[i].(*CanvasWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *ButtonWidget:
 			widget := widgets[i].(*ButtonWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *InputWidget:
 			widget := widgets[i].(*InputWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		case *ScrollBarWidget:
 			widget := widgets[i].(*ScrollBarWidget)
-			coreWidgets = append(coreWidgets, &widget.widget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
 		}
 	}
 	return coreWidgets
 }
 
-func calculateChildrenWidgetsLayout(children []*widget, top, left, width, height int, orientation FrameOrientation) []*widget {
-	var childrenLayout []*widget
+func calculateChildrenWidgetsLayout(children []*baseWidget, top, left, width, height int, orientation FrameOrientation) []*baseWidget {
+	var childrenLayout []*baseWidget
 
 	childrenLen := len(children)
 	for i := 0; i < childrenLen; i++ {
-		currentLayout := &widget{}
+		currentLayout := &baseWidget{}
 
 		if orientation == VerticalFrame {
 			fixedWidthElemens, volatileWidthElements := getFixedWidthElements(children)
@@ -85,9 +85,9 @@ func calculateChildrenWidgetsLayout(children []*widget, top, left, width, height
 	return childrenLayout
 }
 
-func getFixedWidthElements(elements []*widget) ([]*widget, []*widget) {
-	var fixedWidth []*widget
-	var volatileWidth []*widget
+func getFixedWidthElements(elements []*baseWidget) ([]*baseWidget, []*baseWidget) {
+	var fixedWidth []*baseWidget
+	var volatileWidth []*baseWidget
 
 	for _, element := range elements {
 		if element.fixedWidth {
@@ -99,9 +99,9 @@ func getFixedWidthElements(elements []*widget) ([]*widget, []*widget) {
 	return fixedWidth, volatileWidth
 }
 
-func getFixedHeightElements(elements []*widget) ([]*widget, []*widget) {
-	var fixedHeight []*widget
-	var volatileHeight []*widget
+func getFixedHeightElements(elements []*baseWidget) ([]*baseWidget, []*baseWidget) {
+	var fixedHeight []*baseWidget
+	var volatileHeight []*baseWidget
 
 	for _, element := range elements {
 		if element.fixedHeight {
@@ -113,7 +113,7 @@ func getFixedHeightElements(elements []*widget) ([]*widget, []*widget) {
 	return fixedHeight, volatileHeight
 }
 
-func calculateFlexibleWidth(avaiableWidth int, elements []*widget) int {
+func calculateFlexibleWidth(avaiableWidth int, elements []*baseWidget) int {
 	for _, el := range elements {
 		avaiableWidth = avaiableWidth - el.box.width
 	}
@@ -121,7 +121,7 @@ func calculateFlexibleWidth(avaiableWidth int, elements []*widget) int {
 	return avaiableWidth
 }
 
-func calculateFlexibleHeight(avaiableHeight int, elements []*widget) int {
+func calculateFlexibleHeight(avaiableHeight int, elements []*baseWidget) int {
 	for _, el := range elements {
 		avaiableHeight = avaiableHeight - el.box.height
 	}
@@ -129,37 +129,37 @@ func calculateFlexibleHeight(avaiableHeight int, elements []*widget) int {
 	return avaiableHeight
 }
 
-func (widget *widget) RequestReflow() {
+func (widget *baseWidget) RequestReflow() {
 	if widget.window != nil {
 		widget.window.needsReflow = true
 	}
 }
 
-func (widget *widget) RequestRepaint() {
+func (widget *baseWidget) RequestRepaint() {
 	widget.needsRepaint = true
 }
 
-func (widget *widget) GetRect() (int, int, int, int) {
+func (widget *baseWidget) GetRect() (int, int, int, int) {
 	return widget.computedBox.top, widget.computedBox.left, widget.computedBox.width, widget.computedBox.height
 }
 
-func (widget *widget) GetTop() int {
+func (widget *baseWidget) GetTop() int {
 	return widget.computedBox.top
 }
 
-func (widget *widget) GetLeft() int {
+func (widget *baseWidget) GetLeft() int {
 	return widget.computedBox.left
 }
 
-func (widget *widget) GetWidth() int {
+func (widget *baseWidget) GetWidth() int {
 	return widget.computedBox.width
 }
 
-func (widget *widget) GetHeight() int {
+func (widget *baseWidget) GetHeight() int {
 	return widget.computedBox.height
 }
 
-func (widget *widget) IsPointInside(x, y float64) bool {
+func (widget *baseWidget) IsPointInside(x, y float64) bool {
 	if widget.window.hasActiveOverlay {
 		return false
 	}

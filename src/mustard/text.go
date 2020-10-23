@@ -14,7 +14,7 @@ func CreateTextWidget(content string) *TextWidget {
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &TextWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 
 			needsRepaint: true,
 			widgets:      widgets,

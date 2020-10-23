@@ -13,7 +13,7 @@ func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &ScrollBarWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 
 			needsRepaint: true,
 			widgets:      widgets,

@@ -13,7 +13,7 @@ func CreateLabelWidget(content string) *LabelWidget {
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &LabelWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 
 			needsRepaint: true,
 			widgets:      widgets,

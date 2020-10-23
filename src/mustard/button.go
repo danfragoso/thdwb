@@ -15,7 +15,7 @@ func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 	icon, _ := gg.LoadAsset(asset)
 
 	return &ButtonWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 			needsRepaint: true,
 			widgets:      widgets,
 

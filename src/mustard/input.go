@@ -14,7 +14,7 @@ func CreateInputWidget() *InputWidget {
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &InputWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 
 			needsRepaint: true,
 			widgets:      widgets,

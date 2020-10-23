@@ -4,6 +4,7 @@ import (
 	"log"
 
 	gg "thdwb/gg"
+
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
@@ -17,7 +18,7 @@ func CreateImageWidget(path []byte) *ImageWidget {
 	}
 
 	return &ImageWidget{
-		widget: widget{
+		baseWidget: baseWidget{
 
 			needsRepaint: true,
 			widgets:      widgets,
