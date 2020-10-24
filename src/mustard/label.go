@@ -9,7 +9,7 @@ import (
 
 //CreateLabelWidget - Creates and returns a new Label Widget
 func CreateLabelWidget(content string) *LabelWidget {
-	var widgets []interface{}
+	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &LabelWidget{
@@ -34,7 +34,7 @@ func CreateLabelWidget(content string) *LabelWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (label *LabelWidget) AttachWidget(widget interface{}) {
+func (label *LabelWidget) AttachWidget(widget Widget) {
 	label.widgets = append(label.widgets, widget)
 }
 

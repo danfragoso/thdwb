@@ -1,6 +1,40 @@
 package mustard
 
-func getCoreWidgets(widgets []interface{}) []*baseWidget {
+func getCoreWidgets(widgets []Widget) []*baseWidget {
+	var coreWidgets []*baseWidget
+
+	for i := 0; i < len(widgets); i++ {
+		switch widgets[i].(type) {
+		case *Frame:
+			widget := widgets[i].(*Frame)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *LabelWidget:
+			widget := widgets[i].(*LabelWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *TextWidget:
+			widget := widgets[i].(*TextWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *ImageWidget:
+			widget := widgets[i].(*ImageWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *CanvasWidget:
+			widget := widgets[i].(*CanvasWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *ButtonWidget:
+			widget := widgets[i].(*ButtonWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *InputWidget:
+			widget := widgets[i].(*InputWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		case *ScrollBarWidget:
+			widget := widgets[i].(*ScrollBarWidget)
+			coreWidgets = append(coreWidgets, &widget.baseWidget)
+		}
+	}
+	return coreWidgets
+}
+
+func getBoreWidgets(widgets []interface{}) []*baseWidget {
 	var coreWidgets []*baseWidget
 
 	for i := 0; i < len(widgets); i++ {
@@ -157,6 +191,10 @@ func (widget *baseWidget) GetWidth() int {
 
 func (widget *baseWidget) GetHeight() int {
 	return widget.computedBox.height
+}
+
+func (widget *baseWidget) ComputedBox() *box {
+	return &widget.computedBox
 }
 
 func (widget *baseWidget) IsPointInside(x, y float64) bool {

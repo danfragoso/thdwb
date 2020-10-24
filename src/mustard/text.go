@@ -10,7 +10,7 @@ import (
 
 //CreateTextWidget - Creates and returns a new Text Widget
 func CreateTextWidget(content string) *TextWidget {
-	var widgets []interface{}
+	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &TextWidget{
@@ -35,7 +35,7 @@ func CreateTextWidget(content string) *TextWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (text *TextWidget) AttachWidget(widget interface{}) {
+func (text *TextWidget) AttachWidget(widget Widget) {
 	text.widgets = append(text.widgets, widget)
 }
 

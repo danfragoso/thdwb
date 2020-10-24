@@ -10,7 +10,7 @@ import (
 
 //CreateButtonWidget - Creates and returns a new Button Widget
 func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
-	var widgets []interface{}
+	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 	icon, _ := gg.LoadAsset(asset)
 
@@ -39,7 +39,7 @@ func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (button *ButtonWidget) AttachWidget(widget interface{}) {
+func (button *ButtonWidget) AttachWidget(widget Widget) {
 	button.widgets = append(button.widgets, widget)
 }
 

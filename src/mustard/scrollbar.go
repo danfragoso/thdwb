@@ -9,7 +9,7 @@ import (
 
 //CreateScrollBarWidget - Creates and returns a new ScrollBar Widget
 func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
-	var widgets []interface{}
+	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &ScrollBarWidget{
@@ -31,7 +31,7 @@ func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (scrollBar *ScrollBarWidget) AttachWidget(widget interface{}) {
+func (scrollBar *ScrollBarWidget) AttachWidget(widget Widget) {
 	scrollBar.widgets = append(scrollBar.widgets, widget)
 }
 

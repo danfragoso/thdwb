@@ -8,7 +8,7 @@ import (
 
 //CreateImageWidget - Creates and returns a new Image Widget
 func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
-	var widgets []interface{}
+	var widgets []Widget
 
 	return &CanvasWidget{
 		baseWidget: baseWidget{
@@ -30,7 +30,7 @@ func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (canvas *CanvasWidget) AttachWidget(widget interface{}) {
+func (canvas *CanvasWidget) AttachWidget(widget Widget) {
 	canvas.widgets = append(canvas.widgets, widget)
 }
 

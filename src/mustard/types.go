@@ -120,6 +120,12 @@ func (box *box) GetCoords() (int, int, int, int) {
 	return box.top, box.left, box.width, box.height
 }
 
+type Widget interface {
+	ComputedBox() *box
+
+	draw()
+}
+
 type baseWidget struct {
 	box         box
 	computedBox box
@@ -130,7 +136,7 @@ type baseWidget struct {
 	fixedWidth   bool
 	fixedHeight  bool
 
-	widgets []interface{}
+	widgets []Widget
 
 	backgroundColor string
 

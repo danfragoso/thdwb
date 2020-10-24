@@ -2,7 +2,7 @@ package mustard
 
 //CreateFrame - Creates and returns a new Frame
 func CreateFrame(orientation FrameOrientation) *Frame {
-	var widgets []interface{}
+	var widgets []Widget
 
 	return &Frame{
 		baseWidget: baseWidget{
@@ -18,7 +18,7 @@ func CreateFrame(orientation FrameOrientation) *Frame {
 }
 
 //AttachWidget - Attaches widgets to a frame el
-func (frame *Frame) AttachWidget(widget interface{}) {
+func (frame *Frame) AttachWidget(widget Widget) {
 	frame.widgets = append(frame.widgets, widget)
 }
 
@@ -42,6 +42,10 @@ func (frame *Frame) SetHeight(height int) {
 	frame.box.height = height
 	frame.fixedHeight = true
 	frame.RequestReflow()
+}
+
+func (frame *Frame) Children() []Widget {
+	return frame.widgets
 }
 
 //SetHeight - Sets the frame height
@@ -69,49 +73,9 @@ func (frame *Frame) draw() {
 		childrenWidgets := getCoreWidgets(frame.widgets)
 		childrenLayout := calculateChildrenWidgetsLayout(childrenWidgets, top, left, width, height, frame.orientation)
 
-		for i := 0; i < childrenLen; i++ {
-			switch frame.widgets[i].(type) {
-			case *Frame:
-				frame := frame.widgets[i].(*Frame)
-				frame.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				frame.draw()
-
-			case *LabelWidget:
-				label := frame.widgets[i].(*LabelWidget)
-				label.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				label.draw()
-
-			case *TextWidget:
-				text := frame.widgets[i].(*TextWidget)
-				text.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				text.draw()
-
-			case *ImageWidget:
-				image := frame.widgets[i].(*ImageWidget)
-				image.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				image.draw()
-
-			case *CanvasWidget:
-				ctx := frame.widgets[i].(*CanvasWidget)
-				ctx.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				ctx.draw()
-
-			case *ButtonWidget:
-				button := frame.widgets[i].(*ButtonWidget)
-				button.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				button.draw()
-
-			case *InputWidget:
-				input := frame.widgets[i].(*InputWidget)
-				input.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				input.draw()
-
-			case *ScrollBarWidget:
-				scrollBar := frame.widgets[i].(*ScrollBarWidget)
-				scrollBar.computedBox.SetCoords(childrenLayout[i].box.GetCoords())
-				scrollBar.draw()
-			}
-
+		for idx, child := range frame.Children() {
+			child.ComputedBox().SetCoords(childrenLayout[idx].box.GetCoords())
+			child.draw()
 		}
 	}
 }

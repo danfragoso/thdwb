@@ -10,7 +10,7 @@ import (
 
 //CreateInputWidget - Creates and returns a new Input Widget
 func CreateInputWidget() *InputWidget {
-	var widgets []interface{}
+	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
 	return &InputWidget{
@@ -34,7 +34,7 @@ func CreateInputWidget() *InputWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (input *InputWidget) AttachWidget(widget interface{}) {
+func (input *InputWidget) AttachWidget(widget Widget) {
 	input.widgets = append(input.widgets, widget)
 }
 

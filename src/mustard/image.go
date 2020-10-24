@@ -10,7 +10,7 @@ import (
 
 //CreateImageWidget - Creates and returns a new Image Widget
 func CreateImageWidget(path []byte) *ImageWidget {
-	var widgets []interface{}
+	var widgets []Widget
 
 	img, err := gg.LoadAsset(path)
 	if err != nil {
@@ -36,7 +36,7 @@ func CreateImageWidget(path []byte) *ImageWidget {
 }
 
 //AttachWidget - Attaches a new widget to the window
-func (label *ImageWidget) AttachWidget(widget interface{}) {
+func (label *ImageWidget) AttachWidget(widget Widget) {
 	label.widgets = append(label.widgets, widget)
 }
 
