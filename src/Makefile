@@ -3,19 +3,16 @@
 all: run
 
 run:
-	@cd src
-	@go run *.go --settings="../settings.json"
+	@go run *.go --settings="./settings.json"
 
 build:
 	@echo -e "Building THDWB - 🌭"
-	@cd src
 	@go build -o thdwb -ldflags "-s -w" *.go
 	@chmod 755 thdwb
-	@mkdir bin; mv thdwb bin/
+	@mkdir ../bin; mv thdwb ../bin/
 
 clean:
-	@cd src
-	@rm -rf bin
+	@rm -rf ../bin
 
 test:
 	@echo -e "Testing Sauce...\n"
