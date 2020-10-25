@@ -163,6 +163,18 @@ func (widget *baseWidget) ComputedBox() *box {
 	return &widget.computedBox
 }
 
+func (widget *baseWidget) SetWindow(window *Window) {
+	widget.window = window
+}
+
+func (widget *baseWidget) Widgets() []Widget {
+	return widget.widgets
+}
+
+func (widget *baseWidget) NeedsRepaint() bool {
+	return widget.needsRepaint
+}
+
 func (widget *baseWidget) IsPointInside(x, y float64) bool {
 	if widget.window.hasActiveOverlay {
 		return false

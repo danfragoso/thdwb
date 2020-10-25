@@ -44,10 +44,6 @@ func (frame *Frame) SetHeight(height int) {
 	frame.RequestReflow()
 }
 
-func (frame *Frame) Children() []Widget {
-	return frame.widgets
-}
-
 //SetHeight - Sets the frame height
 func (frame *Frame) GetHeight() int {
 	return frame.box.height
@@ -73,7 +69,7 @@ func (frame *Frame) draw() {
 		childrenWidgets := getCoreWidgets(frame.widgets)
 		childrenLayout := calculateChildrenWidgetsLayout(childrenWidgets, top, left, width, height, frame.orientation)
 
-		for idx, child := range frame.Children() {
+		for idx, child := range frame.Widgets() {
 			child.ComputedBox().SetCoords(childrenLayout[idx].box.GetCoords())
 			child.draw()
 		}

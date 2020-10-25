@@ -121,7 +121,10 @@ func (box *box) GetCoords() (int, int, int, int) {
 }
 
 type Widget interface {
+	NeedsRepaint() bool
+	Widgets() []Widget
 	ComputedBox() *box
+	SetWindow(*Window)
 
 	draw()
 }
@@ -149,6 +152,7 @@ type baseWidget struct {
 	focused  bool
 	selected bool
 
+	buffer *image.RGBA
 	window *Window
 }
 

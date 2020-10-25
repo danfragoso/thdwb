@@ -19,107 +19,23 @@ func (app *App) Run(callback func()) {
 func (app *App) AddWindow(window *Window) {
 	app.windows = append(app.windows, window)
 
-	setWidgetWindow(&window.rootFrame.baseWidget, window)
+	setWidgetWindow(window.rootFrame, window)
 }
 
-func setWidgetWindow(widget *baseWidget, window *Window) {
-	widget.window = window
-	widgets := widget.widgets
+func setWidgetWindow(widget Widget, window *Window) {
+	widget.SetWindow(window)
 
-	for i := 0; i < len(widgets); i++ {
-		switch widgets[i].(type) {
-		case *Frame:
-			widget := widgets[i].(*Frame)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *LabelWidget:
-			widget := widgets[i].(*LabelWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *TextWidget:
-			widget := widgets[i].(*TextWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *ImageWidget:
-			widget := widgets[i].(*ImageWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *CanvasWidget:
-			widget := widgets[i].(*CanvasWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *ButtonWidget:
-			widget := widgets[i].(*ButtonWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *InputWidget:
-			widget := widgets[i].(*InputWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		case *ScrollBarWidget:
-			widget := widgets[i].(*ScrollBarWidget)
-			setWidgetWindow(&widget.baseWidget, window)
-		}
+	for _, childWidget := range widget.Widgets() {
+		setWidgetWindow(childWidget, window)
 	}
 }
 
-func redrawWidgets(widget interface{}) {
-	switch widget.(type) {
-	case *Frame:
-		widget := widget.(*Frame)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *LabelWidget:
-		widget := widget.(*LabelWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *TextWidget:
-		widget := widget.(*TextWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *ImageWidget:
-		widget := widget.(*ImageWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *CanvasWidget:
-		widget := widget.(*CanvasWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *ButtonWidget:
-		widget := widget.(*ButtonWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
-		}
-	case *InputWidget:
-		widget := widget.(*InputWidget)
-		if widget.needsRepaint {
-			widget.draw()
-		} else {
-			for i := 0; i < len(widget.widgets); i++ {
-				redrawWidgets(widget.widgets[i])
-			}
+func redrawWidgets(widget Widget) {
+	if widget.NeedsRepaint() {
+		widget.draw()
+	} else {
+		for _, childWidget := range widget.Widgets() {
+			redrawWidgets(childWidget)
 		}
 	}
 }
