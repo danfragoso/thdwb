@@ -113,6 +113,12 @@ func NewContextForRGBA(im *image.RGBA) *Context {
 	}
 }
 
+// SetImage replace the current context image
+func (dc *Context) SetImage(image *image.RGBA) {
+	dc.im = image
+	dc.width, dc.height = image.Bounds().Size().X, image.Bounds().Size().Y
+}
+
 // GetCurrentPoint will return the current point and if there is a current point.
 // The point will have been transformed by the context's transformation matrix.
 func (dc *Context) GetCurrentPoint() (Point, bool) {
