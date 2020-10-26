@@ -5,7 +5,7 @@ import (
 	"image"
 	"strings"
 
-	"thdwb/gg"
+	gg "thdwb/gg"
 	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
@@ -62,7 +62,7 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 		browser.StatusLabel.SetContent(browser.Document.SelectedElement.Attr("href"))
 	} else {
 		browser.Window.SetCursor("default")
-		browser.StatusLabel.SetContent(createStatusLabel(perf))
+		browser.StatusLabel.SetContent(createStatusLabel(browser.Profiler))
 	}
 
 	if browser.Document.DebugFlag &&

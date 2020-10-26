@@ -16,6 +16,7 @@ type WebBrowser struct {
 	StatusLabel    *mustard.LabelWidget
 	History        *History
 	Window         *mustard.Window
+	Profiler       *profiler.Profiler
 }
 
 type HTMLDocument struct {

@@ -13,8 +13,6 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
-var perf *profiler.Profiler
-
 func main() {
 	runtime.LockOSThread()
 	glfw.Init()
@@ -22,15 +20,13 @@ func main() {
 
 	mustard.SetGLFWHints()
 
-	perf = profiler.CreateProfiler()
-
 	defaultPath := "./settings.json"
 	settingsPath := flag.String("settings", defaultPath, "This flag sets the location for the browser settings file.")
 	flag.Parse()
 
 	settings := LoadSettings(*settingsPath)
 
-	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}}
+	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}, Profiler: profiler.CreateProfiler()}
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", settings.WindowWidth, settings.WindowHeight, settings.HiDPI)
@@ -56,7 +52,7 @@ func main() {
 
 	viewPort := mustard.CreateCanvasWidget(func(canvas *mustard.CanvasWidget) {
 		go func() {
-			perf.Start("render")
+			browser.Profiler.Start("render")
 			ctxBounds := canvas.GetContext().Image().Bounds()
 			drawingContext := gg.NewContext(ctxBounds.Max.X, ctxBounds.Max.Y)
 
@@ -67,9 +63,9 @@ func main() {
 
 			canvas.SetContext(drawingContext)
 			canvas.RequestRepaint()
-			perf.Stop("render")
+			browser.Profiler.Stop("render")
 
-			statusLabel.SetContent(createStatusLabel(perf))
+			statusLabel.SetContent(createStatusLabel(browser.Profiler))
 			statusLabel.RequestRepaint()
 			canvas.RequestRepaint()
 
