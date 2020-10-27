@@ -33,30 +33,42 @@ type HTMLDocument struct {
 }
 
 type History struct {
-	pages    []*url.URL
-	allPages []*url.URL
+	previousPages []*url.URL
+	nextPages     []*url.URL
+}
+
+func (history *History) NextPages() []*url.URL {
+	return history.nextPages
 }
 
 func (history *History) AllPages() []*url.URL {
-	return history.allPages
+	return history.previousPages
 }
 
 func (history *History) PageCount() int {
-	return len(history.pages)
+	return len(history.previousPages)
 }
 
 func (history *History) Push(URL *url.URL) {
-	history.pages = append(history.pages, URL)
-	history.allPages = append(history.allPages, URL)
+	history.nextPages = nil
+	history.previousPages = append(history.previousPages, URL)
 }
 
 func (history *History) Last() *url.URL {
-	return history.pages[len(history.pages)-1]
+	return history.previousPages[len(history.previousPages)-1]
+}
+
+func (history *History) PopNext() {
+	if len(history.nextPages) > 0 {
+		history.previousPages = append(history.previousPages, history.nextPages[len(history.nextPages)-1])
+		history.nextPages = nil
+	}
 }
 
 func (history *History) Pop() {
-	if len(history.pages) > 0 {
-		history.pages = history.pages[:len(history.pages)-1]
+	if len(history.previousPages) > 0 {
+		history.nextPages = append(history.nextPages, history.previousPages[len(history.previousPages)-1])
+		history.previousPages = history.previousPages[:len(history.previousPages)-1]
 	}
 }
 

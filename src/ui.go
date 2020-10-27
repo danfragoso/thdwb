@@ -15,8 +15,14 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	icon := mustard.CreateFrame(mustard.VerticalFrame)
 	img := mustard.CreateImageWidget(assets.Logo())
 
-	backButton := mustard.CreateButtonWidget("", assets.ArrowLeft())
-	backButton.SetWidth(30)
+	previousButton := mustard.CreateButtonWidget("", assets.ArrowLeft())
+	previousButton.SetWidth(30)
+
+	nextButton := mustard.CreateButtonWidget("", assets.ArrowRight())
+	nextButton.SetWidth(30)
+
+	toolsButton := mustard.CreateButtonWidget("", assets.Menu())
+	toolsButton.SetWidth(34)
 
 	rv := mustard.CreateFrame(mustard.HorizontalFrame)
 	rv.SetBackgroundColor("#ddd")
@@ -28,26 +34,18 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	icon.SetWidth(50)
 
 	inputFrame.AttachWidget(icon)
-	inputFrame.AttachWidget(backButton)
+	inputFrame.AttachWidget(previousButton)
+	inputFrame.AttachWidget(rv)
+	inputFrame.AttachWidget(nextButton)
+	inputFrame.AttachWidget(rv)
 	inputFrame.AttachWidget(rv)
 	inputFrame.AttachWidget(urlInput)
+	inputFrame.AttachWidget(rv)
+	inputFrame.AttachWidget(toolsButton)
+	inputFrame.AttachWidget(rv)
+
 	urlInput.SetFontSize(15)
 
-	buttonFrame := mustard.CreateFrame(mustard.VerticalFrame)
-
-	goButton := mustard.CreateButtonWidget("", assets.ArrowRight())
-	goButton.SetWidth(30)
-	goButton.SetPadding(1)
-
-	toolsButton := mustard.CreateButtonWidget("", assets.Menu())
-	toolsButton.SetWidth(34)
-	toolsButton.SetPadding(1)
-
-	buttonFrame.AttachWidget(goButton)
-	buttonFrame.AttachWidget(toolsButton)
-	buttonFrame.SetWidth(68)
-	buttonFrame.SetBackgroundColor("#ddd")
-	inputFrame.AttachWidget(buttonFrame)
 	window.RegisterInput(urlInput)
 
 	dv := mustard.CreateFrame(mustard.HorizontalFrame)
@@ -73,5 +71,5 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	appBar.AttachWidget(statusBar)
 	appBar.AttachWidget(pv)
 
-	return appBar, statusLabel, toolsButton, goButton, backButton, urlInput
+	return appBar, statusLabel, toolsButton, nextButton, previousButton, urlInput
 }

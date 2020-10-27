@@ -35,11 +35,7 @@ func main() {
 
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
-	appBar, statusLabel, menuButton, goButton, backButton, urlInput := createMainBar(window, browser)
-	urlInput.SetReturnCallback(func() {
-		goButton.Click()
-	})
-
+	appBar, statusLabel, menuButton, nextButton, previousButton, urlInput := createMainBar(window, browser)
 	rootFrame.AttachWidget(appBar)
 
 	loadDocument(browser, settings.Homepage)
@@ -85,20 +81,24 @@ func main() {
 	browser.Viewport = viewPort
 	browser.StatusLabel = statusLabel
 
+	urlInput.SetReturnCallback(func() {
+		go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+	})
+
 	window.RegisterButton(menuButton, func() {
 		window.AddContextMenuEntry("Home", func() {
 			urlInput.SetValue("thdwb://homepage/")
-			goButton.Click()
+			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 		})
 
 		window.AddContextMenuEntry("History", func() {
 			urlInput.SetValue("thdwb://history/")
-			goButton.Click()
+			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 		})
 
 		window.AddContextMenuEntry("About", func() {
 			urlInput.SetValue("thdwb://about/")
-			goButton.Click()
+			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 		})
 
 		if browser.Document.DebugFlag {
@@ -115,11 +115,15 @@ func main() {
 		window.DrawContextMenu()
 	})
 
-	window.RegisterButton(goButton, func() {
-		go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+	window.RegisterButton(nextButton, func() {
+		if len(browser.History.NextPages()) > 0 {
+			browser.History.PopNext()
+			urlInput.SetValue(browser.History.Last().String())
+			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		}
 	})
 
-	window.RegisterButton(backButton, func() {
+	window.RegisterButton(previousButton, func() {
 		if browser.History.PageCount() > 1 {
 			browser.History.Pop()
 			urlInput.SetValue(browser.History.Last().String())
@@ -180,10 +184,10 @@ func main() {
 			} else {
 				if browser.Document.SelectedElement != nil {
 					window.AddContextMenuEntry("Back", func() {
-						backButton.Click()
+						previousButton.Click()
 					})
 					window.AddContextMenuEntry("Reload", func() {
-						goButton.Click()
+						go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 					})
 					window.AddContextMenuEntry("History", func() {
 						urlInput.SetValue("thdwb://history")
