@@ -17,6 +17,7 @@ type WebBrowser struct {
 	History        *History
 	Window         *mustard.Window
 	Profiler       *profiler.Profiler
+	BuildInfo      *BuildInfo
 }
 
 type HTMLDocument struct {
@@ -30,6 +31,14 @@ type HTMLDocument struct {
 
 	SelectedElement *NodeDOM
 	DebugFlag       bool
+}
+
+type BuildInfo struct {
+	GitRevision string
+	GitBranch   string
+
+	HostInfo  string
+	BuildTime string
 }
 
 type History struct {

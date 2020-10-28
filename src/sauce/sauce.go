@@ -45,6 +45,11 @@ func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resou
 			Body: buildHistoryPage(browser.History),
 			URL:  URL,
 		}
+	case "about":
+		return &structs.Resource{
+			Body: pages.RenderAboutPage(browser.BuildInfo),
+			URL:  URL,
+		}
 	default:
 		return &structs.Resource{
 			Body: string(assets.DefaultPage()),

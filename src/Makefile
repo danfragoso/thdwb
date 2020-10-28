@@ -1,13 +1,18 @@
-.ONESHELL:
+git_revision := $(shell git log -1 --pretty="%H")
+git_branch := $(shell git log -1 --pretty="%d")
+host_info := $(shell uname -s -r -p)
+build_date := $(shell date)
+
+ldflags := -X 'main.gitRevision=$(git_revision)' -X 'main.gitBranch=$(git_branch)' -X 'main.buildTime=$(build_date)' -X 'main.hostInfo=$(host_info)'
 
 all: run
 
 run:
-	@go run *.go --settings="./settings.json"
+	@go run -ldflags "$(ldflags)" *.go --settings="./settings.json"
 
-build:
-	@echo -e "Building THDWB - 🌭"
-	@go build -o thdwb -ldflags "-s -w" *.go
+build: clean
+	@echo "Building THDWB - 🌭"
+	@go build -o thdwb -ldflags "$(ldflags) -s -w" *.go
 	@chmod 755 thdwb
 	@mkdir ../bin; mv thdwb ../bin/
 

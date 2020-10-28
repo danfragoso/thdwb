@@ -26,7 +26,17 @@ func main() {
 
 	settings := LoadSettings(*settingsPath)
 
-	browser := &structs.WebBrowser{Document: &structs.HTMLDocument{}, History: &structs.History{}, Profiler: profiler.CreateProfiler()}
+	browser := &structs.WebBrowser{
+		Document: &structs.HTMLDocument{},
+		History:  &structs.History{},
+		Profiler: profiler.CreateProfiler(),
+		BuildInfo: &structs.BuildInfo{
+			GitRevision: gitRevision,
+			GitBranch:   gitBranch,
+			HostInfo:    hostInfo,
+			BuildTime:   buildTime,
+		},
+	}
 
 	app := mustard.CreateNewApp("THDWB")
 	window := mustard.CreateNewWindow("THDWB", settings.WindowWidth, settings.WindowHeight, settings.HiDPI)
