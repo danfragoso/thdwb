@@ -71,11 +71,18 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 		if browser.Document.DebugFlag &&
 			browser.Document.SelectedElement != nil &&
 			browser.Document.SelectedElement.Element != "html" {
+
+			printNodeDebug(browser.Document.SelectedElement)
 			showDebugOverlay(browser)
 		}
 
 		browser.StatusLabel.RequestRepaint()
 	}
+}
+
+func printNodeDebug(node *structs.NodeDOM) {
+	rect := fmt.Sprintf("{%.2f, %.2f, %.2f, %.2f}", node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height)
+	fmt.Printf("%s [\n %s\n]\n\n", node.Element, rect)
 }
 
 func showDebugOverlay(browser *structs.WebBrowser) {
