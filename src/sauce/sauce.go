@@ -29,7 +29,7 @@ func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
 		}
 	}
 
-	return fetchExternalPage(URL.String())
+	return fetchExternalPage(URL)
 }
 
 func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
@@ -58,37 +58,38 @@ func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resou
 	}
 }
 
-func fetchExternalPage(url string) *structs.Resource {
+func fetchExternalPage(URL *url.URL) *structs.Resource {
+	url := URL.String()
 	go structs.Log("sauce", "Downloading page "+url)
 
 	cachedResource := cache.GetResource(url)
 	if cachedResource != nil {
 		return cachedResource
-	} else {
-		resource := &structs.Resource{Key: url}
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			log.Fatalln(err)
-		}
+	}
 
-		req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
+	resource := &structs.Resource{Key: url, URL: URL}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-		resp, err := client.Do(req)
-		if err != nil {
-			resource.Body = loadErrorPage(err.Error())
-			return resource
-		}
+	req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
 
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-
-		resource.ContentType = resp.Header.Get("Content-Type")
-		resource.URL = resp.Request.URL
-		resource.Body = string(body)
-
-		cache.AddResource(resource)
+	resp, err := client.Do(req)
+	if err != nil {
+		resource.Body = loadErrorPage(err.Error())
 		return resource
 	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	resource.ContentType = resp.Header.Get("Content-Type")
+	resource.URL = resp.Request.URL
+
+	resource.Body = string(body)
+	cache.AddResource(resource)
+	return resource
 }
 
 func ParseURL(link string) *url.URL {
