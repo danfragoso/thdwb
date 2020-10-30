@@ -112,12 +112,12 @@ func main() {
 		})
 
 		if browser.Document.DebugFlag {
-			window.AddContextMenuEntry("Disable element inspector", func() {
+			window.AddContextMenuEntry("Disable debug mode", func() {
 				browser.Window.RemoveStaticOverlay("debugOverlay")
 				browser.Document.DebugFlag = false
 			})
 		} else {
-			window.AddContextMenuEntry("Enable element inspector", func() {
+			window.AddContextMenuEntry("Enable debug mode", func() {
 				browser.Document.DebugFlag = true
 			})
 		}

@@ -55,23 +55,34 @@ func createStatusLabel(perf *profiler.Profiler) string {
 
 func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	y -= float64(browser.Viewport.GetOffset())
-	browser.Document.SelectedElement = browser.Document.RootElement.CalcPointIntersection(x, y)
+	selectedElement := browser.Document.RootElement.CalcPointIntersection(x, y)
 
-	if browser.Document.SelectedElement != nil && browser.Document.SelectedElement.Element == "a" {
-		browser.Window.SetCursor("pointer")
-		browser.StatusLabel.SetContent(browser.Document.SelectedElement.Attr("href"))
-	} else {
-		browser.Window.SetCursor("default")
-		browser.StatusLabel.SetContent(createStatusLabel(browser.Profiler))
+	if browser.Document.SelectedElement != selectedElement {
+		browser.Document.SelectedElement = selectedElement
+
+		if browser.Document.SelectedElement != nil && browser.Document.SelectedElement.Element == "a" {
+			browser.Window.SetCursor("pointer")
+			browser.StatusLabel.SetContent(browser.Document.SelectedElement.Attr("href"))
+		} else {
+			browser.Window.SetCursor("default")
+			browser.StatusLabel.SetContent(createStatusLabel(browser.Profiler))
+		}
+
+		if browser.Document.DebugFlag &&
+			browser.Document.SelectedElement != nil &&
+			browser.Document.SelectedElement.Element != "html" {
+
+			printNodeDebug(browser.Document.SelectedElement)
+			showDebugOverlay(browser)
+		}
+
+		browser.StatusLabel.RequestRepaint()
 	}
+}
 
-	if browser.Document.DebugFlag &&
-		browser.Document.SelectedElement != nil &&
-		browser.Document.SelectedElement.Element != "html" {
-		showDebugOverlay(browser)
-	}
-
-	browser.StatusLabel.RequestRepaint()
+func printNodeDebug(node *structs.NodeDOM) {
+	rect := fmt.Sprintf("{%.2f, %.2f, %.2f, %.2f}", node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height)
+	fmt.Printf("%s [\n %s\n]\n\n", node.Element, rect)
 }
 
 func showDebugOverlay(browser *structs.WebBrowser) {
