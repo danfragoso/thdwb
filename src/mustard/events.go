@@ -6,24 +6,24 @@ import (
 
 func (window *Window) ProcessPointerPosition() {
 	if window.hasActiveOverlay {
-		go window.ProcessContextMenu()
+		window.ProcessContextMenu()
 	} else {
-		go window.ProcessButtons()
-		go window.ProcessInputs()
+		window.ProcessButtons()
+		window.ProcessInputs()
 		window.firePointerPositionEvents()
 	}
 }
 
 func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
 	if window.hasActiveOverlay {
-		go window.ProcessContextMenuClick()
+		window.ProcessContextMenuClick()
 	} else {
 		if button == glfw.MouseButtonLeft {
-			go window.ProcessButtonClick()
-			go window.ProcessInputActivation()
-			go window.fireClickEvents(MouseLeft)
+			window.ProcessButtonClick()
+			window.ProcessInputActivation()
+			window.fireClickEvents(MouseLeft)
 		} else if button == glfw.MouseButtonRight {
-			go window.fireClickEvents(MouseRight)
+			window.fireClickEvents(MouseRight)
 		}
 	}
 }
