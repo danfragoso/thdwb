@@ -27,9 +27,11 @@ func main() {
 	settings := LoadSettings(*settingsPath)
 
 	browser := &structs.WebBrowser{
-		Document: &structs.HTMLDocument{},
+		ActiveDocument: &structs.Document{},
+
 		History:  &structs.History{},
 		Profiler: profiler.CreateProfiler(),
+
 		BuildInfo: &structs.BuildInfo{
 			GitRevision: gitRevision,
 			GitBranch:   gitBranch,
@@ -49,7 +51,7 @@ func main() {
 	rootFrame.AttachWidget(appBar)
 
 	loadDocument(browser, settings.Homepage)
-	urlInput.SetValue(browser.Document.URL.String())
+	urlInput.SetValue(browser.ActiveDocument.URL.String())
 
 	scrollBar := mustard.CreateScrollBarWidget(mustard.VerticalScrollBar)
 	scrollBar.SetTrackColor("#ccc")
@@ -62,7 +64,7 @@ func main() {
 			ctxBounds := canvas.GetContext().Image().Bounds()
 			drawingContext := gg.NewContext(ctxBounds.Max.X, ctxBounds.Max.Y)
 
-			err := bun.RenderDocument(drawingContext, browser.Document)
+			err := bun.RenderDocument(drawingContext, browser.ActiveDocument)
 			if err != nil {
 				structs.Log("render", "Can't render page: "+err.Error())
 			}
@@ -77,7 +79,7 @@ func main() {
 
 			scrollBar.SetScrollerOffset(0)
 
-			body, err := browser.Document.RootElement.FindChildByName("body")
+			body, err := browser.ActiveDocument.DOM.FindChildByName("body")
 			if err != nil {
 				structs.Log("render", "can't find body element: "+err.Error())
 				return
@@ -111,14 +113,14 @@ func main() {
 			go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 		})
 
-		if browser.Document.DebugFlag {
+		if browser.ActiveDocument.DebugFlag {
 			window.AddContextMenuEntry("Disable debug mode", func() {
 				browser.Window.RemoveStaticOverlay("debugOverlay")
-				browser.Document.DebugFlag = false
+				browser.ActiveDocument.DebugFlag = false
 			})
 		} else {
 			window.AddContextMenuEntry("Enable debug mode", func() {
-				browser.Document.DebugFlag = true
+				browser.ActiveDocument.DebugFlag = true
 			})
 		}
 
@@ -146,14 +148,14 @@ func main() {
 			offset := float64(appBar.GetHeight())
 			processPointerPositionEvent(browser, pointerX, pointerY-offset)
 		} else {
-			browser.Document.SelectedElement = nil
+			browser.ActiveDocument.SelectedElement = nil
 		}
 	})
 
 	window.AttachScrollEventListener(func(direction int) {
 		scrollStep := 20
 
-		body, err := browser.Document.RootElement.FindChildByName("body")
+		body, err := browser.ActiveDocument.DOM.FindChildByName("body")
 		if err != nil {
 			structs.Log("render", "Can't find body element: "+err.Error())
 			return
@@ -184,15 +186,15 @@ func main() {
 	window.AttachClickEventListener(func(key mustard.MustardKey) {
 		if viewPort.IsPointInside(window.GetCursorPosition()) {
 			if key == mustard.MouseLeft {
-				if browser.Document.SelectedElement != nil {
-					if browser.Document.SelectedElement.Element == "a" {
-						href := browser.Document.SelectedElement.Attr("href")
+				if browser.ActiveDocument.SelectedElement != nil {
+					if browser.ActiveDocument.SelectedElement.Element == "a" {
+						href := browser.ActiveDocument.SelectedElement.Attr("href")
 						urlInput.SetValue(href)
 						go loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 					}
 				}
 			} else {
-				if browser.Document.SelectedElement != nil {
+				if browser.ActiveDocument.SelectedElement != nil {
 					window.AddContextMenuEntry("Back", func() {
 						previousButton.Click()
 					})

@@ -59,11 +59,11 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
-func ParseDocument(document string) *structs.HTMLDocument {
-	HTMLDocument := &structs.HTMLDocument{}
+func ParseDocument(document string) *structs.Document {
+	HTMLDocument := &structs.Document{}
 
 	HTMLDocument.RawDocument = document
-	lastNode := HTMLDocument.RootElement
+	lastNode := HTMLDocument.DOM
 	parseDocument := xmlTag.MatchString(document)
 	document = strings.ReplaceAll(document, "\n", "")
 
@@ -117,8 +117,8 @@ func ParseDocument(document string) *structs.HTMLDocument {
 				}
 
 				if currentTagName == "html" {
-					HTMLDocument.RootElement = currentNode
-					lastNode = HTMLDocument.RootElement
+					HTMLDocument.DOM = currentNode
+					lastNode = HTMLDocument.DOM
 				} else {
 					lastNode.Children = append(lastNode.Children, currentNode)
 

@@ -9,30 +9,30 @@ import (
 )
 
 type WebBrowser struct {
-	Document       *HTMLDocument
 	ActiveDocument *Document
 	Documents      []*Document
-	Viewport       *mustard.CanvasWidget
-	StatusLabel    *mustard.LabelWidget
-	History        *History
-	Window         *mustard.Window
-	Profiler       *profiler.Profiler
-	BuildInfo      *BuildInfo
-}
 
-type HTMLDocument struct {
-	Title       string
-	RootElement *NodeDOM
-	URL         *url.URL
-	RawDocument string
-	OffsetY     int
-	Styles      []*StyleElement
+	Viewport    *mustard.CanvasWidget
+	StatusLabel *mustard.LabelWidget
+	History     *History
+	Window      *mustard.Window
 	Profiler    *profiler.Profiler
-
-	SelectedElement *NodeDOM
-	DebugFlag       bool
+	BuildInfo   *BuildInfo
 }
 
+type Document struct {
+	Title       string
+	ContentType string
+	URL         *url.URL
+
+	RawDocument string
+	DOM         *NodeDOM
+
+	DebugFlag       bool
+	SelectedElement *NodeDOM
+
+	OffsetY int
+}
 type BuildInfo struct {
 	GitRevision string
 	GitBranch   string
@@ -81,14 +81,6 @@ func (history *History) Pop() {
 	}
 }
 
-type Document struct {
-	Title       string
-	Path        string
-	ContentType string
-	RawDocument string
-	DOM         *NodeDOM
-}
-
 type RenderBox struct {
 	Node *NodeDOM
 
@@ -133,7 +125,7 @@ type NodeDOM struct {
 	NeedsReflow  bool `json:"-"`
 	NeedsRepaint bool `json:"-"`
 
-	Document *HTMLDocument `json:"-"`
+	Document *Document `json:"-"`
 }
 
 // FindChildByName returns the first child of node with a tag name of childName, or ErrNoSuchElement, if

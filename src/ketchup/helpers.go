@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func buildKetchupNode(node *html.Node, document *structs.HTMLDocument) *structs.NodeDOM {
+func buildKetchupNode(node *html.Node, document *structs.Document) *structs.NodeDOM {
 	var element, content string
 
 	ketchupNode := &structs.NodeDOM{}

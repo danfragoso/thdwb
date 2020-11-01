@@ -7,15 +7,15 @@ import (
 	structs "thdwb/structs"
 )
 
-func RenderDocument(ctx *gg.Context, document *structs.HTMLDocument) error {
-	body, err := document.RootElement.FindChildByName("body")
+func RenderDocument(ctx *gg.Context, document *structs.Document) error {
+	body, err := document.DOM.FindChildByName("body")
 	if err != nil {
 		// TODO: Handle documents without body elements by synthesizing one.
 		return err
 	}
 
-	document.RootElement.RenderBox.Width = float64(ctx.Width())
-	document.RootElement.RenderBox.Height = float64(ctx.Height())
+	document.DOM.RenderBox.Width = float64(ctx.Width())
+	document.DOM.RenderBox.Height = float64(ctx.Height())
 
 	ctx.SetRGB(1, 1, 1)
 	ctx.Clear()

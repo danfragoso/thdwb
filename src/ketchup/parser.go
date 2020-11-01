@@ -7,15 +7,15 @@ import (
 	"golang.org/x/net/html"
 )
 
-func ParseHTMLDocument(document string) *structs.HTMLDocument {
+func ParseHTMLDocument(document string) *structs.Document {
 	parsedDoc, err := html.Parse(strings.NewReader(document))
 	if err != nil {
 		panic(err)
 	}
 
-	HTMLDocument := &structs.HTMLDocument{}
+	HTMLDocument := &structs.Document{}
 	HTMLDocument.RawDocument = document
 
-	HTMLDocument.RootElement = buildKetchupNode(parsedDoc, HTMLDocument)
+	HTMLDocument.DOM = buildKetchupNode(parsedDoc, HTMLDocument)
 	return HTMLDocument
 }
