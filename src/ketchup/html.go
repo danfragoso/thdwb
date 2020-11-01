@@ -59,7 +59,7 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
-func ParseDocument(document string) *structs.Document {
+func ParseHTML(document string) *structs.Document {
 	HTMLDocument := &structs.Document{}
 
 	HTMLDocument.RawDocument = document

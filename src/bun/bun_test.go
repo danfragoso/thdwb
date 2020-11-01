@@ -15,7 +15,7 @@ func TestRenderDocument_noBody(t *testing.T) {
 		t.Fatalf("got unexpected error: %s", err)
 	}
 
-	doc := ketchup.ParseDocument(string(html))
+	doc := ketchup.ParseHTML(string(html))
 	if doc == nil {
 		t.Fatal("got nil document")
 	}
