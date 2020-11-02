@@ -59,6 +59,46 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
+func ParsePlainText(document string) *structs.Document {
+	documentTitle := "Text Document"
+	textDocument := &structs.Document{
+		Title: documentTitle,
+
+		RawDocument: document,
+		DOM: &structs.NodeDOM{
+			Element: "html", NeedsReflow: true, NeedsRepaint: true,
+			Style:     mayo.GetElementStylesheet("html", []*structs.Attribute{}),
+			RenderBox: &structs.RenderBox{},
+		},
+	}
+
+	textDocument.DOM.Document = textDocument
+	textDocument.DOM.Children = []*structs.NodeDOM{
+		&structs.NodeDOM{Element: "head", Document: textDocument,
+			Style:     mayo.GetElementStylesheet("head", []*structs.Attribute{}),
+			RenderBox: &structs.RenderBox{}, Parent: textDocument.DOM,
+		},
+		&structs.NodeDOM{
+			Element: "body", NeedsReflow: true, NeedsRepaint: true,
+			Style:     mayo.GetElementStylesheet("body", []*structs.Attribute{}),
+			RenderBox: &structs.RenderBox{}, Document: textDocument,
+			Parent: textDocument.DOM,
+		},
+	}
+
+	documentLines := strings.Split(document, "\n")
+	body, _ := textDocument.DOM.FindChildByName("body")
+	for _, line := range documentLines {
+		body.Children = append(body.Children, &structs.NodeDOM{
+			Element: "p", Content: line, RenderBox: &structs.RenderBox{},
+			Style:  mayo.GetElementStylesheet("p", []*structs.Attribute{}),
+			Parent: body,
+		})
+	}
+
+	return textDocument
+}
+
 func ParseHTML(document string) *structs.Document {
 	HTMLDocument := &structs.Document{}
 

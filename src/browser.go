@@ -27,7 +27,13 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 	resource := sauce.GetResource(URL, browser)
 	rawDocument := string(resource.Body)
 
-	browser.ActiveDocument = ketchup.ParseHTML(rawDocument)
+	switch strings.Split(resource.ContentType, ";")[0] {
+	case "text/plain":
+		browser.ActiveDocument = ketchup.ParsePlainText(rawDocument)
+	default:
+		browser.ActiveDocument = ketchup.ParseHTML(rawDocument)
+	}
+
 	browser.ActiveDocument.URL = resource.URL
 	browser.ActiveDocument.ContentType = resource.ContentType
 
