@@ -28,7 +28,7 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 	rawDocument := string(resource.Body)
 
 	switch strings.Split(resource.ContentType, ";")[0] {
-	case "text/plain":
+	case "text/plain", "application/json":
 		browser.ActiveDocument = ketchup.ParsePlainText(rawDocument)
 	default:
 		browser.ActiveDocument = ketchup.ParseHTML(rawDocument)
