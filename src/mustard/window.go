@@ -17,7 +17,6 @@ func SetGLFWHints() {
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
-	glfw.WindowHint(glfw.Visible, glfw.False)
 }
 
 func CreateNewWindow(title string, width int, height int, hiDPI bool) *Window {
