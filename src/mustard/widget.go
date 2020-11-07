@@ -2,35 +2,10 @@ package mustard
 
 func getCoreWidgets(widgets []Widget) []*baseWidget {
 	var coreWidgets []*baseWidget
-
-	for i := 0; i < len(widgets); i++ {
-		switch widgets[i].(type) {
-		case *Frame:
-			widget := widgets[i].(*Frame)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *LabelWidget:
-			widget := widgets[i].(*LabelWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *TextWidget:
-			widget := widgets[i].(*TextWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *ImageWidget:
-			widget := widgets[i].(*ImageWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *CanvasWidget:
-			widget := widgets[i].(*CanvasWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *ButtonWidget:
-			widget := widgets[i].(*ButtonWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *InputWidget:
-			widget := widgets[i].(*InputWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		case *ScrollBarWidget:
-			widget := widgets[i].(*ScrollBarWidget)
-			coreWidgets = append(coreWidgets, &widget.baseWidget)
-		}
+	for _, widget := range widgets {
+		coreWidgets = append(coreWidgets, widget.BaseWidget())
 	}
+
 	return coreWidgets
 }
 
@@ -169,6 +144,10 @@ func (widget *baseWidget) SetWindow(window *Window) {
 
 func (widget *baseWidget) Widgets() []Widget {
 	return widget.widgets
+}
+
+func (widget *baseWidget) BaseWidget() *baseWidget {
+	return widget
 }
 
 func (widget *baseWidget) NeedsRepaint() bool {

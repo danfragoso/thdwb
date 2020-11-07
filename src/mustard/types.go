@@ -125,6 +125,7 @@ type Widget interface {
 	Widgets() []Widget
 	ComputedBox() *box
 	SetWindow(*Window)
+	BaseWidget() *baseWidget
 
 	draw()
 }
