@@ -1,6 +1,8 @@
 package mustard
 
 import (
+	"image"
+	"image/draw"
 	assets "thdwb/assets"
 	gg "thdwb/gg"
 
@@ -184,5 +186,13 @@ func (input *InputWidget) draw() {
 
 	window.context.SetLineJoinRound()
 	window.context.Stroke()
-	input.needsRepaint = false
+
+	input.buffer = image.NewRGBA(image.Rectangle{
+		image.Point{}, image.Point{width, height},
+	})
+
+	draw.Draw(input.buffer, image.Rectangle{
+		image.Point{},
+		image.Point{width, height},
+	}, window.context.Image(), image.Point{left, top}, draw.Over)
 }

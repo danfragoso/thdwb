@@ -1,6 +1,8 @@
 package mustard
 
 import (
+	"image"
+	"image/draw"
 	assets "thdwb/assets"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -100,5 +102,13 @@ func (scrollBar *ScrollBarWidget) draw() {
 		context.Fill()
 	}
 
-	scrollBar.needsRepaint = false
+	iTop, iLeft, iWidth, iHeight := scrollBar.computedBox.GetCoords()
+	scrollBar.buffer = image.NewRGBA(image.Rectangle{
+		image.Point{}, image.Point{iWidth, iHeight},
+	})
+
+	draw.Draw(scrollBar.buffer, image.Rectangle{
+		image.Point{},
+		image.Point{iWidth, iHeight},
+	}, context.Image(), image.Point{iLeft, iTop}, draw.Over)
 }
