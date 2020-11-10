@@ -95,12 +95,20 @@ func calculateFlexibleWidth(avaiableWidth int, elements []*baseWidget) int {
 		avaiableWidth = avaiableWidth - el.box.width
 	}
 
+	if avaiableWidth < 0 {
+		return 0
+	}
+
 	return avaiableWidth
 }
 
 func calculateFlexibleHeight(avaiableHeight int, elements []*baseWidget) int {
 	for _, el := range elements {
 		avaiableHeight = avaiableHeight - el.box.height
+	}
+
+	if avaiableHeight < 0 {
+		return 0
 	}
 
 	return avaiableHeight
