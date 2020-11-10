@@ -1,5 +1,7 @@
 package mustard
 
+import "image"
+
 func getCoreWidgets(widgets []Widget) []*baseWidget {
 	var coreWidgets []*baseWidget
 	for _, widget := range widgets {
@@ -93,12 +95,20 @@ func calculateFlexibleWidth(avaiableWidth int, elements []*baseWidget) int {
 		avaiableWidth = avaiableWidth - el.box.width
 	}
 
+	if avaiableWidth < 0 {
+		return 0
+	}
+
 	return avaiableWidth
 }
 
 func calculateFlexibleHeight(avaiableHeight int, elements []*baseWidget) int {
 	for _, el := range elements {
 		avaiableHeight = avaiableHeight - el.box.height
+	}
+
+	if avaiableHeight < 0 {
+		return 0
 	}
 
 	return avaiableHeight
@@ -142,6 +152,10 @@ func (widget *baseWidget) SetWindow(window *Window) {
 	widget.window = window
 }
 
+func (widget *baseWidget) Buffer() *image.RGBA {
+	return widget.buffer
+}
+
 func (widget *baseWidget) Widgets() []Widget {
 	return widget.widgets
 }
@@ -152,6 +166,10 @@ func (widget *baseWidget) BaseWidget() *baseWidget {
 
 func (widget *baseWidget) NeedsRepaint() bool {
 	return widget.needsRepaint
+}
+
+func (widget *baseWidget) SetNeedsRepaint(value bool) {
+	widget.needsRepaint = value
 }
 
 func (widget *baseWidget) IsPointInside(x, y float64) bool {

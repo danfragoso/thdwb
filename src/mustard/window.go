@@ -21,6 +21,8 @@ func SetGLFWHints() {
 
 func CreateNewWindow(title string, width int, height int, hiDPI bool) *Window {
 	glw, err := glfw.CreateWindow(width, height, title, nil, nil)
+	glw.SetSizeLimits(300, 200, glfw.DontCare, glfw.DontCare)
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -244,9 +246,33 @@ func (window *Window) addEvents() {
 	})
 }
 
+func compositeWidget(buffer *image.RGBA, widget Widget) {
+	if widget.NeedsRepaint() {
+		top, left, width, height := widget.ComputedBox().GetCoords()
+
+		draw.Draw(buffer, image.Rectangle{
+			image.Point{left, top}, image.Point{left + width, top + height},
+		}, widget.Buffer(), image.Point{}, draw.Over)
+
+		widget.SetNeedsRepaint(false)
+	}
+}
+
+func compositeAll(buffer *image.RGBA, widget Widget) {
+	compositeWidget(buffer, widget)
+
+	for _, childWidget := range widget.Widgets() {
+		compositeAll(buffer, childWidget)
+	}
+}
+
 func (window *Window) generateTexture() {
 	gl.DeleteTextures(1, &window.backend.texture)
 	window.frameBuffer = window.context.Image().(*image.RGBA)
+
+	if window.rootFrame != nil {
+		compositeAll(window.frameBuffer, window.rootFrame)
+	}
 
 	if window.hasStaticOverlay {
 		nBuffer := image.NewRGBA(window.frameBuffer.Bounds())
@@ -272,9 +298,6 @@ func (window *Window) generateTexture() {
 	gl.ActiveTexture(gl.TEXTURE0)
 	gl.BindTexture(gl.TEXTURE_2D, window.backend.texture)
 	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
-	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
 
 	gl.TexImage2D(
 		gl.TEXTURE_2D, 0, gl.RGBA,

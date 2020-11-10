@@ -121,6 +121,8 @@ func (box *box) GetCoords() (int, int, int, int) {
 }
 
 type Widget interface {
+	Buffer() *image.RGBA
+	SetNeedsRepaint(bool)
 	NeedsRepaint() bool
 	Widgets() []Widget
 	ComputedBox() *box

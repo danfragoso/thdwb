@@ -1,6 +1,8 @@
 package mustard
 
 import (
+	"image"
+	"image/draw"
 	"log"
 
 	gg "thdwb/gg"
@@ -54,8 +56,16 @@ func (label *ImageWidget) SetHeight(height int) {
 	label.RequestReflow()
 }
 
-func (image *ImageWidget) draw() {
-	top, left, _, _ := image.computedBox.GetCoords()
-	image.window.context.DrawImage(image.img, left+15, top+3)
-	image.needsRepaint = false
+func (im *ImageWidget) draw() {
+	top, left, width, height := im.computedBox.GetCoords()
+	im.window.context.DrawImage(im.img, left+15, top+3)
+
+	im.buffer = image.NewRGBA(image.Rectangle{
+		image.Point{}, image.Point{width, height},
+	})
+
+	draw.Draw(im.buffer, image.Rectangle{
+		image.Point{},
+		image.Point{width, height},
+	}, im.window.context.Image(), image.Point{left, top}, draw.Over)
 }

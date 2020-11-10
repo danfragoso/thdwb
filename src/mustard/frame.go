@@ -1,5 +1,10 @@
 package mustard
 
+import (
+	"image"
+	"image/draw"
+)
+
 //CreateFrame - Creates and returns a new Frame
 func CreateFrame(orientation FrameOrientation) *Frame {
 	var widgets []Widget
@@ -63,7 +68,15 @@ func (frame *Frame) draw() {
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.Fill()
 
-	frame.needsRepaint = false
+	frame.buffer = image.NewRGBA(image.Rectangle{
+		image.Point{}, image.Point{width, height},
+	})
+
+	draw.Draw(frame.buffer, image.Rectangle{
+		image.Point{},
+		image.Point{width, height},
+	}, context.Image(), image.Point{left, top}, draw.Over)
+
 	childrenLen := len(frame.widgets)
 	if childrenLen > 0 {
 		childrenWidgets := getCoreWidgets(frame.widgets)
