@@ -187,10 +187,11 @@ func (input *InputWidget) draw() {
 	window.context.SetLineJoinRound()
 	window.context.Stroke()
 
-	input.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
-
+	if input.buffer == nil || input.buffer.Bounds().Max.X != width && input.buffer.Bounds().Max.Y != height {
+		input.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 	draw.Draw(input.buffer, image.Rectangle{
 		image.Point{},
 		image.Point{width, height},

@@ -100,9 +100,11 @@ func (label *LabelWidget) draw() {
 	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
 
-	label.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
+	if label.buffer == nil || label.buffer.Bounds().Max.X != width && label.buffer.Bounds().Max.Y != height {
+		label.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 
 	draw.Draw(label.buffer, image.Rectangle{
 		image.Point{},

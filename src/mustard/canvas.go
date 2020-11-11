@@ -98,9 +98,11 @@ func (ctx *CanvasWidget) draw() {
 	ctx.context.DrawImage(ctx.drawingContext.Image(), left, ctx.offset)
 	context.DrawImage(ctx.context.Image(), left, top)
 
-	ctx.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
+	if ctx.buffer == nil || ctx.buffer.Bounds().Max.X != width && ctx.buffer.Bounds().Max.Y != height {
+		ctx.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 
 	draw.Draw(ctx.buffer, image.Rectangle{
 		image.Point{},

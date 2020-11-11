@@ -60,9 +60,11 @@ func (im *ImageWidget) draw() {
 	top, left, width, height := im.computedBox.GetCoords()
 	im.window.context.DrawImage(im.img, left+15, top+3)
 
-	im.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
+	if im.buffer == nil || im.buffer.Bounds().Max.X != width && im.buffer.Bounds().Max.Y != height {
+		im.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 
 	draw.Draw(im.buffer, image.Rectangle{
 		image.Point{},

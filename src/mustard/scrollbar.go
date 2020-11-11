@@ -103,9 +103,12 @@ func (scrollBar *ScrollBarWidget) draw() {
 	}
 
 	iTop, iLeft, iWidth, iHeight := scrollBar.computedBox.GetCoords()
-	scrollBar.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{iWidth, iHeight},
-	})
+
+	if scrollBar.buffer == nil || scrollBar.buffer.Bounds().Max.X != iWidth && scrollBar.buffer.Bounds().Max.Y != iHeight {
+		scrollBar.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{iWidth, iHeight},
+		})
+	}
 
 	draw.Draw(scrollBar.buffer, image.Rectangle{
 		image.Point{},

@@ -130,9 +130,11 @@ func (button *ButtonWidget) draw() {
 		context.DrawImage(button.icon, left+4, top+2)
 	}
 
-	button.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
+	if button.buffer == nil || button.buffer.Bounds().Max.X != width && button.buffer.Bounds().Max.Y != height {
+		button.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 
 	draw.Draw(button.buffer, image.Rectangle{
 		image.Point{},

@@ -68,10 +68,11 @@ func (frame *Frame) draw() {
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.Fill()
 
-	frame.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
-
+	if frame.buffer == nil || frame.buffer.Bounds().Max.X != width && frame.buffer.Bounds().Max.Y != height {
+		frame.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 	draw.Draw(frame.buffer, image.Rectangle{
 		image.Point{},
 		image.Point{width, height},

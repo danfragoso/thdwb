@@ -102,9 +102,11 @@ func (text *TextWidget) draw() {
 	context.DrawStringWrapped(text.content, float64(left)+text.fontSize/4, float64(top)+text.fontSize*2/2, 0, 0, float64(width), text.fontSize*0.15, gg.AlignLeft)
 	context.Fill()
 
-	text.buffer = image.NewRGBA(image.Rectangle{
-		image.Point{}, image.Point{width, height},
-	})
+	if text.buffer == nil || text.buffer.Bounds().Max.X != width && text.buffer.Bounds().Max.Y != height {
+		text.buffer = image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		})
+	}
 
 	draw.Draw(text.buffer, image.Rectangle{
 		image.Point{},
