@@ -52,6 +52,7 @@ func HomePage() []byte {
     <li><a href="https://motherfuckingwebsite.com">https://motherfuckingwebsite.com</a></li>
     <li><a href="http://lite.cnn.com/">http://lite.cnn.com/</a></li>
     <li><a href="http://serenityos.org/">http://serenityos.org/</a></li>
+    <li><a href="thdwb://about/">About</a></li>
   </ul>
   <p>
     Below is the list of components:
@@ -82,10 +83,11 @@ func DefaultPage() []byte {
       </head>
       <body>
         <div>
-          <h3>Sorry, this internal page does not exist.</h3>
+          <h3>Sorry, this page does not exist.</h3>
           <div>THDWB; The Hotdog web browser.</div>
           <ul>
             <li><a href="thdwb://history/">History</a></li>
+            <li><a href="thdwb://about/">About</a></li>
           </ul>
           <div> - - - - - - - - -</div>
           <a href="thdwb://homepage/">Go back to home</a>
