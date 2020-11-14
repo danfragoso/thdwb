@@ -22,11 +22,6 @@ func CreateFrame(orientation FrameOrientation) *Frame {
 	}
 }
 
-//AttachWidget - Attaches widgets to a frame el
-func (frame *Frame) AttachWidget(widget Widget) {
-	frame.widgets = append(frame.widgets, widget)
-}
-
 //SetBackgroundColor - Sets the frame background color
 func (frame *Frame) SetBackgroundColor(backgroundColor string) {
 	if len(backgroundColor) > 0 && string(backgroundColor[0]) == "#" {

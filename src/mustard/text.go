@@ -36,11 +36,6 @@ func CreateTextWidget(content string) *TextWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (text *TextWidget) AttachWidget(widget Widget) {
-	text.widgets = append(text.widgets, widget)
-}
-
 //SetWidth - Sets the text width
 func (text *TextWidget) SetWidth(width int) {
 	text.box.width = width

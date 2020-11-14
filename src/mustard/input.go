@@ -35,11 +35,6 @@ func CreateInputWidget() *InputWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (input *InputWidget) AttachWidget(widget Widget) {
-	input.widgets = append(input.widgets, widget)
-}
-
 //SetWidth - Sets the input width
 func (input *InputWidget) SetWidth(width int) {
 	input.box.width = width

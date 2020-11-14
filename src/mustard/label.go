@@ -35,11 +35,6 @@ func CreateLabelWidget(content string) *LabelWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (label *LabelWidget) AttachWidget(widget Widget) {
-	label.widgets = append(label.widgets, widget)
-}
-
 //SetWidth - Sets the label width
 func (label *LabelWidget) SetWidth(width int) {
 	label.box.width = width

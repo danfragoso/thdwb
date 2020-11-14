@@ -37,11 +37,6 @@ func CreateImageWidget(path []byte) *ImageWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (label *ImageWidget) AttachWidget(widget Widget) {
-	label.widgets = append(label.widgets, widget)
-}
-
 //SetWidth - Sets the label width
 func (label *ImageWidget) SetWidth(width int) {
 	label.box.width = width

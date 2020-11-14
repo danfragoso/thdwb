@@ -32,11 +32,6 @@ func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (scrollBar *ScrollBarWidget) AttachWidget(widget Widget) {
-	scrollBar.widgets = append(scrollBar.widgets, widget)
-}
-
 //SetWidth - Sets the scrollBar width
 func (scrollBar *ScrollBarWidget) SetWidth(width int) {
 	scrollBar.box.width = width

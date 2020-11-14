@@ -40,11 +40,6 @@ func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (button *ButtonWidget) AttachWidget(widget Widget) {
-	button.widgets = append(button.widgets, widget)
-}
-
 //SetWidth - Sets the button width
 func (button *ButtonWidget) SetWidth(width int) {
 	button.box.width = width

@@ -31,11 +31,6 @@ func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
 	}
 }
 
-//AttachWidget - Attaches a new widget to the window
-func (canvas *CanvasWidget) AttachWidget(widget Widget) {
-	canvas.widgets = append(canvas.widgets, widget)
-}
-
 //SetWidth - Sets the label width
 func (canvas *CanvasWidget) SetWidth(width int) {
 	canvas.box.width = width

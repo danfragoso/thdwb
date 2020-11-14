@@ -160,6 +160,10 @@ func (widget *baseWidget) Widgets() []Widget {
 	return widget.widgets
 }
 
+func (widget *baseWidget) AttachWidget(wd Widget) {
+	widget.widgets = append(widget.widgets, wd)
+}
+
 func (widget *baseWidget) BaseWidget() *baseWidget {
 	return widget
 }
