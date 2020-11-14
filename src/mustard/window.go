@@ -69,39 +69,19 @@ func (window *Window) GetSize() (int, int) {
 	return window.width, window.height
 }
 
-func (window *Window) brocessFrame() {
-	if window.needsReflow {
-
-		window.needsReflow = false
-		window.glw.MakeContextCurrent()
-
-		drawRootFrame(window)
-		window.generateTexture()
-
-		gl.DrawArrays(gl.TRIANGLES, 0, 6)
-		window.glw.SwapBuffers()
-	}
-
-	glfw.WaitEvents()
-}
-
 func (window *Window) processFrame() {
+	window.glw.MakeContextCurrent()
+
 	if window.needsReflow {
-		window.needsReflow = false
-		window.glw.MakeContextCurrent()
-
 		drawRootFrame(window)
-		window.generateTexture()
-
-		gl.DrawArrays(gl.TRIANGLES, 0, 6)
-		window.glw.SwapBuffers()
+		window.needsReflow = false
 	} else {
 		redrawWidgets(window.rootFrame)
-		window.generateTexture()
-		gl.DrawArrays(gl.TRIANGLES, 0, 6)
-		window.glw.SwapBuffers()
 	}
 
+	window.generateTexture()
+	gl.DrawArrays(gl.TRIANGLES, 0, 6)
+	window.glw.SwapBuffers()
 	glfw.PollEvents()
 }
 
@@ -110,13 +90,7 @@ func (window *Window) RequestReflow() {
 }
 
 func (window *Window) RecreateContext() {
-	window.context = nil
 	window.context = gg.NewContext(window.width, window.height)
-
-	window.context.SetRGB(0, 0, 0)
-	window.context.Clear()
-
-	window.context.SetRGB(1, 1, 1)
 }
 
 func (window *Window) addEvents() {
