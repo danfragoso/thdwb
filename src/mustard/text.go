@@ -21,7 +21,7 @@ func CreateTextWidget(content string) *TextWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "text",
+			widgetType: textWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 

@@ -25,7 +25,7 @@ func CreateImageWidget(path []byte) *ImageWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "image",
+			widgetType: imageWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 

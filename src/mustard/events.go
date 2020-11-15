@@ -9,7 +9,7 @@ func (window *Window) ProcessPointerPosition() {
 		window.ProcessContextMenu()
 	} else {
 		window.selectWidget(window.rootFrame)
-		if window.selectedWidget.BaseWidget().ref == "frame" {
+		if window.selectedWidget.BaseWidget().widgetType == frameWidget {
 			window.SetCursor("default")
 		}
 

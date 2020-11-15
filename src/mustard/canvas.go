@@ -17,7 +17,7 @@ func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "context",
+			widgetType: canvasWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 

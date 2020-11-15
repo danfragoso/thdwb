@@ -21,7 +21,7 @@ func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "button",
+			widgetType: buttonWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.HandCursor),
 

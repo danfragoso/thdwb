@@ -148,8 +148,8 @@ type baseWidget struct {
 
 	backgroundColor string
 
-	ref    string
-	cursor *glfw.Cursor
+	widgetType widgetType
+	cursor     *glfw.Cursor
 
 	focusable  bool
 	selectable bool
@@ -160,6 +160,19 @@ type baseWidget struct {
 	buffer *image.RGBA
 	window *Window
 }
+
+type widgetType int
+
+const (
+	buttonWidget widgetType = iota
+	canvasWidget
+	frameWidget
+	imageWidget
+	inputWidget
+	labelWidget
+	scrollbarWidget
+	textWidget
+)
 
 type widgetPosition int
 

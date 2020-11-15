@@ -20,7 +20,7 @@ func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "scrollBar",
+			widgetType: scrollbarWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 

@@ -11,7 +11,7 @@ func CreateFrame(orientation FrameOrientation) *Frame {
 
 	return &Frame{
 		baseWidget: baseWidget{
-			ref: "frame",
+			widgetType: frameWidget,
 
 			needsRepaint: true,
 			widgets:      widgets,

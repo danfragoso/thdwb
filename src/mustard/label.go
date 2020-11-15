@@ -20,7 +20,7 @@ func CreateLabelWidget(content string) *LabelWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "label",
+			widgetType: labelWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.ArrowCursor),
 

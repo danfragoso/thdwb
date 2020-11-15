@@ -21,7 +21,7 @@ func CreateInputWidget() *InputWidget {
 			needsRepaint: true,
 			widgets:      widgets,
 
-			ref: "input",
+			widgetType: inputWidget,
 
 			cursor: glfw.CreateStandardCursor(glfw.IBeamCursor),
 
