@@ -306,9 +306,9 @@ func (window *Window) AttachClickEventListener(callback func(MustardKey)) {
 	window.clickEventListeners = append(window.clickEventListeners, callback)
 }
 
-func (window *Window) SetCursor(cursorType string) {
+func (window *Window) SetCursor(cursorType cursorType) {
 	switch cursorType {
-	case "pointer":
+	case PointerCursor:
 		window.glw.SetCursor(window.pointerCursor)
 		break
 

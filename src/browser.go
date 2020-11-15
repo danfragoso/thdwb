@@ -68,10 +68,10 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 		browser.ActiveDocument.SelectedElement = selectedElement
 
 		if browser.ActiveDocument.SelectedElement != nil && browser.ActiveDocument.SelectedElement.Element == "a" {
-			browser.Window.SetCursor("pointer")
+			browser.Window.SetCursor(mustard.PointerCursor)
 			browser.StatusLabel.SetContent(browser.ActiveDocument.SelectedElement.Attr("href"))
 		} else {
-			browser.Window.SetCursor("default")
+			browser.Window.SetCursor(mustard.DefaultCursor)
 			browser.StatusLabel.SetContent(createStatusLabel(browser.Profiler))
 		}
 

@@ -161,6 +161,15 @@ type baseWidget struct {
 	window *Window
 }
 
+type cursorType int
+
+const (
+	//DefaultCursor - Default arrow cursor
+	DefaultCursor cursorType = iota
+	//PointerCursor - Pointer cursor
+	PointerCursor
+)
+
 type widgetType int
 
 const (

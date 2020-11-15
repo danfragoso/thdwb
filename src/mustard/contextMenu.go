@@ -30,7 +30,7 @@ func (window *Window) DestroyContextMenu() {
 	window.RemoveOverlay(window.contextMenu.overlay)
 	window.contextMenu.entries = nil
 	window.contextMenu.selectedEntry = nil
-	window.SetCursor("default")
+	window.SetCursor(DefaultCursor)
 }
 
 func prepEntry(ctx *gg.Context, entry string, width float64) string {
@@ -147,14 +147,14 @@ func extractOverlay(buffer *image.RGBA, postion image.Point) *Overlay {
 func (window *Window) SelectEntry(entry *menuEntry) {
 	window.contextMenu.selectedEntry = entry
 	window.refreshContextMenu()
-	window.SetCursor("pointer")
+	window.SetCursor(PointerCursor)
 }
 
 func (window *Window) DeselectEntries() {
 	if window.contextMenu.selectedEntry != nil {
 		window.contextMenu.selectedEntry = nil
 		window.refreshContextMenu()
-		window.SetCursor("default")
+		window.SetCursor(DefaultCursor)
 	}
 }
 
