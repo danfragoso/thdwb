@@ -8,9 +8,24 @@ func (window *Window) ProcessPointerPosition() {
 	if window.hasActiveOverlay {
 		window.ProcessContextMenu()
 	} else {
+		window.selectWidget(window.rootFrame)
+		if window.selectedWidget.BaseWidget().ref == "frame" {
+			window.SetCursor("default")
+		}
+
 		window.ProcessButtons()
 		window.ProcessInputs()
 		window.firePointerPositionEvents()
+	}
+}
+
+func (window *Window) selectWidget(widget Widget) {
+	if widget.BaseWidget().IsPointInside(window.cursorX, window.cursorY) {
+		window.selectedWidget = widget
+
+		for _, childWidget := range widget.Widgets() {
+			window.selectWidget(childWidget)
+		}
 	}
 }
 

@@ -34,8 +34,9 @@ type Window struct {
 	backend     *glBackend
 	frameBuffer *image.RGBA
 
-	defaultCursor *glfw.Cursor
-	pointerCursor *glfw.Cursor
+	defaultCursor  *glfw.Cursor
+	pointerCursor  *glfw.Cursor
+	selectedWidget Widget
 
 	registeredButtons []*ButtonWidget
 	registeredInputs  []*InputWidget
