@@ -133,8 +133,9 @@ type Widget interface {
 }
 
 type baseWidget struct {
-	box         box
-	computedBox box
+	box            box
+	computedBox    box
+	widgetPosition widgetPosition
 
 	font *truetype.Font
 
@@ -158,6 +159,13 @@ type baseWidget struct {
 	buffer *image.RGBA
 	window *Window
 }
+
+type widgetPosition int
+
+const (
+	PositionRelative widgetPosition = iota
+	PositionAbsolute
+)
 
 type FrameOrientation int
 
