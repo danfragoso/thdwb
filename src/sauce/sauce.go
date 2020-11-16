@@ -20,13 +20,14 @@ var imageCache = &structs.ImgCache{}
 
 // GetResource - Makes an http request and returns a resource struct
 func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
-	if URL.Scheme == "thdwb" {
+	switch URL.Scheme {
+	case "thdwb":
 		return fetchInternalPage(URL, browser)
-	} else if URL.Scheme == "file" {
-		return &structs.Resource{
-			Body: pages.RenderFileBrowser(URL.Path),
-			URL:  URL,
-		}
+	case "file":
+		return &structs.Resource{Body: pages.RenderFileBrowser(URL.Path), URL: URL}
+	case "":
+		URL.Scheme = "http"
+		break
 	}
 
 	return fetchExternalPage(URL)
