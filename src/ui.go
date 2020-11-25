@@ -6,7 +6,7 @@ import (
 	structs "thdwb/structs"
 )
 
-func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
+func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
 	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	appBar.SetHeight(62)
 
@@ -20,6 +20,9 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 
 	nextButton := mustard.CreateButtonWidget("", assets.ArrowRight())
 	nextButton.SetWidth(30)
+
+	reloadButton := mustard.CreateButtonWidget("", assets.Reload())
+	reloadButton.SetWidth(30)
 
 	toolsButton := mustard.CreateButtonWidget("", assets.Menu())
 	toolsButton.SetWidth(34)
@@ -37,6 +40,8 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	inputFrame.AttachWidget(previousButton)
 	inputFrame.AttachWidget(rv)
 	inputFrame.AttachWidget(nextButton)
+	inputFrame.AttachWidget(rv)
+	inputFrame.AttachWidget(reloadButton)
 	inputFrame.AttachWidget(rv)
 	inputFrame.AttachWidget(rv)
 	inputFrame.AttachWidget(urlInput)
@@ -71,5 +76,5 @@ func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustar
 	appBar.AttachWidget(statusBar)
 	appBar.AttachWidget(pv)
 
-	return appBar, statusLabel, toolsButton, nextButton, previousButton, urlInput
+	return appBar, statusLabel, toolsButton, nextButton, previousButton, reloadButton, urlInput
 }

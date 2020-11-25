@@ -47,7 +47,7 @@ func main() {
 
 	rootFrame := mustard.CreateFrame(mustard.HorizontalFrame)
 
-	appBar, statusLabel, menuButton, nextButton, previousButton, urlInput := createMainBar(window, browser)
+	appBar, statusLabel, menuButton, nextButton, previousButton, reloadButton, urlInput := createMainBar(window, browser)
 	rootFrame.AttachWidget(appBar)
 
 	loadDocument(browser, settings.Homepage)
@@ -125,6 +125,10 @@ func main() {
 		}
 
 		window.DrawContextMenu()
+	})
+
+	window.RegisterButton(reloadButton, func() {
+		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 	})
 
 	window.RegisterButton(nextButton, func() {
