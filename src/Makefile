@@ -32,4 +32,4 @@ build_assets:
 	@go run -tags=bundleAssets assets/bundler.go
 
 clean_assets:
-	@rm assets/icons.go
+	@rm assets/icons.go assets/pages.go
