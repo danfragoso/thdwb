@@ -89,6 +89,10 @@ func (window *Window) RequestReflow() {
 	window.needsReflow = true
 }
 
+func (window *Window) SetTitle(title string) {
+	window.glw.SetTitle(title)
+}
+
 func (window *Window) RecreateContext() {
 	window.context = gg.NewContext(window.width, window.height)
 }

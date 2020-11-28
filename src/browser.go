@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"strings"
+	"thdwb/bun"
 
 	gg "thdwb/gg"
 	ketchup "thdwb/ketchup"
@@ -36,6 +37,9 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 
 	browser.ActiveDocument.URL = resource.URL
 	browser.ActiveDocument.ContentType = resource.ContentType
+
+	browser.ActiveDocument.Title = bun.GetPageTitle(browser.ActiveDocument.DOM)
+	browser.Window.SetTitle(browser.ActiveDocument.Title)
 
 	browser.Window.RemoveStaticOverlay("debugOverlay")
 
