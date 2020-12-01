@@ -12,6 +12,11 @@ type Settings struct {
 	WindowHeight int    `json:"windowHeight"`
 
 	HiDPI bool `json:"hiDPI"`
+
+	// golang stdlib spec compliant html5 parser
+	ExperimentalHTML bool `json:"experimentalHTML"`
+	// spec-ish compliant layout engine
+	ExperimentalLayout bool `json:"experimentalLayout"`
 }
 
 func LoadSettings(path string) *Settings {
@@ -40,7 +45,6 @@ func LoadSettings(path string) *Settings {
 		settings.WindowHeight = 600
 	}
 
-	// Default to `false` for HiDPI, nothing to do here.
-
+	// Default to `false` for HiDPI, experimentalHTML, and experimentalLayout nothing to do here.
 	return &settings
 }

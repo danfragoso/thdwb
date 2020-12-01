@@ -2,5 +2,9 @@
   "homepage":"thdwb://homepage/",
   "windowWidth": 900,
   "windowHeight": 600,
-  "hiDPI": true
+
+  "hiDPI": true,
+
+  "experimentalHTML": true,
+  "experimentalLayout": true
 }
