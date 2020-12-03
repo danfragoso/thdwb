@@ -5,6 +5,6 @@
 
   "hiDPI": true,
 
-  "experimentalHTML": true,
-  "experimentalLayout": true
+  "experimentalHTML": false,
+  "experimentalLayout": false
 }

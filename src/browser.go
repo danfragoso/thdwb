@@ -32,7 +32,12 @@ func loadDocument(browser *hotdog.WebBrowser, link string) {
 	case "text/plain", "text/xml", "application/json":
 		browser.ActiveDocument = ketchup.ParsePlainText(rawDocument)
 	default:
-		browser.ActiveDocument = ketchup.ParseHTML(rawDocument)
+		if browser.Settings.ExperimentalHTML {
+			browser.ActiveDocument = ketchup.ParseHTMLDocument(rawDocument)
+		} else {
+			browser.ActiveDocument = ketchup.ParseHTML(rawDocument)
+		}
+
 	}
 
 	browser.ActiveDocument.URL = resource.URL

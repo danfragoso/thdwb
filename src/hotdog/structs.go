@@ -18,6 +18,7 @@ type WebBrowser struct {
 	Window      *mustard.Window
 	Profiler    *profiler.Profiler
 	BuildInfo   *BuildInfo
+	Settings    *Settings
 }
 
 type Document struct {

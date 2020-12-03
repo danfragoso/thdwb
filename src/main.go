@@ -25,13 +25,14 @@ func main() {
 	settingsPath := flag.String("settings", defaultPath, "This flag sets the location for the browser settings file.")
 	flag.Parse()
 
-	settings := LoadSettings(*settingsPath)
+	settings := hotdog.LoadSettings(*settingsPath)
 
 	browser := &hotdog.WebBrowser{
 		ActiveDocument: &hotdog.Document{},
 
 		History:  &hotdog.History{},
 		Profiler: profiler.CreateProfiler(),
+		Settings: settings,
 
 		BuildInfo: &hotdog.BuildInfo{
 			GitRevision: gitRevision,
