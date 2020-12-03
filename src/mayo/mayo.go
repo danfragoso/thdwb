@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
 func getDefaultElementDisplay(element string) string {
@@ -42,7 +42,7 @@ func mapSizeValue(sizeValue string) float64 {
 	return float64(value)
 }
 
-func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []string) *structs.Stylesheet {
+func mapPropToStylesheet(parsedStyleSheet *hotdog.Stylesheet, propSlice []string) *hotdog.Stylesheet {
 	propName := propSlice[0]
 	propValue := propSlice[1]
 
@@ -66,7 +66,7 @@ func mapPropToStylesheet(parsedStyleSheet *structs.Stylesheet, propSlice []strin
 	return parsedStyleSheet
 }
 
-func parseInlineStylesheet(attributes []*structs.Attribute, elementStylesheet *structs.Stylesheet) *structs.Stylesheet {
+func parseInlineStylesheet(attributes []*hotdog.Attribute, elementStylesheet *hotdog.Stylesheet) *hotdog.Stylesheet {
 	for i := 0; i < len(attributes); i++ {
 		attributeName := attributes[i].Name
 		if attributeName == "style" {
@@ -86,7 +86,7 @@ func parseInlineStylesheet(attributes []*structs.Attribute, elementStylesheet *s
 	return elementStylesheet
 }
 
-func hasInlineStyle(attributes []*structs.Attribute) bool {
+func hasInlineStyle(attributes []*hotdog.Attribute) bool {
 	inlineStyle := false
 
 	for i := 0; i < len(attributes); i++ {
@@ -99,9 +99,9 @@ func hasInlineStyle(attributes []*structs.Attribute) bool {
 	return inlineStyle
 }
 
-func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *structs.Stylesheet {
-	elementStylesheet := &structs.Stylesheet{
-		BackgroundColor: &structs.ColorRGBA{1, 1, 1, 0},
+func GetElementStylesheet(elementName string, attributes []*hotdog.Attribute) *hotdog.Stylesheet {
+	elementStylesheet := &hotdog.Stylesheet{
+		BackgroundColor: &hotdog.ColorRGBA{1, 1, 1, 0},
 		FontSize:        0,
 		Display:         "",
 		Position:        "Normal",
@@ -126,7 +126,7 @@ func GetElementStylesheet(elementName string, attributes []*structs.Attribute) *
 		if color != nil {
 			elementStylesheet.Color = color
 		} else {
-			elementStylesheet.Color = &structs.ColorRGBA{0, 0, 0, 1}
+			elementStylesheet.Color = &hotdog.ColorRGBA{0, 0, 0, 1}
 		}
 	}
 

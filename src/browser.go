@@ -7,14 +7,14 @@ import (
 	"thdwb/bun"
 
 	gg "thdwb/gg"
+	hotdog "thdwb/hotdog"
 	ketchup "thdwb/ketchup"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
 	sauce "thdwb/sauce"
-	structs "thdwb/structs"
 )
 
-func loadDocument(browser *structs.WebBrowser, link string) {
+func loadDocument(browser *hotdog.WebBrowser, link string) {
 	URL := sauce.ParseURL(link)
 
 	if URL.Scheme == "" && URL.Host == "" {
@@ -48,7 +48,7 @@ func loadDocument(browser *structs.WebBrowser, link string) {
 	}
 }
 
-func loadDocumentFromUrl(browser *structs.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
+func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelWidget, urlInput *mustard.InputWidget, viewPort *mustard.CanvasWidget) {
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
 	statusLabel.RequestRepaint()
 
@@ -64,7 +64,7 @@ func createStatusLabel(perf *profiler.Profiler) string {
 		"Render took: " + perf.GetProfile("render").GetElapsedTime().String() + "; "
 }
 
-func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
+func processPointerPositionEvent(browser *hotdog.WebBrowser, x, y float64) {
 	y -= float64(browser.Viewport.GetOffset())
 	selectedElement := browser.ActiveDocument.DOM.CalcPointIntersection(x, y)
 
@@ -91,12 +91,12 @@ func processPointerPositionEvent(browser *structs.WebBrowser, x, y float64) {
 	}
 }
 
-func printNodeDebug(node *structs.NodeDOM) {
+func printNodeDebug(node *hotdog.NodeDOM) {
 	rect := fmt.Sprintf("{%.2f, %.2f, %.2f, %.2f}", node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height)
 	fmt.Printf("%s [\n %s\n]\n\n", node.Element, rect)
 }
 
-func showDebugOverlay(browser *structs.WebBrowser) {
+func showDebugOverlay(browser *hotdog.WebBrowser) {
 	browser.Window.RemoveStaticOverlay("debugOverlay")
 
 	debugEl := browser.ActiveDocument.SelectedElement
@@ -111,7 +111,7 @@ func showDebugOverlay(browser *structs.WebBrowser) {
 	browser.Window.AddStaticOverlay(overlay)
 }
 
-func paintDebugRect(ctx *gg.Context, node *structs.NodeDOM) {
+func paintDebugRect(ctx *gg.Context, node *hotdog.NodeDOM) {
 	debugString := node.Element + " {" + fmt.Sprint(node.RenderBox.Top, node.RenderBox.Left, node.RenderBox.Width, node.RenderBox.Height) + "}"
 	ctx.DrawRectangle(0, 0, node.RenderBox.Width, node.RenderBox.Height)
 	ctx.SetRGBA(.2, .8, .4, .3)

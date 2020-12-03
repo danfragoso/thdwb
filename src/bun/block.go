@@ -2,10 +2,10 @@ package bun
 
 import (
 	gg "thdwb/gg"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
+func paintBlockElement(ctx *gg.Context, node *hotdog.NodeDOM) {
 	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
 	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
 	ctx.Fill()
@@ -16,7 +16,7 @@ func paintBlockElement(ctx *gg.Context, node *structs.NodeDOM) {
 	ctx.Fill()
 }
 
-func calculateBlockLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
+func calculateBlockLayout(ctx *gg.Context, node *hotdog.NodeDOM, childIdx int) {
 	if node.Style.Width == 0 {
 		node.RenderBox.Width = node.Parent.RenderBox.Width
 	}

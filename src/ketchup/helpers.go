@@ -2,15 +2,15 @@ package ketchup
 
 import (
 	mayo "thdwb/mayo"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 
 	"golang.org/x/net/html"
 )
 
-func buildKetchupNode(node *html.Node, document *structs.Document) *structs.NodeDOM {
+func buildKetchupNode(node *html.Node, document *hotdog.Document) *hotdog.NodeDOM {
 	var element, content string
 
-	ketchupNode := &structs.NodeDOM{}
+	ketchupNode := &hotdog.NodeDOM{}
 	attributes := retrieveAttributes(node)
 
 	children := retrieveChildren(node)
@@ -51,7 +51,7 @@ func buildKetchupNode(node *html.Node, document *structs.Document) *structs.Node
 	ketchupNode.NeedsRepaint = true
 
 	ketchupNode.Style = mayo.GetElementStylesheet(element, attributes)
-	ketchupNode.RenderBox = &structs.RenderBox{}
+	ketchupNode.RenderBox = &hotdog.RenderBox{}
 
 	return ketchupNode
 }
@@ -73,10 +73,10 @@ func retrieveChildren(node *html.Node) []*html.Node {
 	return children
 }
 
-func retrieveAttributes(node *html.Node) []*structs.Attribute {
-	var attributes []*structs.Attribute
+func retrieveAttributes(node *html.Node) []*hotdog.Attribute {
+	var attributes []*hotdog.Attribute
 	for _, attribute := range node.Attr {
-		attributes = append(attributes, &structs.Attribute{
+		attributes = append(attributes, &hotdog.Attribute{
 			Name:  attribute.Key,
 			Value: attribute.Val,
 		})

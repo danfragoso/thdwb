@@ -1,10 +1,10 @@
 package mayo
 
 import (
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func ReflowNode(node *structs.NodeDOM, prev *structs.NodeDOM, siblingsOffset float64) float64 {
+func ReflowNode(node *hotdog.NodeDOM, prev *hotdog.NodeDOM, siblingsOffset float64) float64 {
 	for i := 0; i < len(node.Children); i++ {
 		siblingsOffset += ReflowNode(node.Children[i], node.Children[i], siblingsOffset)
 	}

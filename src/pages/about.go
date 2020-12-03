@@ -1,10 +1,10 @@
 package pages
 
 import (
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func RenderAboutPage(buildInfo *structs.BuildInfo) string {
+func RenderAboutPage(buildInfo *hotdog.BuildInfo) string {
 	var template string
 	template = `
 	<html lang="en">

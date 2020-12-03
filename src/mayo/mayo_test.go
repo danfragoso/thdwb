@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -28,14 +28,14 @@ func TestHexStringToColor(t *testing.T) {
 
 	for _, validColor := range validColors {
 		result := HexStringToColor(validColor)
-		expected := &structs.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
-		assert.Equal(t, expected, result, "Expecting: &structs.ColorRGBA{0, 0, 1, 1}")
+		expected := &hotdog.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
+		assert.Equal(t, expected, result, "Expecting: &hotdog.ColorRGBA{0, 0, 1, 1}")
 	}
 
 	for _, invalidColor := range invalidColors {
 		result := HexStringToColor(invalidColor)
-		expected := &structs.ColorRGBA{}
-		assert.Equal(t, expected, result, "Expecting: &structs.ColorRGBA{}")
+		expected := &hotdog.ColorRGBA{}
+		assert.Equal(t, expected, result, "Expecting: &hotdog.ColorRGBA{}")
 	}
 }
 
@@ -45,8 +45,8 @@ func TestRGBAToColor(t *testing.T) {
 
 	for _, blue := range blues {
 		result := RGBAToColor(blue)
-		expected := &structs.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
-		assert.Equal(t, expected, result, "Expecting: &structs.ColorRGBA{0, 0, 1, 1}")
+		expected := &hotdog.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
+		assert.Equal(t, expected, result, "Expecting: &hotdog.ColorRGBA{0, 0, 1, 1}")
 	}
 }
 
@@ -56,7 +56,7 @@ func TestMapCSSColor(t *testing.T) {
 
 	for _, blue := range blues {
 		result := MapCSSColor(blue)
-		expected := &structs.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
-		assert.Equal(t, expected, result, "Expecting: &structs.ColorRGBA{0, 0, 1, 1}")
+		expected := &hotdog.ColorRGBA{R: 0, G: 0, B: 1, A: 1}
+		assert.Equal(t, expected, result, "Expecting: &hotdog.ColorRGBA{0, 0, 1, 1}")
 	}
 }

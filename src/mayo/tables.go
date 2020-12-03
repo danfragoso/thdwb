@@ -3,13 +3,13 @@ package mayo
 import (
 	"regexp"
 
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
 var rgba = regexp.MustCompile(`rgba?\([\.?\d?\.?\d?%?\s?,?]+\)`)
 var rgbaParams = regexp.MustCompile(`\([\.?\d?\.?\d?%?\s?,?]+\)`)
 
-var colorTable = map[string]*structs.ColorRGBA{
+var colorTable = map[string]*hotdog.ColorRGBA{
 	"maroon":         {R: 0.5, G: 0.0, B: 0.0, A: 1.0},
 	"red":            {R: 1.0, G: 0.0, B: 0.0, A: 1.0},
 	"orange":         {R: 1.0, G: 0.6, B: 0.0, A: 1.0},
@@ -41,6 +41,6 @@ var elementFontTable = map[string]float64{
 	"p":  float64(14),
 }
 
-var elementColorTable = map[string]*structs.ColorRGBA{
+var elementColorTable = map[string]*hotdog.ColorRGBA{
 	"a": {R: 0.0, G: 0.0, B: 1.0, A: 1.0},
 }

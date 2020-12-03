@@ -3,10 +3,10 @@ package main
 import (
 	assets "thdwb/assets"
 	mustard "thdwb/mustard"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func createMainBar(window *mustard.Window, browser *structs.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
+func createMainBar(window *mustard.Window, browser *hotdog.WebBrowser) (*mustard.Frame, *mustard.LabelWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.ButtonWidget, *mustard.InputWidget) {
 	appBar := mustard.CreateFrame(mustard.HorizontalFrame)
 	appBar.SetHeight(62)
 

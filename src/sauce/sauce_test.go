@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,7 +26,7 @@ func TestGetResource(t *testing.T) {
 	}
 
 	resource := GetResource(url, nil)
-	var testResorce *structs.Resource
+	var testResorce *hotdog.Resource
 
 	assert.IsType(t, testResorce, resource, "Expecting: Resource Struct")
 	assert.Equal(t, "OK!", resource.Body, "Expecting: OK!")

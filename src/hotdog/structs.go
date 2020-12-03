@@ -1,4 +1,4 @@
-package structs
+package hotdog
 
 import (
 	"errors"

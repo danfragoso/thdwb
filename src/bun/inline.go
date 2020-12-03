@@ -8,10 +8,10 @@ import (
 	"thdwb/assets"
 	gg "thdwb/gg"
 	"thdwb/sauce"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func paintInlineElement(ctx *gg.Context, node *structs.NodeDOM) {
+func paintInlineElement(ctx *gg.Context, node *hotdog.NodeDOM) {
 	ctx.DrawRectangle(node.RenderBox.Left, node.RenderBox.Top, node.RenderBox.Width, node.RenderBox.Height)
 	ctx.SetRGBA(node.Style.BackgroundColor.R, node.Style.BackgroundColor.G, node.Style.BackgroundColor.B, node.Style.BackgroundColor.A)
 	ctx.Fill()
@@ -31,7 +31,7 @@ func paintInlineElement(ctx *gg.Context, node *structs.NodeDOM) {
 	ctx.Fill()
 }
 
-func fetchNodeImage(node *structs.NodeDOM) (image.Image, error) {
+func fetchNodeImage(node *hotdog.NodeDOM) (image.Image, error) {
 	imgPath := node.Attr("src")
 
 	if imgPath != "" {
@@ -55,7 +55,7 @@ func fetchNodeImage(node *structs.NodeDOM) (image.Image, error) {
 	return nil, errors.New("Failed to fetch " + imgPath)
 }
 
-func calculateInlineLayout(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
+func calculateInlineLayout(ctx *gg.Context, node *hotdog.NodeDOM, childIdx int) {
 	ctx.SetFont(sansSerif[node.Style.FontWeight], node.Style.FontSize)
 
 	if childIdx > 0 && node.Parent.Children[childIdx-1] != nil {

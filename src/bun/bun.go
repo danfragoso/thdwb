@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	gg "thdwb/gg"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
-func RenderDocument(ctx *gg.Context, document *structs.Document) error {
+func RenderDocument(ctx *gg.Context, document *hotdog.Document) error {
 	body, err := document.DOM.FindChildByName("body")
 	if err != nil {
 		// TODO: Handle documents without body elements by synthesizing one.
@@ -25,19 +25,19 @@ func RenderDocument(ctx *gg.Context, document *structs.Document) error {
 	return nil
 }
 
-func getNodeContent(NodeDOM *structs.NodeDOM) string {
+func getNodeContent(NodeDOM *hotdog.NodeDOM) string {
 	return NodeDOM.Content
 }
 
-func getElementName(NodeDOM *structs.NodeDOM) string {
+func getElementName(NodeDOM *hotdog.NodeDOM) string {
 	return NodeDOM.Element
 }
 
-func getNodeChildren(NodeDOM *structs.NodeDOM) []*structs.NodeDOM {
+func getNodeChildren(NodeDOM *hotdog.NodeDOM) []*hotdog.NodeDOM {
 	return NodeDOM.Children
 }
 
-func walkDOM(TreeDOM *structs.NodeDOM, d string) {
+func walkDOM(TreeDOM *hotdog.NodeDOM, d string) {
 	fmt.Println(d, getElementName(TreeDOM))
 	nodeChildren := getNodeChildren(TreeDOM)
 
@@ -46,10 +46,10 @@ func walkDOM(TreeDOM *structs.NodeDOM, d string) {
 	}
 }
 
-func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
+func layoutDOM(ctx *gg.Context, node *hotdog.NodeDOM, childIdx int) {
 	nodeChildren := getNodeChildren(node)
 
-	node.RenderBox = &structs.RenderBox{}
+	node.RenderBox = &hotdog.RenderBox{}
 	calculateNode(ctx, node, childIdx)
 
 	for i := 0; i < len(nodeChildren); i++ {
@@ -60,7 +60,7 @@ func layoutDOM(ctx *gg.Context, node *structs.NodeDOM, childIdx int) {
 	paintNode(ctx, node)
 }
 
-func paintNode(ctx *gg.Context, node *structs.NodeDOM) {
+func paintNode(ctx *gg.Context, node *hotdog.NodeDOM) {
 	switch node.Style.Display {
 	case "block":
 		paintBlockElement(ctx, node)
@@ -71,7 +71,7 @@ func paintNode(ctx *gg.Context, node *structs.NodeDOM) {
 	}
 }
 
-func calculateNode(ctx *gg.Context, node *structs.NodeDOM, postion int) {
+func calculateNode(ctx *gg.Context, node *hotdog.NodeDOM, postion int) {
 	switch node.Style.Display {
 	case "block":
 		calculateBlockLayout(ctx, node, postion)
@@ -82,7 +82,7 @@ func calculateNode(ctx *gg.Context, node *structs.NodeDOM, postion int) {
 	}
 }
 
-func GetPageTitle(TreeDOM *structs.NodeDOM) string {
+func GetPageTitle(TreeDOM *hotdog.NodeDOM) string {
 	nodeChildren := getNodeChildren(TreeDOM)
 	pageTitle := "Sem Titulo"
 

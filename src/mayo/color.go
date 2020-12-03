@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
 func hexToFloatInRange(hex string) float64 {
@@ -17,10 +17,10 @@ func hexToFloatInRange(hex string) float64 {
 	return float64(number / 255)
 }
 
-// RGBAToColor - Transforms RGBA color string to *structs.ColorRGBA
+// RGBAToColor - Transforms RGBA color string to *hotdog.ColorRGBA
 // TODO - Fix this spaghetti and parse alpha values
-func RGBAToColor(colorString string) *structs.ColorRGBA {
-	var color *structs.ColorRGBA
+func RGBAToColor(colorString string) *hotdog.ColorRGBA {
+	var color *hotdog.ColorRGBA
 
 	if rgbaParams.MatchString(colorString) {
 		paramString := rgbaParams.FindString(colorString)
@@ -70,7 +70,7 @@ func RGBAToColor(colorString string) *structs.ColorRGBA {
 
 			alpha = 1
 
-			return &structs.ColorRGBA{
+			return &hotdog.ColorRGBA{
 				R: red,
 				G: green,
 				B: blue,
@@ -82,14 +82,14 @@ func RGBAToColor(colorString string) *structs.ColorRGBA {
 	return color
 }
 
-// HexStringToColor - Transforms hex color string to *structs.ColorRGBA
-func HexStringToColor(colorString string) *structs.ColorRGBA {
+// HexStringToColor - Transforms hex color string to *hotdog.ColorRGBA
+func HexStringToColor(colorString string) *hotdog.ColorRGBA {
 	colorString = strings.ToLower(colorString)
 	colorStringLen := len(colorString)
 
 	switch colorStringLen {
 	case 9:
-		return &structs.ColorRGBA{
+		return &hotdog.ColorRGBA{
 			R: hexToFloatInRange(colorString[1:3]),
 			G: hexToFloatInRange(colorString[3:5]),
 			B: hexToFloatInRange(colorString[5:7]),
@@ -97,7 +97,7 @@ func HexStringToColor(colorString string) *structs.ColorRGBA {
 		}
 
 	case 7:
-		return &structs.ColorRGBA{
+		return &hotdog.ColorRGBA{
 			R: hexToFloatInRange(colorString[1:3]),
 			G: hexToFloatInRange(colorString[3:5]),
 			B: hexToFloatInRange(colorString[5:7]),
@@ -105,7 +105,7 @@ func HexStringToColor(colorString string) *structs.ColorRGBA {
 		}
 
 	case 5:
-		return &structs.ColorRGBA{
+		return &hotdog.ColorRGBA{
 			R: hexToFloatInRange(colorString[1:2] + colorString[1:2]),
 			G: hexToFloatInRange(colorString[2:3] + colorString[2:3]),
 			B: hexToFloatInRange(colorString[3:4] + colorString[3:4]),
@@ -113,7 +113,7 @@ func HexStringToColor(colorString string) *structs.ColorRGBA {
 		}
 
 	case 4:
-		return &structs.ColorRGBA{
+		return &hotdog.ColorRGBA{
 			R: hexToFloatInRange(colorString[1:2] + colorString[1:2]),
 			G: hexToFloatInRange(colorString[2:3] + colorString[2:3]),
 			B: hexToFloatInRange(colorString[3:4] + colorString[3:4]),
@@ -121,12 +121,12 @@ func HexStringToColor(colorString string) *structs.ColorRGBA {
 		}
 
 	default:
-		return &structs.ColorRGBA{}
+		return &hotdog.ColorRGBA{}
 	}
 }
 
-// MapCSSColor - Transforms css color strings to #structs.ColorRGBA
-func MapCSSColor(colorString string) *structs.ColorRGBA {
+// MapCSSColor - Transforms css color strings to #hotdog.ColorRGBA
+func MapCSSColor(colorString string) *hotdog.ColorRGBA {
 	if string(colorString[0]) == "#" {
 		return HexStringToColor(colorString)
 	} else if rgba.MatchString(colorString) {

@@ -2,18 +2,18 @@ package ketchup
 
 import (
 	"strings"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 
 	"golang.org/x/net/html"
 )
 
-func ParseHTMLDocument(document string) *structs.Document {
+func ParseHTMLDocument(document string) *hotdog.Document {
 	parsedDoc, err := html.Parse(strings.NewReader(document))
 	if err != nil {
 		panic(err)
 	}
 
-	HTMLDocument := &structs.Document{}
+	HTMLDocument := &hotdog.Document{}
 	HTMLDocument.RawDocument = document
 
 	HTMLDocument.DOM = buildKetchupNode(parsedDoc, HTMLDocument)

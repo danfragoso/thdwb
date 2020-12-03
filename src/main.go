@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"runtime"
+
 	bun "thdwb/bun"
-	"thdwb/gg"
+	gg "thdwb/gg"
+	hotdog "thdwb/hotdog"
 	mustard "thdwb/mustard"
 	profiler "thdwb/profiler"
-	structs "thdwb/structs"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -26,13 +27,13 @@ func main() {
 
 	settings := LoadSettings(*settingsPath)
 
-	browser := &structs.WebBrowser{
-		ActiveDocument: &structs.Document{},
+	browser := &hotdog.WebBrowser{
+		ActiveDocument: &hotdog.Document{},
 
-		History:  &structs.History{},
+		History:  &hotdog.History{},
 		Profiler: profiler.CreateProfiler(),
 
-		BuildInfo: &structs.BuildInfo{
+		BuildInfo: &hotdog.BuildInfo{
 			GitRevision: gitRevision,
 			GitBranch:   gitBranch,
 			HostInfo:    hostInfo,
@@ -66,7 +67,7 @@ func main() {
 
 			err := bun.RenderDocument(drawingContext, browser.ActiveDocument)
 			if err != nil {
-				structs.Log("render", "Can't render page: "+err.Error())
+				hotdog.Log("render", "Can't render page: "+err.Error())
 			}
 
 			canvas.SetContext(drawingContext)
@@ -81,7 +82,7 @@ func main() {
 
 			body, err := browser.ActiveDocument.DOM.FindChildByName("body")
 			if err != nil {
-				structs.Log("render", "can't find body element: "+err.Error())
+				hotdog.Log("render", "can't find body element: "+err.Error())
 				return
 			}
 
@@ -161,7 +162,7 @@ func main() {
 
 		body, err := browser.ActiveDocument.DOM.FindChildByName("body")
 		if err != nil {
-			structs.Log("render", "Can't find body element: "+err.Error())
+			hotdog.Log("render", "Can't find body element: "+err.Error())
 			return
 		}
 

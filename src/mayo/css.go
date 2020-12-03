@@ -1,9 +1,9 @@
 package mayo
 
-import structs "thdwb/structs"
+import hotdog "thdwb/hotdog"
 
-func parseStylesheet(string) []*structs.StyleElement {
-	var styleSheet []*structs.StyleElement
+func parseStylesheet(string) []*hotdog.StyleElement {
+	var styleSheet []*hotdog.StyleElement
 
 	return styleSheet
 }

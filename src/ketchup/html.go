@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	mayo "thdwb/mayo"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
 var xmlTag = regexp.MustCompile(`(\<.+?\>)|(\<//?\w+\>\\?)`)
@@ -15,13 +15,13 @@ var tagContent = regexp.MustCompile(`(.+?)\<\/`)
 var tagName = regexp.MustCompile(`(\<\w+)`)
 var attr = regexp.MustCompile(`\w+=".+?"`)
 
-func extractAttributes(tag string) []*structs.Attribute {
+func extractAttributes(tag string) []*hotdog.Attribute {
 	rawAttrArray := attr.FindAllString(tag, -1)
-	elementAttrs := []*structs.Attribute{}
+	elementAttrs := []*hotdog.Attribute{}
 
 	for i := 0; i < len(rawAttrArray); i++ {
 		attrStringSlice := strings.Split(rawAttrArray[i], "=")
-		attr := &structs.Attribute{
+		attr := &hotdog.Attribute{
 			Name:  attrStringSlice[0],
 			Value: strings.Trim(attrStringSlice[1], "\""),
 		}
@@ -59,29 +59,29 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
-func ParsePlainText(document string) *structs.Document {
+func ParsePlainText(document string) *hotdog.Document {
 	documentTitle := "Text Document"
-	textDocument := &structs.Document{
+	textDocument := &hotdog.Document{
 		Title: documentTitle,
 
 		RawDocument: document,
-		DOM: &structs.NodeDOM{
+		DOM: &hotdog.NodeDOM{
 			Element: "html", NeedsReflow: true, NeedsRepaint: true,
-			Style:     mayo.GetElementStylesheet("html", []*structs.Attribute{}),
-			RenderBox: &structs.RenderBox{},
+			Style:     mayo.GetElementStylesheet("html", []*hotdog.Attribute{}),
+			RenderBox: &hotdog.RenderBox{},
 		},
 	}
 
 	textDocument.DOM.Document = textDocument
-	textDocument.DOM.Children = []*structs.NodeDOM{
-		&structs.NodeDOM{Element: "head", Document: textDocument,
-			Style:     mayo.GetElementStylesheet("head", []*structs.Attribute{}),
-			RenderBox: &structs.RenderBox{}, Parent: textDocument.DOM,
+	textDocument.DOM.Children = []*hotdog.NodeDOM{
+		&hotdog.NodeDOM{Element: "head", Document: textDocument,
+			Style:     mayo.GetElementStylesheet("head", []*hotdog.Attribute{}),
+			RenderBox: &hotdog.RenderBox{}, Parent: textDocument.DOM,
 		},
-		&structs.NodeDOM{
+		&hotdog.NodeDOM{
 			Element: "body", NeedsReflow: true, NeedsRepaint: true,
-			Style:     mayo.GetElementStylesheet("body", []*structs.Attribute{}),
-			RenderBox: &structs.RenderBox{}, Document: textDocument,
+			Style:     mayo.GetElementStylesheet("body", []*hotdog.Attribute{}),
+			RenderBox: &hotdog.RenderBox{}, Document: textDocument,
 			Parent: textDocument.DOM,
 		},
 	}
@@ -89,9 +89,9 @@ func ParsePlainText(document string) *structs.Document {
 	documentLines := strings.Split(document, "\n")
 	body, _ := textDocument.DOM.FindChildByName("body")
 	for _, line := range documentLines {
-		body.Children = append(body.Children, &structs.NodeDOM{
-			Element: "p", Content: line, RenderBox: &structs.RenderBox{},
-			Style:  mayo.GetElementStylesheet("p", []*structs.Attribute{}),
+		body.Children = append(body.Children, &hotdog.NodeDOM{
+			Element: "p", Content: line, RenderBox: &hotdog.RenderBox{},
+			Style:  mayo.GetElementStylesheet("p", []*hotdog.Attribute{}),
 			Parent: body,
 		})
 	}
@@ -99,8 +99,8 @@ func ParsePlainText(document string) *structs.Document {
 	return textDocument
 }
 
-func ParseHTML(document string) *structs.Document {
-	HTMLDocument := &structs.Document{}
+func ParseHTML(document string) *hotdog.Document {
+	HTMLDocument := &hotdog.Document{}
 
 	HTMLDocument.RawDocument = document
 	lastNode := HTMLDocument.DOM
@@ -108,7 +108,7 @@ func ParseHTML(document string) *structs.Document {
 	document = strings.ReplaceAll(document, "\n", "")
 
 	for parseDocument == true {
-		var currentNode *structs.NodeDOM
+		var currentNode *hotdog.NodeDOM
 
 		currentTag := xmlTag.FindString(document)
 		currentTagIndex := xmlTag.FindStringIndex(document)
@@ -141,17 +141,17 @@ func ParseHTML(document string) *structs.Document {
 				extractedAttributes := extractAttributes(currentTag)
 				elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
 
-				currentNode = &structs.NodeDOM{
+				currentNode = &hotdog.NodeDOM{
 					Element:    currentTagName,
 					Content:    "",
-					Children:   []*structs.NodeDOM{},
+					Children:   []*hotdog.NodeDOM{},
 					Attributes: extractedAttributes,
 					Style:      elementStylesheet,
 					Parent:     lastNode,
 
 					NeedsReflow:  true,
 					NeedsRepaint: true,
-					RenderBox:    &structs.RenderBox{},
+					RenderBox:    &hotdog.RenderBox{},
 
 					Document: HTMLDocument,
 				}

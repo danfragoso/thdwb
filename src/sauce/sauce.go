@@ -11,20 +11,20 @@ import (
 
 	"thdwb/assets"
 	pages "thdwb/pages"
-	structs "thdwb/structs"
+	hotdog "thdwb/hotdog"
 )
 
 var client = &http.Client{}
-var cache = &structs.ResourceCache{}
-var imageCache = &structs.ImgCache{}
+var cache = &hotdog.ResourceCache{}
+var imageCache = &hotdog.ImgCache{}
 
 // GetResource - Makes an http request and returns a resource struct
-func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
+func GetResource(URL *url.URL, browser *hotdog.WebBrowser) *hotdog.Resource {
 	switch URL.Scheme {
 	case "thdwb":
 		return fetchInternalPage(URL, browser)
 	case "file":
-		return &structs.Resource{Body: pages.RenderFileBrowser(URL.Path), URL: URL}
+		return &hotdog.Resource{Body: pages.RenderFileBrowser(URL.Path), URL: URL}
 	case "":
 		URL.Scheme = "http"
 		break
@@ -33,42 +33,42 @@ func GetResource(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
 	return fetchExternalPage(URL)
 }
 
-func fetchInternalPage(URL *url.URL, browser *structs.WebBrowser) *structs.Resource {
+func fetchInternalPage(URL *url.URL, browser *hotdog.WebBrowser) *hotdog.Resource {
 	switch URL.Host {
 	case "homepage":
-		return &structs.Resource{
+		return &hotdog.Resource{
 			Body: string(assets.HomePage()),
 			URL:  URL,
 		}
 
 	case "history":
-		return &structs.Resource{
+		return &hotdog.Resource{
 			Body: buildHistoryPage(browser.History),
 			URL:  URL,
 		}
 	case "about":
-		return &structs.Resource{
+		return &hotdog.Resource{
 			Body: pages.RenderAboutPage(browser.BuildInfo),
 			URL:  URL,
 		}
 	default:
-		return &structs.Resource{
+		return &hotdog.Resource{
 			Body: string(assets.DefaultPage()),
 			URL:  URL,
 		}
 	}
 }
 
-func fetchExternalPage(URL *url.URL) *structs.Resource {
+func fetchExternalPage(URL *url.URL) *hotdog.Resource {
 	url := URL.String()
-	go structs.Log("sauce", "Downloading page "+url)
+	go hotdog.Log("sauce", "Downloading page "+url)
 
 	cachedResource := cache.GetResource(url)
 	if cachedResource != nil {
 		return cachedResource
 	}
 
-	resource := &structs.Resource{Key: url, URL: URL}
+	resource := &hotdog.Resource{Key: url, URL: URL}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -145,7 +145,7 @@ func GetImage(URL *url.URL) []byte {
 	return img
 }
 
-func buildHistoryPage(history *structs.History) string {
+func buildHistoryPage(history *hotdog.History) string {
 	d := `
 	<html>
 		<head>
