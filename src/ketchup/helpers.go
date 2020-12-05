@@ -1,8 +1,8 @@
 package ketchup
 
 import (
-	mayo "thdwb/mayo"
 	hotdog "thdwb/hotdog"
+	mayo "thdwb/mayo"
 
 	"golang.org/x/net/html"
 )

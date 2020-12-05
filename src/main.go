@@ -66,7 +66,7 @@ func main() {
 			ctxBounds := canvas.GetContext().Image().Bounds()
 			drawingContext := gg.NewContext(ctxBounds.Max.X, ctxBounds.Max.Y)
 
-			err := bun.RenderDocument(drawingContext, browser.ActiveDocument)
+			err := bun.RenderDocument(drawingContext, browser.ActiveDocument, settings.ExperimentalLayout)
 			if err != nil {
 				hotdog.Log("render", "Can't render page: "+err.Error())
 			}

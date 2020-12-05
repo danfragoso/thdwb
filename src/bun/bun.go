@@ -7,20 +7,33 @@ import (
 	hotdog "thdwb/hotdog"
 )
 
-func RenderDocument(ctx *gg.Context, document *hotdog.Document) error {
-	body, err := document.DOM.FindChildByName("body")
-	if err != nil {
-		// TODO: Handle documents without body elements by synthesizing one.
-		return err
+func RenderDocument(ctx *gg.Context, document *hotdog.Document, experimentalLayout bool) error {
+	if !experimentalLayout {
+		body, err := document.DOM.FindChildByName("body")
+		if err != nil {
+			// TODO: Handle documents without body elements by synthesizing one.
+			return err
+		}
+
+		document.DOM.RenderBox.Width = float64(ctx.Width())
+		document.DOM.RenderBox.Height = float64(ctx.Height())
+
+		ctx.SetRGB(1, 1, 1)
+		ctx.Clear()
+
+		layoutDOM(ctx, body, 0)
+	} else {
+		html, err := document.DOM.FindChildByName("html")
+		if err != nil {
+			return err
+		}
+
+		renderTree := createRenderTree(html)
+		renderTree.RenderBox.Width = float64(ctx.Width())
+		renderTree.RenderBox.Height = float64(ctx.Height())
+
+		fmt.Println(renderTree)
 	}
-
-	document.DOM.RenderBox.Width = float64(ctx.Width())
-	document.DOM.RenderBox.Height = float64(ctx.Height())
-
-	ctx.SetRGB(1, 1, 1)
-	ctx.Clear()
-
-	layoutDOM(ctx, body, 0)
 
 	return nil
 }

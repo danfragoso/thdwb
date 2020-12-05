@@ -29,5 +29,5 @@ func TestRenderDocument_noBody(t *testing.T) {
 		}
 	}()
 
-	RenderDocument(dctx, doc)
+	RenderDocument(dctx, doc, false)
 }
