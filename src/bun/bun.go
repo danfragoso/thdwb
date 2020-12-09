@@ -32,6 +32,10 @@ func RenderDocument(ctx *gg.Context, document *hotdog.Document, experimentalLayo
 		renderTree.RenderBox.Width = float64(ctx.Width())
 		renderTree.RenderBox.Height = float64(ctx.Height())
 
+		layoutNode(ctx, renderTree)
+		paintNode(ctx, renderTree)
+		paintText(ctx, renderTree)
+
 		renderTree.Print(0)
 	}
 

@@ -26,7 +26,7 @@ type NodeDOM struct {
 
 func (node *NodeDOM) Print(d int) {
 	spacing := strings.Repeat("-", d)
-	fmt.Printf("|%s> %s\n", spacing, node.Element)
+	fmt.Printf("|%s> %s [%s]\n", spacing, node.Element, node.Content)
 
 	for _, child := range node.Children {
 		child.Print(d + 1)
