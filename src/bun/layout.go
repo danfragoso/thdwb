@@ -1,6 +1,9 @@
 package bun
 
-import hotdog "thdwb/hotdog"
+import (
+	"thdwb/gg"
+	hotdog "thdwb/hotdog"
+)
 
 func createRenderTree(root *hotdog.NodeDOM) *hotdog.NodeDOM {
 	if root.Style.Display == "none" {
@@ -24,4 +27,12 @@ func createRenderTree(root *hotdog.NodeDOM) *hotdog.NodeDOM {
 	}
 
 	return node
+}
+
+func layoutNode(ctx *gg.Context, node *hotdog.NodeDOM) {
+
+}
+
+func paintText(ctx *gg.Context, node *hotdog.NodeDOM) {
+
 }

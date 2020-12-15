@@ -15,7 +15,10 @@ func getDefaultElementDisplay(element string) string {
 		displayType = "none"
 	case "li":
 		displayType = "list-item"
-	case "a", "abbr", "acronym", "b", "bdo", "big", "br", "button", "cite", "code", "dfn", "em", "i", "img", "input", "kbd", "label", "map", "object", "output", "q", "samp", "select", "small", "span", "strong", "sub", "sup", "textarea", "time", "tt", "var", "font":
+	case "html:text", "a", "abbr", "acronym", "b", "bdo", "big", "br",
+		"button", "cite", "code", "dfn", "em", "i", "img", "input", "kbd",
+		"label", "map", "object", "output", "q", "samp", "select", "small",
+		"span", "strong", "sub", "sup", "textarea", "time", "tt", "var", "font":
 		displayType = "inline"
 	}
 
