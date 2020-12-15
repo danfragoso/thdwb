@@ -150,6 +150,10 @@ func (widget *baseWidget) ComputedBox() *box {
 
 func (widget *baseWidget) SetWindow(window *Window) {
 	widget.window = window
+
+	for _, childWidget := range widget.widgets {
+		childWidget.SetWindow(window)
+	}
 }
 
 func (widget *baseWidget) Buffer() *image.RGBA {
@@ -161,7 +165,32 @@ func (widget *baseWidget) Widgets() []Widget {
 }
 
 func (widget *baseWidget) AttachWidget(wd Widget) {
+	wd.SetWindow(widget.window)
 	widget.widgets = append(widget.widgets, wd)
+
+	if widget.window != nil && widget.window.rootFrame != nil {
+		widget.window.rootFrame.RequestReflow()
+	}
+}
+
+func (widget *baseWidget) DetachWidget(wd Widget) Widget {
+	var detachedWidget Widget
+	var childWidgets []Widget
+
+	for _, childWidget := range widget.widgets {
+		if childWidget == wd {
+			detachedWidget = childWidget
+		} else {
+			childWidgets = append(childWidgets, childWidget)
+		}
+	}
+
+	widget.widgets = childWidgets
+	if widget.window != nil && widget.window.rootFrame != nil {
+		widget.window.rootFrame.RequestReflow()
+	}
+
+	return detachedWidget
 }
 
 func (widget *baseWidget) BaseWidget() *baseWidget {
