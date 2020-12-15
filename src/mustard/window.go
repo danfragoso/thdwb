@@ -71,6 +71,7 @@ func (window *Window) GetSize() (int, int) {
 
 func (window *Window) processFrame() {
 	window.glw.MakeContextCurrent()
+	window.glw.SwapBuffers()
 
 	if window.needsReflow {
 		drawRootFrame(window)
@@ -80,8 +81,10 @@ func (window *Window) processFrame() {
 	}
 
 	window.generateTexture()
+
+	gl.Viewport(0, 0, int32(window.width), int32(window.height))
 	gl.DrawArrays(gl.TRIANGLES, 0, 6)
-	window.glw.SwapBuffers()
+
 	glfw.PollEvents()
 }
 
@@ -113,8 +116,6 @@ func (window *Window) addEvents() {
 		window.width, window.height = swidth, sheight
 		window.RecreateContext()
 		//window.RecreateOverlayContext()
-
-		gl.Viewport(0, 0, int32(width), int32(height))
 		window.needsReflow = true
 	})
 
