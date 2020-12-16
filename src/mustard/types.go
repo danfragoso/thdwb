@@ -179,6 +179,7 @@ const (
 	imageWidget
 	inputWidget
 	labelWidget
+	treeWidget
 	scrollbarWidget
 	textWidget
 )
@@ -220,6 +221,29 @@ type LabelWidget struct {
 
 	fontSize  float64
 	fontColor string
+}
+
+type TreeWidget struct {
+	baseWidget
+
+	fontSize  float64
+	fontColor string
+	nodes     []*TreeWidgetNode
+}
+
+func (widget *TreeWidget) AddNode(childNode *TreeWidgetNode) {
+	widget.nodes = append(widget.nodes, childNode)
+}
+
+type TreeWidgetNode struct {
+	Content  string
+	Parent   *TreeWidgetNode
+	Children []*TreeWidgetNode
+}
+
+func (node *TreeWidgetNode) AddNode(childNode *TreeWidgetNode) {
+	childNode.Parent = node
+	node.Children = append(node.Children, childNode)
 }
 
 type TextWidget struct {
