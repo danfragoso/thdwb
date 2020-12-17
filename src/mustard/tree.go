@@ -80,7 +80,8 @@ func (tree *TreeWidget) draw() {
 	context.Fill()
 
 	for _, node := range tree.nodes {
-		drawNode(context, node, tree)
+		flowNode(context, node, tree, 0)
+		drawNode(context, node, tree, 0)
 	}
 
 	if tree.buffer == nil || tree.buffer.Bounds().Max.X != width && tree.buffer.Bounds().Max.Y != height {
@@ -95,11 +96,24 @@ func (tree *TreeWidget) draw() {
 	}, context.Image(), image.Point{left, top}, draw.Over)
 }
 
-func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget) {
+func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
+	if node.PreviousSibling() == nil {
+		if node.Parent != nil {
+			node.box.top = node.Parent.box.top + node.Parent.box.height
+		}
+	}
+}
+
+func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
+	for _, childNode := range node.Children {
+		drawNode(context, childNode, tree, level+1)
+	}
+
 	top, left, _, _ := tree.computedBox.GetCoords()
+	padding := 10 * level
 
 	context.SetHexColor(tree.fontColor)
 	context.SetFont(tree.font, tree.fontSize)
-	context.DrawString("-> "+node.Content, float64(left)+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
+	context.DrawString("-> "+node.Content, float64(left+padding)+tree.fontSize/4, float64(top+padding)+tree.fontSize*2/2)
 	context.Fill()
 }
