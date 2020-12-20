@@ -52,6 +52,32 @@ func CreateNewWindow(title string, width int, height int, hiDPI bool) *Window {
 	return window
 }
 
+func (window *Window) destroy() {
+	/* @TODO
+	Discover what is the best way to destroy structs
+	and its fields.
+	*/
+
+	window.visible = false
+	window.glw.Destroy()
+
+	window.glw = nil
+	window.context = nil
+	window.backend = nil
+	window.frameBuffer = nil
+
+	window.defaultCursor = nil
+	window.pointerCursor = nil
+
+	window.registeredButtons = nil
+	window.registeredInputs = nil
+	window.activeInput = nil
+
+	window.rootFrame = nil
+
+	window = nil
+}
+
 //Show - Show the window
 func (window *Window) Show() {
 	window.needsReflow = true

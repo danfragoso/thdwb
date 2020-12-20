@@ -22,6 +22,19 @@ func (app *App) AddWindow(window *Window) {
 	setWidgetWindow(window.rootFrame, window)
 }
 
+func (app *App) DestroyWindow(window *Window) {
+	var nWindows []*Window
+
+	for _, appWindow := range app.windows {
+		if appWindow != window {
+			nWindows = append(nWindows, appWindow)
+		}
+	}
+
+	app.windows = nWindows
+	window.destroy()
+}
+
 func setWidgetWindow(widget Widget, window *Window) {
 	widget.SetWindow(window)
 
