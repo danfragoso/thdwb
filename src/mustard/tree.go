@@ -1,6 +1,7 @@
 package mustard
 
 import (
+	"fmt"
 	"image"
 	"image/draw"
 	assets "thdwb/assets"
@@ -97,23 +98,40 @@ func (tree *TreeWidget) draw() {
 }
 
 func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
-	if node.PreviousSibling() == nil {
-		if node.Parent != nil {
-			node.box.top = node.Parent.box.top + node.Parent.box.height
+	node.box.left = level * int(tree.fontSize)
+	node.box.height = int(tree.fontSize)
+
+	prevSibling := node.PreviousSibling()
+	if node.Parent == nil {
+		if prevSibling != nil {
+			node.box.top = prevSibling.box.top + prevSibling.box.height
+		} else {
+			node.box.top = 0
 		}
+	} else {
+		if prevSibling != nil {
+			node.box.top = prevSibling.box.top + prevSibling.box.height
+		} else {
+			fmt.Println("parent:", node.Parent.Content, node.Parent.box.top, node.Parent.box.height)
+			node.box.top = node.Parent.box.top + node.Parent.box.height
+			fmt.Println("node", node.Content, node.box.top, node.box.height)
+		}
+	}
+
+	for _, childNode := range node.Children {
+		flowNode(context, childNode, tree, level+1)
 	}
 }
 
 func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
-	for _, childNode := range node.Children {
-		drawNode(context, childNode, tree, level+1)
-	}
-
-	top, left, _, _ := tree.computedBox.GetCoords()
-	padding := 10 * level
+	top, left, _, _ := node.box.GetCoords()
 
 	context.SetHexColor(tree.fontColor)
 	context.SetFont(tree.font, tree.fontSize)
-	context.DrawString("-> "+node.Content, float64(left+padding)+tree.fontSize/4, float64(top+padding)+tree.fontSize*2/2)
+	context.DrawString("-> "+node.Content, float64(left)+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
 	context.Fill()
+
+	for _, childNode := range node.Children {
+		drawNode(context, childNode, tree, level+1)
+	}
 }

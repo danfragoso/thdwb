@@ -247,16 +247,18 @@ type TreeWidgetNode struct {
 	Parent   *TreeWidgetNode
 	Children []*TreeWidgetNode
 
-	box box
+	index int
+	box   box
 }
 
 func (node *TreeWidgetNode) AddNode(childNode *TreeWidgetNode) {
 	childNode.Parent = node
+	childNode.index = len(node.Children)
 	node.Children = append(node.Children, childNode)
 }
 
 func (node *TreeWidgetNode) NextSibling() *TreeWidgetNode {
-	selfIdx := node.FindIndex()
+	selfIdx := node.index
 	if selfIdx+1 < len(node.Parent.Children) {
 		return node.Parent.Children[selfIdx+1]
 	}
@@ -265,22 +267,12 @@ func (node *TreeWidgetNode) NextSibling() *TreeWidgetNode {
 }
 
 func (node *TreeWidgetNode) PreviousSibling() *TreeWidgetNode {
-	selfIdx := node.FindIndex()
+	selfIdx := node.index
 	if selfIdx-1 >= 0 {
 		return node.Parent.Children[selfIdx-1]
 	}
 
 	return nil
-}
-
-func (node *TreeWidgetNode) FindIndex() int {
-	for idx, child := range node.Parent.Children {
-		if child == node {
-			return idx
-		}
-	}
-
-	return -1
 }
 
 type TextWidget struct {
