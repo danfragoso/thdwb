@@ -64,6 +64,14 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 	urlInput.SetValue(browser.ActiveDocument.URL.String())
 }
 
+func treeNodeFromDOM(node *hotdog.NodeDOM) *mustard.TreeWidgetNode {
+	treeNode := mustard.CreateTreeWidgetNode(node.Element)
+	for _, childNode := range node.Children {
+		treeNode.AddNode(treeNodeFromDOM((childNode)))
+	}
+	return treeNode
+}
+
 func createStatusLabel(perf *profiler.Profiler) string {
 	return "Loaded; " +
 		"Render took: " + perf.GetProfile("render").GetElapsedTime().String() + "; "
