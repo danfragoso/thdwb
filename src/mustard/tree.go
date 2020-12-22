@@ -1,7 +1,6 @@
 package mustard
 
 import (
-	"fmt"
 	"image"
 	"image/draw"
 	assets "thdwb/assets"
@@ -112,14 +111,13 @@ func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 		if prevSibling != nil {
 			node.box.top = prevSibling.box.top + prevSibling.box.height
 		} else {
-			fmt.Println("parent:", node.Parent.Content, node.Parent.box.top, node.Parent.box.height)
 			node.box.top = node.Parent.box.top + node.Parent.box.height
-			fmt.Println("node", node.Content, node.box.top, node.box.height)
 		}
 	}
 
 	for _, childNode := range node.Children {
 		flowNode(context, childNode, tree, level+1)
+		node.box.height += childNode.box.height
 	}
 }
 
