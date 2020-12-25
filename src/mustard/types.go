@@ -247,8 +247,25 @@ type TreeWidgetNode struct {
 	Parent   *TreeWidgetNode
 	Children []*TreeWidgetNode
 
-	index int
-	box   box
+	isOpen bool
+	index  int
+	box    box
+}
+
+func (node *TreeWidgetNode) Toggle() {
+	if node.isOpen {
+		node.isOpen = false
+	} else {
+		node.isOpen = true
+	}
+}
+
+func (node *TreeWidgetNode) Close() {
+	node.isOpen = false
+
+}
+func (node *TreeWidgetNode) Open() {
+	node.isOpen = true
 }
 
 func (node *TreeWidgetNode) AddNode(childNode *TreeWidgetNode) {

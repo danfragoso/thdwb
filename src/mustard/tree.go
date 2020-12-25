@@ -115,10 +115,13 @@ func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 		}
 	}
 
-	for _, childNode := range node.Children {
-		flowNode(context, childNode, tree, level+1)
-		node.box.height += childNode.box.height
+	if node.isOpen {
+		for _, childNode := range node.Children {
+			flowNode(context, childNode, tree, level+1)
+			node.box.height += childNode.box.height
+		}
 	}
+
 }
 
 func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
@@ -129,7 +132,9 @@ func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 	context.DrawString("-> "+node.Content, float64(left)+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
 	context.Fill()
 
-	for _, childNode := range node.Children {
-		drawNode(context, childNode, tree, level+1)
+	if node.isOpen {
+		for _, childNode := range node.Children {
+			drawNode(context, childNode, tree, level+1)
+		}
 	}
 }
