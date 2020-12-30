@@ -15,6 +15,9 @@ func CreateTreeWidget() *TreeWidget {
 	var widgets []Widget
 	font, _ := truetype.Parse(assets.OpenSans(400))
 
+	openIcon, _ := gg.LoadAsset(assets.DownChevron())
+	closeIcon, _ := gg.LoadAsset(assets.RightChevron())
+
 	return &TreeWidget{
 		baseWidget: baseWidget{
 
@@ -30,9 +33,47 @@ func CreateTreeWidget() *TreeWidget {
 			font: font,
 		},
 
+		openIcon:  openIcon,
+		closeIcon: closeIcon,
 		fontSize:  20,
 		fontColor: "#000",
 	}
+}
+
+func (tree *TreeWidget) Click() {
+	x, y := tree.window.GetCursorPosition()
+	node := getIntersectedNode(tree.nodes, x, y)
+
+	if node != nil {
+		if node.isOpen {
+			node.isOpen = false
+		} else {
+			node.isOpen = true
+		}
+	}
+}
+
+func getIntersectedNode(nodes []*TreeWidgetNode, x, y float64) *TreeWidgetNode {
+	var intersectedNode *TreeWidgetNode
+	for _, node := range nodes {
+		if x > float64(node.box.left) &&
+			x < float64(node.box.left+node.box.width) &&
+			y > float64(node.box.top) &&
+			y < float64(node.box.top+node.box.height) {
+
+			if !node.isOpen {
+				return node
+			}
+
+			intersectedNode = node
+			childIntersectedNode := getIntersectedNode(node.Children, x, y)
+			if childIntersectedNode != nil {
+				intersectedNode = childIntersectedNode
+			}
+		}
+	}
+
+	return intersectedNode
 }
 
 //SetWidth - Sets the tree width
@@ -99,6 +140,7 @@ func (tree *TreeWidget) draw() {
 func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
 	node.box.left = level * int(tree.fontSize)
 	node.box.height = int(tree.fontSize)
+	node.box.width = tree.computedBox.width
 
 	prevSibling := node.PreviousSibling()
 	if node.Parent == nil {
@@ -129,12 +171,22 @@ func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 
 	context.SetHexColor(tree.fontColor)
 	context.SetFont(tree.font, tree.fontSize)
-	context.DrawString("-> "+node.Content, float64(left)+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
+	context.DrawString(node.Content, float64(left)+20+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
 	context.Fill()
 
-	if node.isOpen {
-		for _, childNode := range node.Children {
-			drawNode(context, childNode, tree, level+1)
+	if len(node.Children) > 0 {
+		if node.isOpen {
+			context.DrawImage(tree.openIcon, left+4, top+1)
+
+			for _, childNode := range node.Children {
+				drawNode(context, childNode, tree, level+1)
+			}
+		} else {
+			context.Push()
+			context.Rotate(40)
+			context.DrawImage(tree.closeIcon, left+4, top+1)
+			context.Pop()
 		}
 	}
+
 }

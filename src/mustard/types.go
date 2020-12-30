@@ -38,6 +38,7 @@ type Window struct {
 	pointerCursor  *glfw.Cursor
 	selectedWidget Widget
 
+	registeredTrees   []*TreeWidget
 	registeredButtons []*ButtonWidget
 	registeredInputs  []*InputWidget
 	activeInput       *InputWidget
@@ -229,6 +230,13 @@ type TreeWidget struct {
 	fontSize  float64
 	fontColor string
 	nodes     []*TreeWidgetNode
+
+	openIcon  image.Image
+	closeIcon image.Image
+}
+
+func (widget *TreeWidget) RemoveNodes() {
+	widget.nodes = nil
 }
 
 func (widget *TreeWidget) AddNode(childNode *TreeWidgetNode) {

@@ -15,6 +15,7 @@ func (window *Window) ProcessPointerPosition() {
 		}
 
 		window.ProcessButtons()
+		window.ProcessTrees()
 		window.ProcessInputs()
 		window.firePointerPositionEvents()
 	}
@@ -36,6 +37,7 @@ func (window *Window) ProcessPointerClick(button glfw.MouseButton) {
 	} else {
 		if button == glfw.MouseButtonLeft {
 			window.ProcessButtonClick()
+			window.ProcessTreeClick()
 			window.ProcessInputActivation()
 			window.fireClickEvents(MouseLeft)
 		} else if button == glfw.MouseButtonRight {
@@ -68,6 +70,25 @@ func (window *Window) ProcessArrowKeys(arrowKey string) {
 			window.activeInput.cursorPosition++
 			window.activeInput.cursorDirection = false
 			window.activeInput.needsRepaint = true
+		}
+	}
+}
+
+func (window *Window) ProcessTrees() {
+	x, y := window.cursorX, window.cursorY
+
+	for _, tree := range window.registeredTrees {
+		if x > float64(tree.computedBox.left) &&
+			x < float64(tree.computedBox.left+tree.computedBox.width) &&
+			y > float64(tree.computedBox.top) &&
+			y < float64(tree.computedBox.top+tree.computedBox.height) {
+			tree.selected = true
+			tree.needsRepaint = true
+			window.glw.SetCursor(tree.cursor)
+			break
+		} else {
+			tree.selected = false
+			tree.needsRepaint = true
 		}
 	}
 }
@@ -132,6 +153,16 @@ func (window *Window) ProcessButtonClick() {
 		if button.selected == true {
 			button.onClick()
 			button.needsRepaint = true
+			return
+		}
+	}
+}
+
+func (window *Window) ProcessTreeClick() {
+	for _, tree := range window.registeredTrees {
+		if tree.selected == true {
+			tree.Click()
+			tree.needsRepaint = true
 			return
 		}
 	}

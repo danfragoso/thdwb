@@ -316,6 +316,10 @@ func (window *Window) GetCursorPosition() (float64, float64) {
 	return window.cursorX, window.cursorY
 }
 
+func (window *Window) RegisterTree(tree *TreeWidget) {
+	window.registeredTrees = append(window.registeredTrees, tree)
+}
+
 func (window *Window) RegisterButton(button *ButtonWidget, callback func()) {
 	button.onClick = callback
 	window.registeredButtons = append(window.registeredButtons, button)
