@@ -255,9 +255,10 @@ type TreeWidgetNode struct {
 	Parent   *TreeWidgetNode
 	Children []*TreeWidgetNode
 
-	isOpen bool
-	index  int
-	box    box
+	isOpen     bool
+	isSelected bool
+	index      int
+	box        box
 }
 
 func (node *TreeWidgetNode) Toggle() {

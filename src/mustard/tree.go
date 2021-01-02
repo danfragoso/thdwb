@@ -45,10 +45,45 @@ func (tree *TreeWidget) Click() {
 	node := getIntersectedNode(tree.nodes, x, y)
 
 	if node != nil {
-		if node.isOpen {
-			node.isOpen = false
+		fireNodeEvents(tree, node, x, y, tree.fontSize)
+	}
+}
+
+func desselectNodes(nodes []*TreeWidgetNode) {
+	for _, node := range nodes {
+		node.isSelected = false
+		desselectNodes(node.Children)
+	}
+}
+
+func (tree *TreeWidget) SelectNode(node *TreeWidgetNode) {
+	for _, treeNode := range tree.nodes {
+		treeNode.isSelected = false
+		desselectNodes(treeNode.Children)
+	}
+
+	node.isSelected = true
+}
+
+func selectNode(nodes []*TreeWidgetNode, node *TreeWidgetNode) {
+	for _, childNode := range nodes {
+		selectNode(childNode.Children, node)
+
+		if childNode == node {
+			node.isSelected = true
 		} else {
-			node.isOpen = true
+			node.isSelected = false
+		}
+	}
+}
+
+func fireNodeEvents(tree *TreeWidget, node *TreeWidgetNode, x, y, nodeHeight float64) {
+	t, l, _, _ := node.box.GetCoords()
+	if int(y) > t && int(y) < t+int(nodeHeight) {
+		tree.SelectNode(node)
+
+		if int(x) < l+25 {
+			node.Toggle()
 		}
 	}
 }
@@ -139,7 +174,7 @@ func (tree *TreeWidget) draw() {
 
 func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
 	node.box.left = level * int(tree.fontSize)
-	node.box.height = int(tree.fontSize)
+	node.box.height = int(tree.fontSize) + 4
 	node.box.width = tree.computedBox.width
 
 	prevSibling := node.PreviousSibling()
@@ -167,7 +202,18 @@ func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 }
 
 func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
-	top, left, _, _ := node.box.GetCoords()
+	top, left, width, _ := node.box.GetCoords()
+
+	if node.isSelected {
+		context.SetHexColor("#7db1ff32")
+		context.DrawRectangle(float64(tree.computedBox.left), float64(top), float64(width), tree.fontSize+4)
+		context.Fill()
+
+	} else {
+		context.SetHexColor(tree.backgroundColor)
+		context.DrawRectangle(float64(tree.computedBox.left), float64(top), float64(width), tree.fontSize+4)
+		context.Fill()
+	}
 
 	context.SetHexColor(tree.fontColor)
 	context.SetFont(tree.font, tree.fontSize)
