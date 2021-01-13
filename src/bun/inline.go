@@ -7,8 +7,8 @@ import (
 	"image"
 	"thdwb/assets"
 	gg "thdwb/gg"
-	"thdwb/sauce"
 	hotdog "thdwb/hotdog"
+	"thdwb/sauce"
 )
 
 func paintInlineElement(ctx *gg.Context, node *hotdog.NodeDOM) {

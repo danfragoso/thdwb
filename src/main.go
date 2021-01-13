@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"runtime"
 
 	bun "thdwb/bun"
@@ -95,8 +96,30 @@ func main() {
 	browser.Viewport = viewPort
 	browser.StatusLabel = statusLabel
 
+	// tree
+	wnd := mustard.CreateNewWindow("tree", 200, 200, true)
+
+	rFrame := mustard.CreateFrame(mustard.HorizontalFrame)
+	tree := mustard.CreateTreeWidget()
+	tree.SetFontSize(14)
+	rFrame.AttachWidget(tree)
+	wnd.RegisterTree(tree)
+	wnd.SetRootFrame(rFrame)
+	wnd.Show()
+	app.AddWindow(wnd)
+
+	// tree
+
 	urlInput.SetReturnCallback(func() {
 		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
+		treeNodeDOM := treeNodeFromDOM(browser.ActiveDocument.DOM)
+		tree.SetSelectCallback(func(selectedNode *mustard.TreeWidgetNode) {
+			fmt.Println(selectedNode)
+		})
+
+		tree.RemoveNodes()
+		tree.AddNode(treeNodeDOM)
+		tree.RequestRepaint()
 	})
 
 	window.RegisterButton(menuButton, func() {
@@ -125,6 +148,26 @@ func main() {
 				browser.ActiveDocument.DebugFlag = true
 			})
 		}
+
+		window.AddContextMenuEntry("Show source", func() {
+			sourceText := mustard.CreateTextWidget(browser.ActiveDocument.RawDocument)
+			sourceButton := mustard.CreateButtonWidget("detach", nil)
+			sourceFrame := mustard.CreateFrame(mustard.HorizontalFrame)
+			sourceFrame.SetBackgroundColor("#FF7F50")
+			sourceFrame.AttachWidget(sourceText)
+			sourceFrame.AttachWidget(sourceButton)
+			rootFrame.AttachWidget(sourceFrame)
+
+			window.RegisterButton(sourceButton, func() {
+				wnd := mustard.CreateNewWindow("oi", 200, 200, true)
+
+				rFrame := rootFrame.DetachWidget(sourceFrame)
+				wnd.SetRootFrame(rFrame.(*mustard.Frame))
+				wnd.Show()
+
+				app.AddWindow(wnd)
+			})
+		})
 
 		window.DrawContextMenu()
 	})
@@ -215,6 +258,10 @@ func main() {
 						urlInput.SetValue("thdwb://homepage")
 						loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 					})
+					window.AddContextMenuEntry("destroy", func() {
+						app.DestroyWindow(wnd)
+					})
+
 					window.DrawContextMenu()
 				}
 			}

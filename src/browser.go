@@ -57,7 +57,7 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
 	statusLabel.RequestRepaint()
 
-	loadDocument(browser, urlInput.GetValue())
+	go loadDocument(browser, urlInput.GetValue())
 	viewPort.SetOffset(0)
 	viewPort.SetDrawingRepaint(true)
 	viewPort.RequestRepaint()
@@ -65,7 +65,8 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 }
 
 func treeNodeFromDOM(node *hotdog.NodeDOM) *mustard.TreeWidgetNode {
-	treeNode := mustard.CreateTreeWidgetNode(node.Element)
+	nodeString := fmt.Sprintf("%s; '%s'", node.Element, node.Content)
+	treeNode := mustard.CreateTreeWidgetNode(nodeString)
 	treeNode.Open()
 	for _, childNode := range node.Children {
 		treeNode.AddNode(treeNodeFromDOM((childNode)))
