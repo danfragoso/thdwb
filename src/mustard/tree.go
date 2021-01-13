@@ -49,6 +49,10 @@ func (tree *TreeWidget) Click() {
 	}
 }
 
+func (tree *TreeWidget) SetSelectCallback(selectCallback func(*TreeWidgetNode)) {
+	tree.selectCallback = selectCallback
+}
+
 func desselectNodes(nodes []*TreeWidgetNode) {
 	for _, node := range nodes {
 		node.isSelected = false
@@ -81,6 +85,7 @@ func fireNodeEvents(tree *TreeWidget, node *TreeWidgetNode, x, y, nodeHeight flo
 	t, l, _, _ := node.box.GetCoords()
 	if int(y) > t && int(y) < t+int(nodeHeight) {
 		tree.SelectNode(node)
+		tree.selectCallback(node)
 
 		if int(x) < l+25 {
 			node.Toggle()

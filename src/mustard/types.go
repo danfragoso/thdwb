@@ -233,6 +233,8 @@ type TreeWidget struct {
 
 	openIcon  image.Image
 	closeIcon image.Image
+
+	selectCallback func(*TreeWidgetNode)
 }
 
 func (widget *TreeWidget) RemoveNodes() {
