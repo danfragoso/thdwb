@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"runtime"
 
 	bun "thdwb/bun"
@@ -96,30 +95,8 @@ func main() {
 	browser.Viewport = viewPort
 	browser.StatusLabel = statusLabel
 
-	// tree
-	wnd := mustard.CreateNewWindow("tree", 200, 200, true)
-
-	rFrame := mustard.CreateFrame(mustard.HorizontalFrame)
-	tree := mustard.CreateTreeWidget()
-	tree.SetFontSize(14)
-	rFrame.AttachWidget(tree)
-	wnd.RegisterTree(tree)
-	wnd.SetRootFrame(rFrame)
-	wnd.Show()
-	app.AddWindow(wnd)
-
-	// tree
-
 	urlInput.SetReturnCallback(func() {
 		loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
-		treeNodeDOM := treeNodeFromDOM(browser.ActiveDocument.DOM)
-		tree.SetSelectCallback(func(selectedNode *mustard.TreeWidgetNode) {
-			fmt.Println(selectedNode)
-		})
-
-		tree.RemoveNodes()
-		tree.AddNode(treeNodeDOM)
-		tree.RequestRepaint()
 	})
 
 	window.RegisterButton(menuButton, func() {
@@ -142,6 +119,11 @@ func main() {
 			window.AddContextMenuEntry("Disable debug mode", func() {
 				browser.Window.RemoveStaticOverlay("debugOverlay")
 				browser.ActiveDocument.DebugFlag = false
+
+				if browser.ActiveDocument.DebugWindow != nil {
+					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
+					browser.ActiveDocument.DebugWindow = nil
+				}
 			})
 		} else {
 			window.AddContextMenuEntry("Enable debug mode", func() {
@@ -149,25 +131,42 @@ func main() {
 			})
 		}
 
-		window.AddContextMenuEntry("Show source", func() {
-			sourceText := mustard.CreateTextWidget(browser.ActiveDocument.RawDocument)
-			sourceButton := mustard.CreateButtonWidget("detach", nil)
-			sourceFrame := mustard.CreateFrame(mustard.HorizontalFrame)
-			sourceFrame.SetBackgroundColor("#FF7F50")
-			sourceFrame.AttachWidget(sourceText)
-			sourceFrame.AttachWidget(sourceButton)
-			rootFrame.AttachWidget(sourceFrame)
+		if browser.ActiveDocument.DebugFlag {
+			if browser.ActiveDocument.DebugWindow != nil {
+				window.AddContextMenuEntry("Hide Tree", func() {
+					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
+					browser.ActiveDocument.DebugWindow = nil
+				})
+			} else {
+				window.AddContextMenuEntry("Show Tree", func() {
+					browser.ActiveDocument.DebugWindow = mustard.CreateNewWindow("HTML tree view", 600, 800, true)
 
-			window.RegisterButton(sourceButton, func() {
-				wnd := mustard.CreateNewWindow("oi", 200, 200, true)
+					rFrame := mustard.CreateFrame(mustard.HorizontalFrame)
+					tree := mustard.CreateTreeWidget()
+					tree.SetFontSize(14)
+					rFrame.AttachWidget(tree)
 
-				rFrame := rootFrame.DetachWidget(sourceFrame)
-				wnd.SetRootFrame(rFrame.(*mustard.Frame))
-				wnd.Show()
+					browser.ActiveDocument.DebugWindow.RegisterTree(tree)
+					browser.ActiveDocument.DebugWindow.SetRootFrame(rFrame)
+					browser.ActiveDocument.DebugWindow.Show()
 
-				app.AddWindow(wnd)
-			})
-		})
+					app.AddWindow(browser.ActiveDocument.DebugWindow)
+
+					treeNodeDOM := treeNodeFromDOM(browser.ActiveDocument.DOM)
+					tree.SetSelectCallback(func(selectedNode *mustard.TreeWidgetNode) {
+						if browser.ActiveDocument.DebugFlag {
+							child, _ := browser.ActiveDocument.DOM.FindByXPath(selectedNode.Value)
+							browser.ActiveDocument.SelectedElement = child
+							showDebugOverlay(browser)
+						}
+					})
+
+					tree.RemoveNodes()
+					tree.AddNode(treeNodeDOM)
+					tree.RequestRepaint()
+				})
+			}
+		}
 
 		window.DrawContextMenu()
 	})
@@ -257,9 +256,6 @@ func main() {
 					window.AddContextMenuEntry("Home", func() {
 						urlInput.SetValue("thdwb://homepage")
 						loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
-					})
-					window.AddContextMenuEntry("destroy", func() {
-						app.DestroyWindow(wnd)
 					})
 
 					window.DrawContextMenu()

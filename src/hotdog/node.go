@@ -42,6 +42,34 @@ func (node *NodeDOM) JSON() string {
 	return string(res)
 }
 
+func (node *NodeDOM) FindByXPath(xPath string) (*NodeDOM, error) {
+	if node.GetXPath() == xPath {
+		return node, nil
+	}
+
+	for _, child := range node.Children {
+		foundChild, err := child.FindByXPath(xPath)
+		if err != nil {
+			var noChild NoSuchElementError
+			if errors.As(err, &noChild) {
+				// No child with that element name, continue in other branches of the element tree
+				continue
+			}
+
+			// Some other error
+			return nil, err
+		}
+
+		return foundChild, nil
+	}
+
+	return nil, NoSuchElementError(xPath)
+}
+
+func (node *NodeDOM) GetXPath() string {
+	return getXPath(node)
+}
+
 func (node *NodeDOM) FindChildByName(childName string) (*NodeDOM, error) {
 	if node.Element == childName {
 		return node, nil

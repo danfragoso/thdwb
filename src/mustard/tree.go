@@ -222,7 +222,7 @@ func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 
 	context.SetHexColor(tree.fontColor)
 	context.SetFont(tree.font, tree.fontSize)
-	context.DrawString(node.Content, float64(left)+20+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
+	context.DrawString(node.Key, float64(left)+20+tree.fontSize/4, float64(top)+tree.fontSize*2/2)
 	context.Fill()
 
 	if len(node.Children) > 0 {
