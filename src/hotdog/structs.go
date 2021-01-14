@@ -29,6 +29,8 @@ type Document struct {
 	DOM         *NodeDOM
 
 	DebugFlag       bool
+	DebugWindow     *mustard.Window
+	DebugTree       *mustard.TreeWidget
 	SelectedElement *NodeDOM
 
 	OffsetY int

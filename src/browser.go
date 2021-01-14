@@ -57,7 +57,7 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
 	statusLabel.RequestRepaint()
 
-	loadDocument(browser, urlInput.GetValue())
+	go loadDocument(browser, urlInput.GetValue())
 	viewPort.SetOffset(0)
 	viewPort.SetDrawingRepaint(true)
 	viewPort.RequestRepaint()
@@ -65,7 +65,9 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 }
 
 func treeNodeFromDOM(node *hotdog.NodeDOM) *mustard.TreeWidgetNode {
-	treeNode := mustard.CreateTreeWidgetNode(node.Element)
+	nodeString := fmt.Sprintf(node.Element)
+	xPath := node.GetXPath()
+	treeNode := mustard.CreateTreeWidgetNode(nodeString, xPath)
 	treeNode.Open()
 	for _, childNode := range node.Children {
 		treeNode.AddNode(treeNodeFromDOM((childNode)))
@@ -97,7 +99,11 @@ func processPointerPositionEvent(browser *hotdog.WebBrowser, x, y float64) {
 			browser.ActiveDocument.SelectedElement != nil &&
 			browser.ActiveDocument.SelectedElement.Element != "html" {
 
-			printNodeDebug(browser.ActiveDocument.SelectedElement)
+			if browser.ActiveDocument.DebugWindow != nil {
+				browser.ActiveDocument.DebugTree.SelectNodeByValue(browser.ActiveDocument.SelectedElement.GetXPath())
+				browser.ActiveDocument.DebugTree.RequestRepaint()
+			}
+
 			showDebugOverlay(browser)
 		}
 

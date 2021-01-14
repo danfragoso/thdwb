@@ -119,11 +119,57 @@ func main() {
 			window.AddContextMenuEntry("Disable debug mode", func() {
 				browser.Window.RemoveStaticOverlay("debugOverlay")
 				browser.ActiveDocument.DebugFlag = false
+
+				if browser.ActiveDocument.DebugWindow != nil {
+					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
+					browser.ActiveDocument.DebugWindow = nil
+					browser.ActiveDocument.DebugTree = nil
+				}
 			})
 		} else {
 			window.AddContextMenuEntry("Enable debug mode", func() {
 				browser.ActiveDocument.DebugFlag = true
 			})
+		}
+
+		if browser.ActiveDocument.DebugFlag {
+			if browser.ActiveDocument.DebugWindow != nil {
+				window.AddContextMenuEntry("Hide Tree", func() {
+					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
+					browser.ActiveDocument.DebugWindow = nil
+					browser.ActiveDocument.DebugTree = nil
+				})
+			} else {
+				window.AddContextMenuEntry("Show Tree", func() {
+					tree := mustard.CreateTreeWidget()
+
+					browser.ActiveDocument.DebugWindow = mustard.CreateNewWindow("HTML tree view", 600, 800, true)
+					browser.ActiveDocument.DebugTree = tree
+
+					rFrame := mustard.CreateFrame(mustard.HorizontalFrame)
+					tree.SetFontSize(14)
+					rFrame.AttachWidget(tree)
+
+					browser.ActiveDocument.DebugWindow.RegisterTree(tree)
+					browser.ActiveDocument.DebugWindow.SetRootFrame(rFrame)
+					browser.ActiveDocument.DebugWindow.Show()
+
+					app.AddWindow(browser.ActiveDocument.DebugWindow)
+
+					treeNodeDOM := treeNodeFromDOM(browser.ActiveDocument.DOM)
+					tree.SetSelectCallback(func(selectedNode *mustard.TreeWidgetNode) {
+						if browser.ActiveDocument.DebugFlag {
+							child, _ := browser.ActiveDocument.DOM.FindByXPath(selectedNode.Value)
+							browser.ActiveDocument.SelectedElement = child
+							showDebugOverlay(browser)
+						}
+					})
+
+					tree.RemoveNodes()
+					tree.AddNode(treeNodeDOM)
+					tree.RequestRepaint()
+				})
+			}
 		}
 
 		window.DrawContextMenu()
@@ -215,6 +261,7 @@ func main() {
 						urlInput.SetValue("thdwb://homepage")
 						loadDocumentFromUrl(browser, statusLabel, urlInput, viewPort)
 					})
+
 					window.DrawContextMenu()
 				}
 			}

@@ -245,15 +245,17 @@ func (widget *TreeWidget) AddNode(childNode *TreeWidgetNode) {
 	widget.nodes = append(widget.nodes, childNode)
 }
 
-func CreateTreeWidgetNode(content string) *TreeWidgetNode {
+func CreateTreeWidgetNode(key, value string) *TreeWidgetNode {
 	return &TreeWidgetNode{
-		Content: content,
-		box:     box{},
+		Key:   key,
+		Value: value,
+		box:   box{},
 	}
 }
 
 type TreeWidgetNode struct {
-	Content  string
+	Key      string
+	Value    string
 	Parent   *TreeWidgetNode
 	Children []*TreeWidgetNode
 
