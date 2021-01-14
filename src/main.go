@@ -123,6 +123,7 @@ func main() {
 				if browser.ActiveDocument.DebugWindow != nil {
 					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
 					browser.ActiveDocument.DebugWindow = nil
+					browser.ActiveDocument.DebugTree = nil
 				}
 			})
 		} else {
@@ -136,13 +137,16 @@ func main() {
 				window.AddContextMenuEntry("Hide Tree", func() {
 					app.DestroyWindow(browser.ActiveDocument.DebugWindow)
 					browser.ActiveDocument.DebugWindow = nil
+					browser.ActiveDocument.DebugTree = nil
 				})
 			} else {
 				window.AddContextMenuEntry("Show Tree", func() {
+					tree := mustard.CreateTreeWidget()
+
 					browser.ActiveDocument.DebugWindow = mustard.CreateNewWindow("HTML tree view", 600, 800, true)
+					browser.ActiveDocument.DebugTree = tree
 
 					rFrame := mustard.CreateFrame(mustard.HorizontalFrame)
-					tree := mustard.CreateTreeWidget()
 					tree.SetFontSize(14)
 					rFrame.AttachWidget(tree)
 

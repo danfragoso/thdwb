@@ -99,7 +99,11 @@ func processPointerPositionEvent(browser *hotdog.WebBrowser, x, y float64) {
 			browser.ActiveDocument.SelectedElement != nil &&
 			browser.ActiveDocument.SelectedElement.Element != "html" {
 
-			printNodeDebug(browser.ActiveDocument.SelectedElement)
+			if browser.ActiveDocument.DebugWindow != nil {
+				browser.ActiveDocument.DebugTree.SelectNodeByValue(browser.ActiveDocument.SelectedElement.GetXPath())
+				browser.ActiveDocument.DebugTree.RequestRepaint()
+			}
+
 			showDebugOverlay(browser)
 		}
 

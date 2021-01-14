@@ -69,6 +69,24 @@ func (tree *TreeWidget) SelectNode(node *TreeWidgetNode) {
 	node.isSelected = true
 }
 
+func (tree *TreeWidget) SelectNodeByValue(value string) {
+	if tree != nil {
+		selectNodeByValue(tree.nodes, value)
+	}
+}
+
+func selectNodeByValue(nodes []*TreeWidgetNode, value string) {
+	for _, childNode := range nodes {
+		selectNodeByValue(childNode.Children, value)
+
+		if childNode.Value == value {
+			childNode.isSelected = true
+		} else {
+			childNode.isSelected = false
+		}
+	}
+}
+
 func selectNode(nodes []*TreeWidgetNode, node *TreeWidgetNode) {
 	for _, childNode := range nodes {
 		selectNode(childNode.Children, node)

@@ -30,6 +30,7 @@ type Document struct {
 
 	DebugFlag       bool
 	DebugWindow     *mustard.Window
+	DebugTree       *mustard.TreeWidget
 	SelectedElement *NodeDOM
 
 	OffsetY int
