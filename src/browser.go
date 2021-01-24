@@ -57,7 +57,7 @@ func loadDocumentFromUrl(browser *hotdog.WebBrowser, statusLabel *mustard.LabelW
 	statusLabel.SetContent("Loading: " + urlInput.GetValue())
 	statusLabel.RequestRepaint()
 
-	go loadDocument(browser, urlInput.GetValue())
+	loadDocument(browser, urlInput.GetValue())
 	viewPort.SetOffset(0)
 	viewPort.SetDrawingRepaint(true)
 	viewPort.RequestRepaint()
