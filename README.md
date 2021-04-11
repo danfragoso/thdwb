@@ -22,7 +22,6 @@ The main goal of this project is to learn how to does a web browser works under 
 - Running
 
   ```sh
-  cd src
   make
   ```
   This command will start the browser and load an example page
@@ -30,7 +29,6 @@ The main goal of this project is to learn how to does a web browser works under 
 - Testing
 
   ```sh
-  cd src
   make test
   ```
   This command will run all the configurated unit tests
@@ -38,7 +36,6 @@ The main goal of this project is to learn how to does a web browser works under 
 - Building
 
   ```sh
-  cd src
   make build
   ```
   This command will build the binary version

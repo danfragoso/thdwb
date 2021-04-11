@@ -1,4 +1,4 @@
 bin/
 
-src/assets/icons.go
-src/assets/pages.go
+assets/icons.go
+assets/pages.go
