@@ -102,13 +102,13 @@ func ParseURL(link string) *url.URL {
 	return URL
 }
 
-func GetImage(URL *url.URL) []byte {
+func GetImage(URL *url.URL) ([]byte, error) {
 	imgUrl := URL.String()
 
 	cachedImage := imageCache.GetImage(imgUrl)
 
 	if cachedImage != nil {
-		return cachedImage.Image
+		return cachedImage.Image, nil
 	}
 
 	var img []byte
@@ -117,32 +117,32 @@ func GetImage(URL *url.URL) []byte {
 
 		decodedData, err := base64.RawStdEncoding.DecodeString(imgData)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("Failed to decode base64 data")
+			return nil, fmt.Errorf("Failed to decode base64 data (%s)", err)
 		}
 
 		img = decodedData
 	} else {
 		req, err := http.NewRequest("GET", imgUrl, nil)
 		if err != nil {
-			log.Fatalln(err)
+			return nil, err
 		}
 
 		req.Header.Set("User-Agent", "THDWB (The HotDog Web Browser);")
 
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println("Failed to fetch image")
-			return nil
+			return nil, fmt.Errorf("Failed to fetch image (%s)", err)
 		}
 		defer resp.Body.Close()
 
 		img, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	imageCache.AddImage(imgUrl, img)
-	return img
+	return img, nil
 }
 
 func buildHistoryPage(history *hotdog.History) string {
