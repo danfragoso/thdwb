@@ -4,7 +4,7 @@ This is the hotdog web browser project. It's a web browser with its own layout a
 
 It's made from scratch entirely in golang. External dependencies are only OpenGL and GLFW, even go dependencies are kept to a minimum.
 
-The main goal of this project is to learn how to does a web browser works under the hood by implementing one. The browser is far from stable, spec-compliant, or even really useful, but, I'm slowly working on bringing more features and supporting more sites.
+The main goal of this project is to learn how web browsers work under the hood by implementing one. The browser is far from stable, spec-compliant, or even really useful, but, I'm slowly working on bringing more features and supporting more sites.
 
 🌭🌭🌭
 
