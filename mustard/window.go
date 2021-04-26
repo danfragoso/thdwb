@@ -21,6 +21,9 @@ func SetGLFWHints() {
 
 func CreateNewWindow(title string, width int, height int, hiDPI bool) *Window {
 	glw, err := glfw.CreateWindow(width, height, title, nil, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 	glw.SetSizeLimits(300, 200, glfw.DontCare, glfw.DontCare)
 
 	if err != nil {
