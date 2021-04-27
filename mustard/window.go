@@ -108,7 +108,12 @@ func (window *Window) processFrame() {
 
 	window.generateTexture()
 
-	gl.Viewport(0, 0, int32(window.width), int32(window.height))
+	xscale, yscale := float32(1), float32(1)
+	if window.hiDPI {
+		xscale, yscale = window.glw.GetContentScale()
+	}
+
+	gl.Viewport(0, 0, int32(float32(window.width)*xscale), int32(float32(window.height)*yscale))
 	gl.DrawArrays(gl.TRIANGLES, 0, 6)
 
 	glfw.PollEvents()
