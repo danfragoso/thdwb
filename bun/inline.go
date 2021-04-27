@@ -2,7 +2,6 @@ package bun
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"github.com/danfragoso/thdwb/assets"
 	gg "github.com/danfragoso/thdwb/gg"
@@ -20,9 +19,13 @@ func paintInlineElement(ctx *gg.Context, node *hotdog.NodeDOM) {
 		// We should not download the image again, as we already have this saved.
 		// We could save the image on the node or have it cached on the
 		im, err := fetchNodeImage(node)
-		if err == nil {
-			ctx.DrawImage(im, int(node.RenderBox.Left), int(node.RenderBox.Top))
+
+		if err != nil {
+			fmt.Println(err)
+			// Use the stand-in error image.
+			im, _, _ = image.Decode(bytes.NewReader(assets.ErrorImage()))
 		}
+		ctx.DrawImage(im, int(node.RenderBox.Left), int(node.RenderBox.Top))
 	}
 
 	ctx.SetRGBA(node.Style.Color.R, node.Style.Color.G, node.Style.Color.B, node.Style.Color.A)
@@ -34,25 +37,22 @@ func paintInlineElement(ctx *gg.Context, node *hotdog.NodeDOM) {
 func fetchNodeImage(node *hotdog.NodeDOM) (image.Image, error) {
 	imgPath := node.Attr("src")
 
-	if imgPath != "" {
-		imgURL := sauce.ParseURL(imgPath)
-
-		if imgURL.Scheme == "" && imgURL.Host == "" {
-			imgURL = sauce.ParseURL(node.Document.URL.String() + imgURL.Path)
-		}
-
-		data := sauce.GetImage(imgURL)
-		im, _, err := image.Decode(bytes.NewReader(data))
-
-		if err == nil {
-			return im, nil
-		}
-
-		im, _, _ = image.Decode(bytes.NewReader(assets.ErrorImage()))
-		return im, nil
+	imgURL, err := node.Document.URL.Parse(imgPath)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("Failed to fetch " + imgPath)
+	// Fetch the image (either from cache or network)
+	data, err := sauce.GetImage(imgURL)
+	if err != nil {
+		return nil, err
+	}
+	im, _, err := image.Decode(bytes.NewReader(data))
+
+	if err != nil {
+		return nil, err
+	}
+	return im, nil
 }
 
 func calculateInlineLayout(ctx *gg.Context, node *hotdog.NodeDOM, childIdx int) {
@@ -76,12 +76,13 @@ func calculateInlineLayout(ctx *gg.Context, node *hotdog.NodeDOM, childIdx int) 
 		im, err := fetchNodeImage(node)
 		if err != nil {
 			fmt.Println(err)
-		} else {
-			imgSize := im.Bounds().Size()
-
-			node.RenderBox.Width = float64(imgSize.X)
-			node.RenderBox.Height = float64(imgSize.Y)
+			// Use the stand-in error image.
+			im, _, _ = image.Decode(bytes.NewReader(assets.ErrorImage()))
 		}
+		imgSize := im.Bounds().Size()
+
+		node.RenderBox.Width = float64(imgSize.X)
+		node.RenderBox.Height = float64(imgSize.Y)
 	} else {
 		if node.RenderBox.Width == 0 {
 			node.RenderBox.Width = node.Parent.RenderBox.Width
