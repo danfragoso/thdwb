@@ -1,6 +1,7 @@
 package mayo
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -35,7 +36,8 @@ func getDefaultElementFontWeight(element string) int {
 }
 
 func mapSizeValue(sizeValue string) float64 {
-	valueString := sizeValue[0 : len(sizeValue)-2]
+	re := regexp.MustCompile("[0-9]+")
+	valueString := re.FindString(sizeValue)
 	value, err := strconv.ParseInt(valueString, 10, 0)
 
 	if err != nil {
