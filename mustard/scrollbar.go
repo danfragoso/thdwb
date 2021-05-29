@@ -1,9 +1,10 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -33,14 +34,14 @@ func CreateScrollBarWidget(orientation ScrollBarOrientation) *ScrollBarWidget {
 }
 
 //SetWidth - Sets the scrollBar width
-func (scrollBar *ScrollBarWidget) SetWidth(width int) {
+func (scrollBar *ScrollBarWidget) SetWidth(width float64) {
 	scrollBar.box.width = width
 	scrollBar.fixedWidth = true
 	scrollBar.RequestReflow()
 }
 
 //SetHeight - Sets the scrollBar height
-func (scrollBar *ScrollBarWidget) SetHeight(height int) {
+func (scrollBar *ScrollBarWidget) SetHeight(height float64) {
 	scrollBar.box.height = height
 	scrollBar.fixedHeight = true
 	scrollBar.RequestReflow()
@@ -99,14 +100,14 @@ func (scrollBar *ScrollBarWidget) draw() {
 
 	iTop, iLeft, iWidth, iHeight := scrollBar.computedBox.GetCoords()
 
-	if scrollBar.buffer == nil || scrollBar.buffer.Bounds().Max.X != iWidth && scrollBar.buffer.Bounds().Max.Y != iHeight {
+	if scrollBar.buffer == nil || scrollBar.buffer.Bounds().Max.X != int(iWidth) && scrollBar.buffer.Bounds().Max.Y != int(iHeight) {
 		scrollBar.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{iWidth, iHeight},
+			image.Point{}, image.Point{int(iWidth), int(iHeight)},
 		})
 	}
 
 	draw.Draw(scrollBar.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{iWidth, iHeight},
-	}, context.Image(), image.Point{iLeft, iTop}, draw.Over)
+		image.Point{int(iWidth), int(iHeight)},
+	}, context.Image(), image.Point{int(iLeft), int(iTop)}, draw.Over)
 }

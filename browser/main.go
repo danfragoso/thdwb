@@ -220,7 +220,7 @@ func main() {
 		} else {
 			documentOffset := viewPort.GetOffset() + int(body.RenderBox.Height)
 
-			if documentOffset >= viewPort.GetHeight() {
+			if float64(documentOffset) >= viewPort.GetHeight() {
 				viewPort.SetOffset(viewPort.GetOffset() - scrollStep)
 			}
 		}

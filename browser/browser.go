@@ -126,7 +126,7 @@ func showDebugOverlay(browser *hotdog.WebBrowser) {
 	paintDebugRect(ctx, debugEl)
 
 	overlay := mustard.CreateStaticOverlay("debugOverlay", ctx, image.Point{
-		int(left), int(top) + browser.Viewport.GetTop() + browser.Viewport.GetOffset(),
+		int(left), int(top+browser.Viewport.GetTop()) + browser.Viewport.GetOffset(),
 	})
 
 	browser.Window.AddStaticOverlay(overlay)

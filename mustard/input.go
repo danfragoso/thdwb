@@ -1,10 +1,11 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
-	gg "github.com/danfragoso/thdwb/gg"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
+	gg "github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -36,14 +37,14 @@ func CreateInputWidget() *InputWidget {
 }
 
 //SetWidth - Sets the input width
-func (input *InputWidget) SetWidth(width int) {
+func (input *InputWidget) SetWidth(width float64) {
 	input.box.width = width
 	input.fixedWidth = true
 	input.RequestReflow()
 }
 
 //SetHeight - Sets the input height
-func (input *InputWidget) SetHeight(height int) {
+func (input *InputWidget) SetHeight(height float64) {
 	input.box.height = height
 	input.fixedHeight = true
 	input.RequestReflow()
@@ -93,9 +94,9 @@ func (input *InputWidget) SetBackgroundColor(backgroundColor string) {
 func (input *InputWidget) draw() {
 	input.padding = 4
 	top, left, width, height := input.computedBox.GetCoords()
-	totalPadding := int(input.padding * 2)
-	if input.context == nil || input.context.Width() != width-totalPadding || input.context.Height() != height-totalPadding {
-		input.context = gg.NewContext(width-totalPadding, height-totalPadding)
+	totalPadding := input.padding * 2
+	if input.context == nil || input.context.Width() != int(width-totalPadding) || input.context.Height() != int(height-totalPadding) {
+		input.context = gg.NewContext(int(width-totalPadding), int(height-totalPadding))
 	}
 
 	window := input.window
@@ -127,7 +128,7 @@ func (input *InputWidget) draw() {
 	context.SetFont(input.font, input.fontSize)
 	w, h := context.MeasureString(input.value)
 
-	cursorP := float64(width - totalPadding*2)
+	cursorP := width - totalPadding*2
 	cP, _ := context.MeasureString(input.value[len(input.value)+input.cursorPosition:])
 	cursorP = cursorP - cP
 
@@ -168,27 +169,27 @@ func (input *InputWidget) draw() {
 		context.Fill()
 	}
 
-	window.context.DrawImage(context.Image(), left+totalPadding/2, top+totalPadding/2)
+	window.context.DrawImage(context.Image(), int(left+totalPadding/2), int(top+totalPadding/2))
 	window.context.SetHexColor("#000")
 	window.context.SetLineWidth(.4)
 
 	window.context.DrawRectangle(
-		float64(left)+1,
-		float64(top)+1,
-		float64(width)-2,
-		float64(height)-2,
+		left+1,
+		top+1,
+		width-2,
+		height-2,
 	)
 
 	window.context.SetLineJoinRound()
 	window.context.Stroke()
 
-	if input.buffer == nil || input.buffer.Bounds().Max.X != width && input.buffer.Bounds().Max.Y != height {
+	if input.buffer == nil || input.buffer.Bounds().Max.X != int(width) && input.buffer.Bounds().Max.Y != int(height) {
 		input.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 	draw.Draw(input.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, window.context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, window.context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }

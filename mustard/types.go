@@ -105,20 +105,20 @@ type glBackend struct {
 }
 
 type box struct {
-	top    int
-	left   int
-	width  int
-	height int
+	top    float64
+	left   float64
+	width  float64
+	height float64
 }
 
-func (box *box) SetCoords(top, left, width, height int) {
+func (box *box) SetCoords(top, left, width, height float64) {
 	box.top = top
 	box.left = left
 	box.width = width
 	box.height = height
 }
 
-func (box *box) GetCoords() (int, int, int, int) {
+func (box *box) GetCoords() (float64, float64, float64, float64) {
 	return box.top, box.left, box.width, box.height
 }
 

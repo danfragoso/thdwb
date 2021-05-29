@@ -31,26 +31,26 @@ func (frame *Frame) SetBackgroundColor(backgroundColor string) {
 }
 
 //SetWidth - Sets the frame width
-func (frame *Frame) SetWidth(width int) {
+func (frame *Frame) SetWidth(width float64) {
 	frame.box.width = width
 	frame.fixedWidth = true
 	frame.RequestReflow()
 }
 
 //SetHeight - Sets the frame height
-func (frame *Frame) SetHeight(height int) {
+func (frame *Frame) SetHeight(height float64) {
 	frame.box.height = height
 	frame.fixedHeight = true
 	frame.RequestReflow()
 }
 
 //SetHeight - Sets the frame height
-func (frame *Frame) GetHeight() int {
+func (frame *Frame) GetHeight() float64 {
 	return frame.box.height
 }
 
 func drawRootFrame(window *Window) {
-	window.rootFrame.computedBox.SetCoords(0, 0, window.width, window.height)
+	window.rootFrame.computedBox.SetCoords(0, 0, float64(window.width), float64(window.height))
 
 	window.rootFrame.draw()
 }
@@ -63,15 +63,15 @@ func (frame *Frame) draw() {
 	context.DrawRectangle(float64(left), float64(top), float64(width), float64(height))
 	context.Fill()
 
-	if frame.buffer == nil || frame.buffer.Bounds().Max.X != width && frame.buffer.Bounds().Max.Y != height {
+	if frame.buffer == nil || frame.buffer.Bounds().Max.X != int(width) && frame.buffer.Bounds().Max.Y != int(height) {
 		frame.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 	draw.Draw(frame.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 
 	childrenLen := len(frame.widgets)
 	if childrenLen > 0 {

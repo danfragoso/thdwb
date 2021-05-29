@@ -264,7 +264,7 @@ func compositeWidget(buffer *image.RGBA, widget Widget) {
 		top, left, width, height := widget.ComputedBox().GetCoords()
 
 		draw.Draw(buffer, image.Rectangle{
-			image.Point{left, top}, image.Point{left + width, top + height},
+			image.Point{int(left), int(top)}, image.Point{int(left + width), int(top + height)},
 		}, widget.Buffer(), image.Point{}, draw.Over)
 
 		widget.SetNeedsRepaint(false)

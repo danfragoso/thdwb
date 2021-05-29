@@ -1,10 +1,11 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
-	"github.com/danfragoso/thdwb/gg"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
+	"github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -101,11 +102,11 @@ func selectNode(nodes []*TreeWidgetNode, node *TreeWidgetNode) {
 
 func fireNodeEvents(tree *TreeWidget, node *TreeWidgetNode, x, y, nodeHeight float64) {
 	t, l, _, _ := node.box.GetCoords()
-	if int(y) > t && int(y) < t+int(nodeHeight) {
+	if y > t && y < t+nodeHeight {
 		tree.SelectNode(node)
 		tree.selectCallback(node)
 
-		if int(x) < l+25 {
+		if x < l+25 {
 			node.Toggle()
 		}
 	}
@@ -135,14 +136,14 @@ func getIntersectedNode(nodes []*TreeWidgetNode, x, y float64) *TreeWidgetNode {
 }
 
 //SetWidth - Sets the tree width
-func (tree *TreeWidget) SetWidth(width int) {
+func (tree *TreeWidget) SetWidth(width float64) {
 	tree.box.width = width
 	tree.fixedWidth = true
 	tree.RequestReflow()
 }
 
 //SetHeight - Sets the tree height
-func (tree *TreeWidget) SetHeight(height int) {
+func (tree *TreeWidget) SetHeight(height float64) {
 	tree.box.height = height
 	tree.fixedHeight = true
 	tree.RequestReflow()
@@ -183,21 +184,21 @@ func (tree *TreeWidget) draw() {
 		drawNode(context, node, tree, 0)
 	}
 
-	if tree.buffer == nil || tree.buffer.Bounds().Max.X != width && tree.buffer.Bounds().Max.Y != height {
+	if tree.buffer == nil || tree.buffer.Bounds().Max.X != int(width) && tree.buffer.Bounds().Max.Y != int(height) {
 		tree.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(tree.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }
 
 func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {
-	node.box.left = level * int(tree.fontSize)
-	node.box.height = int(tree.fontSize) + 4
+	node.box.left = tree.fontSize * float64(level)
+	node.box.height = tree.fontSize + 4
 	node.box.width = tree.computedBox.width
 
 	prevSibling := node.PreviousSibling()
@@ -245,7 +246,7 @@ func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 
 	if len(node.Children) > 0 {
 		if node.isOpen {
-			context.DrawImage(tree.openIcon, left+4, top+1)
+			context.DrawImage(tree.openIcon, int(left+4), int(top+1))
 
 			for _, childNode := range node.Children {
 				drawNode(context, childNode, tree, level+1)
@@ -253,7 +254,7 @@ func drawNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level
 		} else {
 			context.Push()
 			context.Rotate(40)
-			context.DrawImage(tree.closeIcon, left+4, top+1)
+			context.DrawImage(tree.closeIcon, int(left+4), int(top+1))
 			context.Pop()
 		}
 	}

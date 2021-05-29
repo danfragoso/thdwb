@@ -38,14 +38,14 @@ func CreateImageWidget(path []byte) *ImageWidget {
 }
 
 //SetWidth - Sets the label width
-func (label *ImageWidget) SetWidth(width int) {
+func (label *ImageWidget) SetWidth(width float64) {
 	label.box.width = width
 	label.fixedWidth = true
 	label.RequestReflow()
 }
 
 //SetHeight - Sets the label height
-func (label *ImageWidget) SetHeight(height int) {
+func (label *ImageWidget) SetHeight(height float64) {
 	label.box.height = height
 	label.fixedHeight = true
 	label.RequestReflow()
@@ -53,16 +53,16 @@ func (label *ImageWidget) SetHeight(height int) {
 
 func (im *ImageWidget) draw() {
 	top, left, width, height := im.computedBox.GetCoords()
-	im.window.context.DrawImage(im.img, left+15, top+3)
+	im.window.context.DrawImage(im.img, int(left)+15, int(top)+3)
 
-	if im.buffer == nil || im.buffer.Bounds().Max.X != width && im.buffer.Bounds().Max.Y != height {
+	if im.buffer == nil || im.buffer.Bounds().Max.X != int(width) && im.buffer.Bounds().Max.Y != int(height) {
 		im.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(im.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, im.window.context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, im.window.context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }

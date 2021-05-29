@@ -1,9 +1,10 @@
 package mustard
 
 import (
-	gg "github.com/danfragoso/thdwb/gg"
 	"image"
 	"image/draw"
+
+	gg "github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
@@ -32,14 +33,14 @@ func CreateCanvasWidget(renderer func(*CanvasWidget)) *CanvasWidget {
 }
 
 //SetWidth - Sets the label width
-func (canvas *CanvasWidget) SetWidth(width int) {
+func (canvas *CanvasWidget) SetWidth(width float64) {
 	canvas.box.width = width
 	canvas.fixedWidth = true
 	canvas.RequestReflow()
 }
 
 //SetHeight - Sets the label height
-func (canvas *CanvasWidget) SetHeight(height int) {
+func (canvas *CanvasWidget) SetHeight(height float64) {
 	canvas.box.height = height
 	canvas.fixedHeight = true
 	canvas.RequestReflow()
@@ -79,9 +80,9 @@ func (ctx *CanvasWidget) draw() {
 	top, left, width, height := ctx.computedBox.GetCoords()
 	currentContextSize := ctx.context.Image().Bounds().Size()
 
-	if currentContextSize.X != width || currentContextSize.Y != height {
-		ctx.context = gg.NewContext(width, height)
-		ctx.drawingContext = gg.NewContext(width, 12000)
+	if currentContextSize.X != int(width) || currentContextSize.Y != int(height) {
+		ctx.context = gg.NewContext(int(width), int(height))
+		ctx.drawingContext = gg.NewContext(int(width), 12000)
 		ctx.drawingRepaint = true
 	}
 
@@ -90,19 +91,19 @@ func (ctx *CanvasWidget) draw() {
 		ctx.drawingRepaint = false
 	}
 
-	ctx.context.DrawImage(ctx.drawingContext.Image(), left, ctx.offset)
-	context.DrawImage(ctx.context.Image(), left, top)
+	ctx.context.DrawImage(ctx.drawingContext.Image(), int(left), ctx.offset)
+	context.DrawImage(ctx.context.Image(), int(left), int(top))
 
-	if ctx.buffer == nil || ctx.buffer.Bounds().Max.X != width && ctx.buffer.Bounds().Max.Y != height {
+	if ctx.buffer == nil || ctx.buffer.Bounds().Max.X != int(width) && ctx.buffer.Bounds().Max.Y != int(height) {
 		ctx.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(ctx.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }
 
 func createCtxScrollBar(ctx *CanvasWidget) {

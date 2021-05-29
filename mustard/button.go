@@ -1,10 +1,11 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
-	gg "github.com/danfragoso/thdwb/gg"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
+	gg "github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -41,14 +42,14 @@ func CreateButtonWidget(label string, asset []byte) *ButtonWidget {
 }
 
 //SetWidth - Sets the button width
-func (button *ButtonWidget) SetWidth(width int) {
+func (button *ButtonWidget) SetWidth(width float64) {
 	button.box.width = width
 	button.fixedWidth = true
 	button.RequestReflow()
 }
 
 //SetHeight - Sets the button height
-func (button *ButtonWidget) SetHeight(height int) {
+func (button *ButtonWidget) SetHeight(height float64) {
 	button.box.height = height
 	button.fixedHeight = true
 	button.RequestReflow()
@@ -122,17 +123,17 @@ func (button *ButtonWidget) draw() {
 	}
 
 	if button.icon != nil {
-		context.DrawImage(button.icon, left+4, top+2)
+		context.DrawImage(button.icon, int(left+4), int(top+2))
 	}
 
-	if button.buffer == nil || button.buffer.Bounds().Max.X != width && button.buffer.Bounds().Max.Y != height {
+	if button.buffer == nil || button.buffer.Bounds().Max.X != int(width) && button.buffer.Bounds().Max.Y != int(height) {
 		button.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(button.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }

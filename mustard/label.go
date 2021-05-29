@@ -1,9 +1,10 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -36,14 +37,14 @@ func CreateLabelWidget(content string) *LabelWidget {
 }
 
 //SetWidth - Sets the label width
-func (label *LabelWidget) SetWidth(width int) {
+func (label *LabelWidget) SetWidth(width float64) {
 	label.box.width = width
 	label.fixedWidth = true
 	label.RequestReflow()
 }
 
 //SetHeight - Sets the label height
-func (label *LabelWidget) SetHeight(height int) {
+func (label *LabelWidget) SetHeight(height float64) {
 	label.box.height = height
 	label.fixedHeight = true
 	label.RequestReflow()
@@ -95,14 +96,14 @@ func (label *LabelWidget) draw() {
 	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
 
-	if label.buffer == nil || label.buffer.Bounds().Max.X != width && label.buffer.Bounds().Max.Y != height {
+	if label.buffer == nil || label.buffer.Bounds().Max.X != int(width) && label.buffer.Bounds().Max.Y != int(height) {
 		label.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(label.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }

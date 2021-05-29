@@ -1,6 +1,8 @@
 package mustard
 
-import "image"
+import (
+	"image"
+)
 
 func getCoreWidgets(widgets []Widget) []*baseWidget {
 	var coreWidgets []*baseWidget
@@ -11,7 +13,7 @@ func getCoreWidgets(widgets []Widget) []*baseWidget {
 	return coreWidgets
 }
 
-func calculateChildrenWidgetsLayout(children []*baseWidget, top, left, width, height int, orientation FrameOrientation) []*baseWidget {
+func calculateChildrenWidgetsLayout(children []*baseWidget, top, left, width, height float64, orientation FrameOrientation) []*baseWidget {
 	var childrenLayout []*baseWidget
 
 	childrenLen := len(children)
@@ -31,7 +33,7 @@ func calculateChildrenWidgetsLayout(children []*baseWidget, top, left, width, he
 			if children[i].fixedWidth {
 				currentLayout.box.width = children[i].box.width
 			} else {
-				currentLayout.box.width = remainingWidth / len(volatileWidthElements)
+				currentLayout.box.width = remainingWidth / float64(len(volatileWidthElements))
 			}
 
 			currentLayout.box.top = top
@@ -49,7 +51,7 @@ func calculateChildrenWidgetsLayout(children []*baseWidget, top, left, width, he
 			if children[i].fixedHeight {
 				currentLayout.box.height = children[i].box.height
 			} else {
-				currentLayout.box.height = remainingHeight / len(volatileHeightElements)
+				currentLayout.box.height = remainingHeight / float64(len(volatileHeightElements))
 			}
 
 			currentLayout.box.left = left
@@ -90,7 +92,7 @@ func getFixedHeightElements(elements []*baseWidget) ([]*baseWidget, []*baseWidge
 	return fixedHeight, volatileHeight
 }
 
-func calculateFlexibleWidth(avaiableWidth int, elements []*baseWidget) int {
+func calculateFlexibleWidth(avaiableWidth float64, elements []*baseWidget) float64 {
 	for _, el := range elements {
 		avaiableWidth = avaiableWidth - el.box.width
 	}
@@ -102,7 +104,7 @@ func calculateFlexibleWidth(avaiableWidth int, elements []*baseWidget) int {
 	return avaiableWidth
 }
 
-func calculateFlexibleHeight(avaiableHeight int, elements []*baseWidget) int {
+func calculateFlexibleHeight(avaiableHeight float64, elements []*baseWidget) float64 {
 	for _, el := range elements {
 		avaiableHeight = avaiableHeight - el.box.height
 	}
@@ -124,23 +126,23 @@ func (widget *baseWidget) RequestRepaint() {
 	widget.needsRepaint = true
 }
 
-func (widget *baseWidget) GetRect() (int, int, int, int) {
-	return widget.computedBox.top, widget.computedBox.left, widget.computedBox.width, widget.computedBox.height
+func (widget *baseWidget) GetRect() (float64, float64, float64, float64) {
+	return widget.computedBox.GetCoords()
 }
 
-func (widget *baseWidget) GetTop() int {
+func (widget *baseWidget) GetTop() float64 {
 	return widget.computedBox.top
 }
 
-func (widget *baseWidget) GetLeft() int {
+func (widget *baseWidget) GetLeft() float64 {
 	return widget.computedBox.left
 }
 
-func (widget *baseWidget) GetWidth() int {
+func (widget *baseWidget) GetWidth() float64 {
 	return widget.computedBox.width
 }
 
-func (widget *baseWidget) GetHeight() int {
+func (widget *baseWidget) GetHeight() float64 {
 	return widget.computedBox.height
 }
 

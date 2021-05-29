@@ -1,10 +1,11 @@
 package mustard
 
 import (
-	assets "github.com/danfragoso/thdwb/assets"
-	gg "github.com/danfragoso/thdwb/gg"
 	"image"
 	"image/draw"
+
+	assets "github.com/danfragoso/thdwb/assets"
+	gg "github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/goki/freetype/truetype"
@@ -37,14 +38,14 @@ func CreateTextWidget(content string) *TextWidget {
 }
 
 //SetWidth - Sets the text width
-func (text *TextWidget) SetWidth(width int) {
+func (text *TextWidget) SetWidth(width float64) {
 	text.box.width = width
 	text.fixedWidth = true
 	text.RequestReflow()
 }
 
 //SetHeight - Sets the text height
-func (text *TextWidget) SetHeight(height int) {
+func (text *TextWidget) SetHeight(height float64) {
 	text.box.height = height
 	text.fixedHeight = true
 	text.RequestReflow()
@@ -97,14 +98,14 @@ func (text *TextWidget) draw() {
 	context.DrawStringWrapped(text.content, float64(left)+text.fontSize/4, float64(top)+text.fontSize*2/2, 0, 0, float64(width), text.fontSize*0.15, gg.AlignLeft)
 	context.Fill()
 
-	if text.buffer == nil || text.buffer.Bounds().Max.X != width && text.buffer.Bounds().Max.Y != height {
+	if text.buffer == nil || text.buffer.Bounds().Max.X != int(width) && text.buffer.Bounds().Max.Y != int(height) {
 		text.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{width, height},
+			image.Point{}, image.Point{int(width), int(height)},
 		})
 	}
 
 	draw.Draw(text.buffer, image.Rectangle{
 		image.Point{},
-		image.Point{width, height},
-	}, context.Image(), image.Point{left, top}, draw.Over)
+		image.Point{int(width), int(height)},
+	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
 }
