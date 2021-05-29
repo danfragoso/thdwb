@@ -1,9 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
-
 	assets "github.com/danfragoso/thdwb/assets"
 	gg "github.com/danfragoso/thdwb/gg"
 
@@ -98,14 +95,5 @@ func (text *TextWidget) draw() {
 	context.DrawStringWrapped(text.content, float64(left)+text.fontSize/4, float64(top)+text.fontSize*2/2, 0, 0, float64(width), text.fontSize*0.15, gg.AlignLeft)
 	context.Fill()
 
-	if text.buffer == nil || text.buffer.Bounds().Max.X != int(width) && text.buffer.Bounds().Max.Y != int(height) {
-		text.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(text.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(text, context.Image())
 }

@@ -1,9 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
-
 	assets "github.com/danfragoso/thdwb/assets"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -96,14 +93,5 @@ func (label *LabelWidget) draw() {
 	context.DrawString(label.content, float64(left)+label.fontSize/4, float64(top)+label.fontSize*2/2)
 	context.Fill()
 
-	if label.buffer == nil || label.buffer.Bounds().Max.X != int(width) && label.buffer.Bounds().Max.Y != int(height) {
-		label.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(label.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(label, context.Image())
 }

@@ -1,9 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
-
 	assets "github.com/danfragoso/thdwb/assets"
 	"github.com/danfragoso/thdwb/gg"
 
@@ -184,16 +181,7 @@ func (tree *TreeWidget) draw() {
 		drawNode(context, node, tree, 0)
 	}
 
-	if tree.buffer == nil || tree.buffer.Bounds().Max.X != int(width) && tree.buffer.Bounds().Max.Y != int(height) {
-		tree.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(tree.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(tree, context.Image())
 }
 
 func flowNode(context *gg.Context, node *TreeWidgetNode, tree *TreeWidget, level int) {

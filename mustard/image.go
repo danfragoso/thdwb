@@ -1,8 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
 	"log"
 
 	gg "github.com/danfragoso/thdwb/gg"
@@ -52,17 +50,8 @@ func (label *ImageWidget) SetHeight(height float64) {
 }
 
 func (im *ImageWidget) draw() {
-	top, left, width, height := im.computedBox.GetCoords()
+	top, left, _, _ := im.computedBox.GetCoords()
 	im.window.context.DrawImage(im.img, int(left)+15, int(top)+3)
 
-	if im.buffer == nil || im.buffer.Bounds().Max.X != int(width) && im.buffer.Bounds().Max.Y != int(height) {
-		im.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(im.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, im.window.context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(im, im.window.context.Image())
 }

@@ -1,9 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
-
 	assets "github.com/danfragoso/thdwb/assets"
 	gg "github.com/danfragoso/thdwb/gg"
 
@@ -126,14 +123,5 @@ func (button *ButtonWidget) draw() {
 		context.DrawImage(button.icon, int(left+4), int(top+2))
 	}
 
-	if button.buffer == nil || button.buffer.Bounds().Max.X != int(width) && button.buffer.Bounds().Max.Y != int(height) {
-		button.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(button.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(button, context.Image())
 }

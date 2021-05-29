@@ -2,7 +2,28 @@ package mustard
 
 import (
 	"image"
+	"image/draw"
 )
+
+func copyWidgetToBuffer(widget Widget, src image.Image) {
+	computedBox := widget.ComputedBox()
+	top := int(computedBox.top)
+	left := int(computedBox.left)
+	width := int(computedBox.width)
+	height := int(computedBox.height)
+
+	buffer := widget.Buffer()
+	if buffer == nil || buffer.Bounds().Max.X != width && buffer.Bounds().Max.Y != height {
+		widget.BaseWidget().SetBuffer(image.NewRGBA(image.Rectangle{
+			image.Point{}, image.Point{width, height},
+		}))
+	}
+
+	draw.Draw(widget.BaseWidget().buffer, image.Rectangle{
+		image.Point{},
+		image.Point{int(width), int(height)},
+	}, src, image.Point{int(left), int(top)}, draw.Over)
+}
 
 func getCoreWidgets(widgets []Widget) []*baseWidget {
 	var coreWidgets []*baseWidget
@@ -148,6 +169,10 @@ func (widget *baseWidget) GetHeight() float64 {
 
 func (widget *baseWidget) ComputedBox() *box {
 	return &widget.computedBox
+}
+
+func (widget *baseWidget) SetBuffer(buffer *image.RGBA) {
+	widget.buffer = buffer
 }
 
 func (widget *baseWidget) SetWindow(window *Window) {

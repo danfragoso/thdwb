@@ -1,9 +1,6 @@
 package mustard
 
 import (
-	"image"
-	"image/draw"
-
 	gg "github.com/danfragoso/thdwb/gg"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -93,17 +90,7 @@ func (ctx *CanvasWidget) draw() {
 
 	ctx.context.DrawImage(ctx.drawingContext.Image(), int(left), ctx.offset)
 	context.DrawImage(ctx.context.Image(), int(left), int(top))
-
-	if ctx.buffer == nil || ctx.buffer.Bounds().Max.X != int(width) && ctx.buffer.Bounds().Max.Y != int(height) {
-		ctx.buffer = image.NewRGBA(image.Rectangle{
-			image.Point{}, image.Point{int(width), int(height)},
-		})
-	}
-
-	draw.Draw(ctx.buffer, image.Rectangle{
-		image.Point{},
-		image.Point{int(width), int(height)},
-	}, context.Image(), image.Point{int(left), int(top)}, draw.Over)
+	copyWidgetToBuffer(ctx, context.Image())
 }
 
 func createCtxScrollBar(ctx *CanvasWidget) {
