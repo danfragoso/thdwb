@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -19,13 +20,13 @@ func main() {
 
 	for _, rootFile := range rootFiles {
 		if rootFile.IsDir() {
-			fileString := "package assets\n"
+			fileString := "package assets\n\nimport _ \"embed\"\n"
 			childFiles, _ := ioutil.ReadDir(rootPath + rootFile.Name())
 
 			for _, childFile := range childFiles {
 				if !childFile.IsDir() {
 					fileContent, _ := ioutil.ReadFile(rootPath + rootFile.Name() + "/" + childFile.Name())
-					fileString += createFileFunction(childFile.Name(), fileContent)
+					fileString += createFileFunction(rootFile.Name(), childFile.Name(), fileContent)
 				}
 			}
 
@@ -34,20 +35,16 @@ func main() {
 	}
 }
 
-func createFileFunction(fileName string, fileContent []byte) string {
-	functionTitle := strings.Title(strings.Split(fileName, ".")[0])
-	functionStr := fmt.Sprint("\nfunc ", functionTitle, "() []byte {\n")
-	functionStr += "\treturn []byte{"
+func createFileFunction(folderName string, fileName string, fileContent []byte) string {
+	fileTitle := strings.Split(fileName, ".")[0]
 
-	suffix := ", "
-	for byteIdx, _byte := range fileContent {
-		if byteIdx == len(fileContent)-1 {
-			suffix = "}"
-		}
+	embedStr := "\n//go:embed " + filepath.Join(folderName, fileName) + "\n"
+	embedStr += "var " + fileTitle + " []byte\n"
 
-		functionStr += fmt.Sprint(_byte, suffix)
-	}
+	functionTitle := strings.Title(fileTitle)
+	functionStr := fmt.Sprint("func ", functionTitle, "() []byte {\n")
+	functionStr += "\treturn " + fileTitle
 
 	functionStr += "\n}\n"
-	return functionStr
+	return embedStr + functionStr
 }
