@@ -59,6 +59,31 @@ func isVoidElement(tagName string) bool {
 	return isVoid
 }
 
+func CreateHTMLBase() *hotdog.NodeDOM {
+	html := &hotdog.NodeDOM{
+		Element: "html", NeedsReflow: true, NeedsRepaint: true,
+		Style:     mayo.GetElementStylesheet("html", []*hotdog.Attribute{}),
+		RenderBox: &hotdog.RenderBox{},
+	}
+
+	head := &hotdog.NodeDOM{
+		Element: "head", NeedsReflow: true, NeedsRepaint: true,
+		Style:     mayo.GetElementStylesheet("head", []*hotdog.Attribute{}),
+		RenderBox: &hotdog.RenderBox{},
+		Parent:    html,
+	}
+
+	body := &hotdog.NodeDOM{
+		Element: "body", NeedsReflow: true, NeedsRepaint: true,
+		Style:     mayo.GetElementStylesheet("body", []*hotdog.Attribute{}),
+		RenderBox: &hotdog.RenderBox{},
+		Parent:    html,
+	}
+
+	html.Children = append(html.Children, head, body)
+	return html
+}
+
 func ParsePlainText(document string) *hotdog.Document {
 	documentTitle := "Text Document"
 	textDocument := &hotdog.Document{
@@ -140,6 +165,11 @@ func ParseHTML(document string) *hotdog.Document {
 
 				extractedAttributes := extractAttributes(currentTag)
 				elementStylesheet := mayo.GetElementStylesheet(currentTagName, extractedAttributes)
+
+				if lastNode == nil {
+					HTMLDocument.DOM = CreateHTMLBase()
+					lastNode = HTMLDocument.DOM.Children[1]
+				}
 
 				currentNode = &hotdog.NodeDOM{
 					Element:    currentTagName,
