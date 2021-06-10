@@ -23,6 +23,10 @@ func loadDocument(browser *hotdog.WebBrowser, link string) {
 			URL.Path = "/" + URL.Path
 		}
 
+		if strings.HasSuffix(browser.ActiveDocument.URL.String(), "/") {
+			URL.Path = strings.TrimSuffix(browser.ActiveDocument.URL.Path, "/") + URL.Path
+		}
+
 		URL = sauce.ParseURL(browser.ActiveDocument.URL.Scheme + "://" + browser.ActiveDocument.URL.Host + URL.Path)
 	}
 
