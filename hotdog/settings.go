@@ -7,24 +7,34 @@ import (
 )
 
 type Settings struct {
-	Homepage     string `json:"homepage"`
-	WindowWidth  int    `json:"windowWidth"`
-	WindowHeight int    `json:"windowHeight"`
+	Homepage string `json:"homepage"`
+
+	WindowWidth  int `json:"windowWidth"`
+	WindowHeight int `json:"windowHeight"`
 
 	HiDPI bool `json:"hiDPI"`
 
-	// golang stdlib spec compliant html5 parser
-	ExperimentalHTML bool `json:"experimentalHTML"`
-	// spec-ish compliant layout engine
-	ExperimentalLayout bool `json:"experimentalLayout"`
+	ExperimentalHTML   bool `json:"experimentalHTML"`   // golang stdlib spec compliant html5 parser
+	ExperimentalLayout bool `json:"experimentalLayout"` // spec-ish compliant layout engine
+}
+
+var defaultSettings Settings = Settings{
+	Homepage: "thdwb://homepage",
+
+	WindowWidth:  600,
+	WindowHeight: 600,
+
+	HiDPI: true,
+
+	ExperimentalHTML:   false,
+	ExperimentalLayout: false,
 }
 
 func LoadSettings(path string) *Settings {
-	var settings Settings
 	settingsData, err := ioutil.ReadFile(path)
 
 	if err == nil {
-		err = json.Unmarshal(settingsData, &settings)
+		err = json.Unmarshal(settingsData, &defaultSettings)
 		if err != nil {
 			fmt.Println("Error loading settings from file;", err)
 		}
@@ -33,18 +43,5 @@ func LoadSettings(path string) *Settings {
 		fmt.Println("Loading default settings.")
 	}
 
-	if settings.Homepage == "" {
-		settings.Homepage = "thdwb://homepage"
-	}
-
-	if settings.WindowWidth == 0 {
-		settings.WindowWidth = 600
-	}
-
-	if settings.WindowHeight == 0 {
-		settings.WindowHeight = 600
-	}
-
-	// Default to `false` for HiDPI, experimentalHTML, and experimentalLayout nothing to do here.
-	return &settings
+	return &defaultSettings
 }
